@@ -1,14 +1,14 @@
-From 19d109674e896c40fd689fb4824f1391ffecf676 Mon Sep 17 00:00:00 2001
+From 9f0ce68f45d9005f101f2f661458431143a7c2fb Mon Sep 17 00:00:00 2001
 From: DerFlash <bte@freenet.de>
 Date: Tue, 9 Jul 2013 00:11:12 +0200
 Subject: [PATCH] Save ticks lived to nbttag
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 2a192e1..409b0ad 100644
+index 56dec36..08da397 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -1134,6 +1134,7 @@ public abstract class Entity {
+@@ -1123,6 +1123,7 @@ public abstract class Entity {
              nbttagcompound.setLong("WorldUUIDLeast", this.world.getDataManager().getUUID().getLeastSignificantBits());
              nbttagcompound.setLong("WorldUUIDMost", this.world.getDataManager().getUUID().getMostSignificantBits());
              nbttagcompound.setInt("Bukkit.updateLevel", CURRENT_LEVEL);
@@ -16,7 +16,7 @@ index 2a192e1..409b0ad 100644
              // CraftBukkit end
              this.b(nbttagcompound);
              if (this.vehicle != null) {
-@@ -1202,6 +1203,8 @@ public abstract class Entity {
+@@ -1191,6 +1192,8 @@ public abstract class Entity {
              if (this instanceof EntityLiving) {
                  EntityLiving entity = (EntityLiving) this;
  

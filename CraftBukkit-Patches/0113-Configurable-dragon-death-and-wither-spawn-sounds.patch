@@ -1,14 +1,14 @@
-From 15b8b8a5a98f77bb8e0704d419019882daa06b9a Mon Sep 17 00:00:00 2001
+From 7be85d20c6970d27149841cf9af42cf25e2afbeb Mon Sep 17 00:00:00 2001
 From: drXor <mcyoungsota@gmail.com>
 Date: Sat, 29 Mar 2014 13:44:25 -0400
 Subject: [PATCH] Configurable dragon death and wither spawn sounds
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityEnderDragon.java b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-index dbf30cb..64b0992 100644
+index f50d8f6..35418b6 100644
 --- a/src/main/java/net/minecraft/server/EntityEnderDragon.java
 +++ b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-@@ -550,7 +550,14 @@ public class EntityEnderDragon extends EntityInsentient implements IComplex, IMo
+@@ -544,7 +544,14 @@ public class EntityEnderDragon extends EntityInsentient implements IComplex, IMo
              }
  
              if (this.bB == 1) {

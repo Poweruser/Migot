@@ -1,14 +1,14 @@
-From 625906f2c19b34c027c32c7bba15a8355f9bc6b5 Mon Sep 17 00:00:00 2001
+From 9d1b1f2a1b096d965ff4c57c6f699a42dd448352 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Thu, 16 May 2013 18:51:05 +1000
 Subject: [PATCH] Orebfuscator
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityFallingBlock.java b/src/main/java/net/minecraft/server/EntityFallingBlock.java
-index bc51217..8335e89 100644
+index e0b9936..bfce163 100644
 --- a/src/main/java/net/minecraft/server/EntityFallingBlock.java
 +++ b/src/main/java/net/minecraft/server/EntityFallingBlock.java
-@@ -86,6 +86,7 @@ public class EntityFallingBlock extends Entity {
+@@ -83,6 +83,7 @@ public class EntityFallingBlock extends Entity {
                      }
  
                      this.world.setAir(i, j, k);
@@ -16,7 +16,7 @@ index bc51217..8335e89 100644
                  }
  
                  if (this.onGround) {
-@@ -101,6 +102,7 @@ public class EntityFallingBlock extends Entity {
+@@ -98,6 +99,7 @@ public class EntityFallingBlock extends Entity {
                              }
                              this.world.setTypeAndData(i, j, k, this.id, this.data, 3);
                              // CraftBukkit end
@@ -25,10 +25,10 @@ index bc51217..8335e89 100644
                              if (this.id instanceof BlockFalling) {
                                  ((BlockFalling) this.id).a(this.world, i, j, k, this.data);
 diff --git a/src/main/java/net/minecraft/server/Explosion.java b/src/main/java/net/minecraft/server/Explosion.java
-index d6ac728..229b296 100644
+index 56fa999..4502f68 100644
 --- a/src/main/java/net/minecraft/server/Explosion.java
 +++ b/src/main/java/net/minecraft/server/Explosion.java
-@@ -239,6 +239,7 @@ public class Explosion {
+@@ -203,6 +203,7 @@ public class Explosion {
                  j = chunkposition.y;
                  k = chunkposition.z;
                  block = this.world.getType(i, j, k);

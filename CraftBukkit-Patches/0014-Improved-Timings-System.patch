@@ -1,4 +1,4 @@
-From 240e3a0afa47aa7e53f6f647c000dc5c627d5d95 Mon Sep 17 00:00:00 2001
+From e781914268dfc14895228096bb79ff8bf035ed71 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Thu, 10 Jan 2013 00:18:11 -0500
 Subject: [PATCH] Improved Timings System
@@ -26,7 +26,7 @@ index 8cc2efd..64ae190 100644
  
          return chunk;
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 04f5bc6..0999562 100644
+index 7b97576..a0ce6dd 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -15,6 +15,7 @@ import org.bukkit.entity.Hanging;
@@ -37,7 +37,7 @@ index 04f5bc6..0999562 100644
  import org.bukkit.event.entity.EntityCombustByEntityEvent;
  import org.bukkit.event.hanging.HangingBreakByEntityEvent;
  import org.bukkit.event.painting.PaintingBreakByEntityEvent;
-@@ -114,6 +115,8 @@ public abstract class Entity {
+@@ -113,6 +114,8 @@ public abstract class Entity {
      public boolean valid; // CraftBukkit
      public org.bukkit.projectiles.ProjectileSource projectileSource; // CraftBukkit - For projectiles only
  
@@ -46,7 +46,7 @@ index 04f5bc6..0999562 100644
      public int getId() {
          return this.id;
      }
-@@ -426,7 +429,8 @@ public abstract class Entity {
+@@ -415,7 +418,8 @@ public abstract class Entity {
          if (d0 == 0 && d1 == 0 && d2 == 0 && this.vehicle == null && this.passenger == null) {
              return;
          }
@@ -56,7 +56,7 @@ index 04f5bc6..0999562 100644
          if (this.X) {
              this.boundingBox.d(d0, d1, d2);
              this.locX = (this.boundingBox.a + this.boundingBox.d) / 2.0D;
-@@ -735,6 +739,7 @@ public abstract class Entity {
+@@ -724,6 +728,7 @@ public abstract class Entity {
  
              this.world.methodProfiler.b();
          }

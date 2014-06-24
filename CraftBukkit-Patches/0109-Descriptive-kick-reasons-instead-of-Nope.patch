@@ -1,14 +1,14 @@
-From 24f3c8df08c01148aa41f8152c610f8414fa315d Mon Sep 17 00:00:00 2001
+From 151173747c2bfd00dc08dca2ce3075213a799f60 Mon Sep 17 00:00:00 2001
 From: drXor <mcyoungsota@gmail.com>
 Date: Sat, 15 Mar 2014 01:30:05 -0400
 Subject: [PATCH] Descriptive kick reasons instead of Nope!
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 7f80895..5ac54e3 100644
+index 861ffeb..0635c20 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -220,7 +220,7 @@ public abstract class Entity {
+@@ -219,7 +219,7 @@ public abstract class Entity {
          if ((f == Float.POSITIVE_INFINITY) || (f == Float.NEGATIVE_INFINITY)) {
              if (this instanceof EntityPlayer) {
                  this.world.getServer().getLogger().warning(((CraftPlayer) this.getBukkitEntity()).getName() + " was caught trying to crash the server with an invalid yaw");
@@ -17,7 +17,7 @@ index 7f80895..5ac54e3 100644
              }
              f = 0;
          }
-@@ -233,7 +233,7 @@ public abstract class Entity {
+@@ -232,7 +232,7 @@ public abstract class Entity {
          if ((f1 == Float.POSITIVE_INFINITY) || (f1 == Float.NEGATIVE_INFINITY)) {
              if (this instanceof EntityPlayer) {
                  this.world.getServer().getLogger().warning(((CraftPlayer) this.getBukkitEntity()).getName() + " was caught trying to crash the server with an invalid pitch");
