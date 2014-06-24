@@ -1,0 +1,22 @@
+From 728817e969f53f807ca689a50901c6ceb504b011 Mon Sep 17 00:00:00 2001
+From: Zach Brown <Zbob750@live.com>
+Date: Tue, 24 Jun 2014 09:51:05 -0500
+Subject: [PATCH] Fix ItemFrame EntityDamageByEntityEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityItemFrame.java b/src/main/java/net/minecraft/server/EntityItemFrame.java
+index 940e7c8..7d5ca62 100644
+--- a/src/main/java/net/minecraft/server/EntityItemFrame.java
++++ b/src/main/java/net/minecraft/server/EntityItemFrame.java
+@@ -24,7 +24,7 @@ public class EntityItemFrame extends EntityHanging {
+         } else if (this.getItem() != null) {
+             if (!this.world.isStatic) {
+                 // CraftBukkit start - fire EntityDamageEvent
+-                if (!org.bukkit.craftbukkit.event.CraftEventFactory.handleNonLivingEntityDamageEvent(this, damagesource, f) || this.dead) {
++                if (org.bukkit.craftbukkit.event.CraftEventFactory.handleNonLivingEntityDamageEvent(this, damagesource, f) || this.dead) { // Spigot - Fix event
+                     return true;
+                 }
+                 // CraftBukkit end
+-- 
+1.9.1
+
