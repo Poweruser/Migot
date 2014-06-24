@@ -1,9 +1,22 @@
-From 728817e969f53f807ca689a50901c6ceb504b011 Mon Sep 17 00:00:00 2001
+From 55b801f30d75cb9ac3d9448a2ae361ebe190e957 Mon Sep 17 00:00:00 2001
 From: Zach Brown <Zbob750@live.com>
 Date: Tue, 24 Jun 2014 09:51:05 -0500
-Subject: [PATCH] Fix ItemFrame EntityDamageByEntityEvent
+Subject: [PATCH] Fix ItemFrame and Fireball EntityDamageByEntityEvent
 
 
+diff --git a/src/main/java/net/minecraft/server/EntityFireball.java b/src/main/java/net/minecraft/server/EntityFireball.java
+index 4043347..eef432a 100644
+--- a/src/main/java/net/minecraft/server/EntityFireball.java
++++ b/src/main/java/net/minecraft/server/EntityFireball.java
+@@ -244,7 +244,7 @@ public abstract class EntityFireball extends Entity {
+             this.P();
+             if (damagesource.getEntity() != null) {
+                 // CraftBukkit start
+-                if (!CraftEventFactory.handleNonLivingEntityDamageEvent(this, damagesource, f)) {
++                if (CraftEventFactory.handleNonLivingEntityDamageEvent(this, damagesource, f)) { // Spigot - fix event
+                     return false;
+                 }
+                 // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/EntityItemFrame.java b/src/main/java/net/minecraft/server/EntityItemFrame.java
 index 940e7c8..7d5ca62 100644
 --- a/src/main/java/net/minecraft/server/EntityItemFrame.java
