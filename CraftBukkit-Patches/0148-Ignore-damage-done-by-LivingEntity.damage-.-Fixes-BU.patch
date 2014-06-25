@@ -1,0 +1,25 @@
+From 1544f0a76b6516f03567bea0702c995bd75eb02d Mon Sep 17 00:00:00 2001
+From: t00thpick1 <t00thpick1dirko@gmail.com>
+Date: Sun, 22 Jun 2014 22:54:05 -0400
+Subject: [PATCH] Ignore damage done by LivingEntity.damage(). Fixes
+ BUKKIT-5666
+
+This matches behavior previous to new damage event API of not throwing
+events for plugin-triggered damage.
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+index fd1b85a..e6377c1 100644
+--- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
++++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+@@ -528,6 +528,8 @@ public class CraftEventFactory {
+             cause = DamageCause.MAGIC;
+         } else if (source == DamageSource.FALL) {
+             cause = DamageCause.FALL;
++        } else if (source == DamageSource.GENERIC) {
++            return new EntityDamageEvent(entity.getBukkitEntity(), null, modifiers);
+         }
+ 
+         if (cause != null) {
+-- 
+1.9.1
+
