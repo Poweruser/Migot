@@ -1,0 +1,22 @@
+From 66a36742c9a984b1b7d44d497e3c29788c38b5d2 Mon Sep 17 00:00:00 2001
+From: Thinkofdeath <thinkofdeath@spigotmc.org>
+Date: Thu, 26 Jun 2014 23:42:52 +0100
+Subject: [PATCH] Add damager to the unhandled error
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+index e6377c1..efa7741 100644
+--- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
++++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+@@ -498,7 +498,7 @@ public class CraftEventFactory {
+             } else if (source == DamageSource.FALL) {
+                 cause = DamageCause.FALL;
+             } else {
+-                throw new RuntimeException("Unhandled entity damage");
++                throw new RuntimeException("Unhandled entity damage from " + damager.getHandle().getName()); // Spigot - Add damager
+             }
+             EntityDamageEvent event = callEvent(new EntityDamageByEntityEvent(damager, entity.getBukkitEntity(), cause, modifiers));
+             if (!event.isCancelled()) {
+-- 
+1.9.1
+
