@@ -1,0 +1,21 @@
+From cff8e2420ee1c3aef0f01af3fced6a473983b47c Mon Sep 17 00:00:00 2001
+From: Thinkofdeath <thinkofdeath@spigotmc.org>
+Date: Thu, 26 Jun 2014 14:29:11 +0100
+Subject: [PATCH] Fix explosions not moving invulnerable entities
+
+
+diff --git a/src/main/java/net/minecraft/server/Explosion.java b/src/main/java/net/minecraft/server/Explosion.java
+index 4502f68..fd51102 100644
+--- a/src/main/java/net/minecraft/server/Explosion.java
++++ b/src/main/java/net/minecraft/server/Explosion.java
+@@ -131,7 +131,6 @@ public class Explosion {
+                     CraftEventFactory.entityDamage = source;
+                     if (!entity.damageEntity(DamageSource.explosion(this), (float) ((int) ((d10 * d10 + d10) / 2.0D * 8.0D * (double) this.size + 1.0D)))) {
+                         CraftEventFactory.entityDamage = null;
+-                        continue;
+                     }
+                     // CraftBukkit end
+                     double d11 = EnchantmentProtection.a(entity, d10);
+-- 
+1.9.1
+
