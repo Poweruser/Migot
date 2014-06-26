@@ -1,11 +1,11 @@
-From 34f763cc0aea978efc5e76c9c3df06df012bafa1 Mon Sep 17 00:00:00 2001
+From 279ada71d0f79d8732887da68236761eb3dbc1b8 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 2 Jun 2013 10:36:24 +1000
 Subject: [PATCH] POM Changes
 
 
 diff --git a/pom.xml b/pom.xml
-index dcf7ed3..f7d100a 100644
+index dcf7ed3..c9464cc 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,42 +1,21 @@
@@ -61,6 +61,15 @@ index dcf7ed3..f7d100a 100644
  
      <build>
          <plugins>
+@@ -118,7 +97,7 @@
+         <dependency>
+             <groupId>com.google.guava</groupId>
+             <artifactId>guava</artifactId>
+-            <version>10.0.1</version>
++            <version>11.0.2</version>
+             <type>jar</type>
+             <scope>compile</scope>
+         </dependency>
 -- 
 1.9.1
 
