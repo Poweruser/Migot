@@ -1,4 +1,4 @@
-From 55b801f30d75cb9ac3d9448a2ae361ebe190e957 Mon Sep 17 00:00:00 2001
+From b1a1f4c95864bf2ed9cf91f61185cbf3d9c60971 Mon Sep 17 00:00:00 2001
 From: Zach Brown <Zbob750@live.com>
 Date: Tue, 24 Jun 2014 09:51:05 -0500
 Subject: [PATCH] Fix ItemFrame and Fireball EntityDamageByEntityEvent
@@ -30,6 +30,19 @@ index 940e7c8..7d5ca62 100644
                      return true;
                  }
                  // CraftBukkit end
+diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+index fd1b85a..fc5cd6f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
++++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+@@ -579,7 +579,7 @@ public class CraftEventFactory {
+         if (event == null) {
+             return false;
+         }
+-        return event.isCancelled() || event.getDamage() == 0;
++        return event.isCancelled();
+     }
+ 
+     public static PlayerLevelChangeEvent callPlayerLevelChangeEvent(Player player, int oldLevel, int newLevel) {
 -- 
 1.9.1
 
