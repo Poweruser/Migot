@@ -1,4 +1,4 @@
-From 4c0a6720e1aa3018860c091f0eab1744a7009ec6 Mon Sep 17 00:00:00 2001
+From 5adb5bd6c35803188522470c3adc2e63678a6208 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Tue, 2 Jul 2013 13:07:39 +1000
 Subject: [PATCH] POM Changes
@@ -130,10 +130,10 @@ index b2e2002..df02bd3 100644
            <execution>
              <phase>package</phase>
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 3be5174..853e5d2 100644
+index 3c92c3c..77735b7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -308,7 +308,7 @@ public final class CraftServer implements Server {
+@@ -319,7 +319,7 @@ public final class CraftServer implements Server {
          loadIcon();
  
          updater = new AutoUpdater(new BukkitDLUpdaterService(configuration.getString("auto-updater.host")), getLogger(), configuration.getString("auto-updater.preferred-channel"));
