@@ -1,4 +1,4 @@
-From 60d4ffeb6087cacfc5d436f928f2ae6018c656ba Mon Sep 17 00:00:00 2001
+From dec6db2215babc7d34a2b18e06b761807175b2ae Mon Sep 17 00:00:00 2001
 From: Jonas Konrad <me@yawk.at>
 Date: Fri, 25 Apr 2014 23:46:46 +0200
 Subject: [PATCH] Fix race condition that could kill connections before they
@@ -12,10 +12,10 @@ initialized. The ServerConnection does not remove NetworkManagers with
 this flag.
 
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index d1b9c49..e9973c2 100644
+index 9939652..ae3de2f 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
-@@ -42,6 +42,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+@@ -45,6 +45,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
      public SocketAddress n;
      public java.util.UUID spoofedUUID;
      public Property[] spoofedProfile;
@@ -23,7 +23,7 @@ index d1b9c49..e9973c2 100644
      // Spigot End
      private PacketListener o;
      private EnumProtocol p;
-@@ -69,6 +70,9 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+@@ -73,6 +74,9 @@ public class NetworkManager extends SimpleChannelInboundHandler {
          super.channelActive(channelhandlercontext);
          this.m = channelhandlercontext.channel();
          this.n = this.m.remoteAddress();
@@ -33,7 +33,7 @@ index d1b9c49..e9973c2 100644
          this.a(EnumProtocol.HANDSHAKING);
      }
  
-@@ -187,6 +191,9 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+@@ -191,6 +195,9 @@ public class NetworkManager extends SimpleChannelInboundHandler {
      }
  
      public void close(IChatBaseComponent ichatbasecomponent) {

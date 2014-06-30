@@ -1,14 +1,14 @@
-From 636c6f443896f1f980604a189753616cb259bf46 Mon Sep 17 00:00:00 2001
+From a3678a386aa00af562d59f1f6f2c141cd487bc64 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 13 Apr 2014 09:00:59 +1000
 Subject: [PATCH] Print Stack on InternalException
 
 
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index 0c10e18..d1b9c49 100644
+index 04af15c..9939652 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
-@@ -94,6 +94,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+@@ -98,6 +98,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
          }
  
          this.close(chatmessage);

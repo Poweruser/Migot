@@ -1,4 +1,4 @@
-From b47c4d7bf07abd04d227a84ff30e9114b0a51c01 Mon Sep 17 00:00:00 2001
+From 3b5ccbb6a72116d264ffae89963c3f23de005407 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sat, 12 Apr 2014 15:11:15 +1000
 Subject: [PATCH] Old / New Version Support.
@@ -7,18 +7,23 @@ This adds support for newer / older Minecraft versions.
 At present it supports protocol versions 4 and 5 (1.7.2-1.7.8).
 
 diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/main/java/net/minecraft/server/HandshakeListener.java
-index ee24038..2ef286e 100644
+index ee24038..09fdb88 100644
 --- a/src/main/java/net/minecraft/server/HandshakeListener.java
 +++ b/src/main/java/net/minecraft/server/HandshakeListener.java
-@@ -26,6 +26,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
+@@ -26,6 +26,12 @@ public class HandshakeListener implements PacketHandshakingInListener {
      }
  
      public void a(PacketHandshakingInSetProtocol packethandshakinginsetprotocol) {
-+        NetworkManager.a( this.b ).attr( NetworkManager.protocolVersion ).set( packethandshakinginsetprotocol.d() ); // Spigot
++        // Spigot start
++        if ( NetworkManager.SUPPORTED_VERSIONS.contains( packethandshakinginsetprotocol.d() ) )
++        {
++            NetworkManager.a( this.b ).attr( NetworkManager.protocolVersion ).set( packethandshakinginsetprotocol.d() );
++        }
++        // Spigot end
          switch (ProtocolOrdinalWrapper.a[packethandshakinginsetprotocol.c().ordinal()]) {
          case 1:
              this.b.a(EnumProtocol.LOGIN);
-@@ -70,7 +71,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
+@@ -70,7 +76,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                  chatcomponenttext = new ChatComponentText( org.spigotmc.SpigotConfig.outdatedServerMessage ); // Spigot
                  this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
                  this.b.close(chatcomponenttext);
@@ -28,15 +33,26 @@ index ee24038..2ef286e 100644
                  this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
                  this.b.close(chatcomponenttext);
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index 31d6008..0c10e18 100644
+index 31d6008..04af15c 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
-@@ -47,6 +47,19 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+@@ -22,6 +22,9 @@ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ import org.apache.logging.log4j.Marker;
+ import org.apache.logging.log4j.MarkerManager;
++// Spigot start
++import com.google.common.collect.ImmutableSet;
++// Spigot end
+ 
+ public class NetworkManager extends SimpleChannelInboundHandler {
+ 
+@@ -47,6 +50,20 @@ public class NetworkManager extends SimpleChannelInboundHandler {
      private EnumProtocol p;
      private IChatBaseComponent q;
      private boolean r;
 +    // Spigot Start
 +    public static final AttributeKey<Integer> protocolVersion = new AttributeKey<Integer>("protocol_version");
++    public static final ImmutableSet<Integer> SUPPORTED_VERSIONS = ImmutableSet.of(4, 5);
 +    public static final int CURRENT_VERSION = 5;
 +    public static int getVersion(Channel attr)
 +    {
