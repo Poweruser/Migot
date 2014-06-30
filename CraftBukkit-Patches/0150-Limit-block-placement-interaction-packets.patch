@@ -1,0 +1,29 @@
+From ede2c3228d66884f4181535ba51a571b9cb6cefd Mon Sep 17 00:00:00 2001
+From: Thinkofdeath <thinkofdeath@spigotmc.org>
+Date: Sun, 29 Jun 2014 21:10:34 +0100
+Subject: [PATCH] Limit block placement/interaction packets
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index c6fbf44..86fb44e 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -572,7 +572,15 @@ public class PlayerConnection implements PacketPlayInListener {
+         }
+     }
+ 
++    // Spigot start - limit place/interactions
++    private int lastPlace = -1;
++
+     public void a(PacketPlayInBlockPlace packetplayinblockplace) {
++        if (lastPlace != -1 && MinecraftServer.currentTick - lastPlace < 2) {
++            return;
++        }
++        lastPlace = MinecraftServer.currentTick;
++    // Spigot end
+         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
+ 
+         // CraftBukkit start
+-- 
+1.8.5.2.msysgit.0
+
