@@ -1,4 +1,4 @@
-From 8f6a95b59cc9531a91f2396aca273d5eb6c218bc Mon Sep 17 00:00:00 2001
+From 405b5e1674ccc98ec55486ed2eb425d4a7317cad Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 1 Dec 2013 15:10:48 +1100
 Subject: [PATCH] mc-dev imports
@@ -1649,6 +1649,31 @@ index 0000000..02206f5
 +        return this.toString();
 +    }
 +}
+diff --git a/src/main/java/net/minecraft/server/NBTReadLimiter.java b/src/main/java/net/minecraft/server/NBTReadLimiter.java
+new file mode 100644
+index 0000000..d469016
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/NBTReadLimiter.java
+@@ -0,0 +1,19 @@
++package net.minecraft.server;
++
++public class NBTReadLimiter {
++
++    public static final NBTReadLimiter a = new NBTReadLimiterUnlimited(0L);
++    private final long b;
++    private long c;
++
++    public NBTReadLimiter(long i) {
++        this.b = i;
++    }
++
++    public void a(long i) {
++        this.c += i / 8L;
++        if (this.c > this.b) {
++            throw new RuntimeException("Tried to read NBT tag that was too big; tried to allocate: " + this.c + "bytes where max allowed: " + this.b);
++        }
++    }
++}
 diff --git a/src/main/java/net/minecraft/server/NBTTagByteArray.java b/src/main/java/net/minecraft/server/NBTTagByteArray.java
 new file mode 100644
 index 0000000..3eeed3e
@@ -1788,6 +1813,72 @@ index 0000000..c7cea7f
 +    }
 +
 +    public int[] c() {
++        return this.data;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/NBTTagString.java b/src/main/java/net/minecraft/server/NBTTagString.java
+new file mode 100644
+index 0000000..9b06979
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/NBTTagString.java
+@@ -0,0 +1,60 @@
++package net.minecraft.server;
++
++import java.io.DataInput;
++import java.io.DataOutput;
++import java.io.IOException;
++
++public class NBTTagString extends NBTBase {
++
++    private String data;
++
++    public NBTTagString() {
++        this.data = "";
++    }
++
++    public NBTTagString(String s) {
++        this.data = s;
++        if (s == null) {
++            throw new IllegalArgumentException("Empty string not allowed");
++        }
++    }
++
++    void write(DataOutput dataoutput) throws IOException {
++        dataoutput.writeUTF(this.data);
++    }
++
++    void load(DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) throws IOException {
++        this.data = datainput.readUTF();
++        nbtreadlimiter.a((long) (16 * this.data.length()));
++    }
++
++    public byte getTypeId() {
++        return (byte) 8;
++    }
++
++    public String toString() {
++        return "\"" + this.data + "\"";
++    }
++
++    public NBTBase clone() {
++        return new NBTTagString(this.data);
++    }
++
++    public boolean equals(Object object) {
++        if (!super.equals(object)) {
++            return false;
++        } else {
++            NBTTagString nbttagstring = (NBTTagString) object;
++
++            return this.data == null && nbttagstring.data == null || this.data != null && this.data.equals(nbttagstring.data);
++        }
++    }
++
++    public int hashCode() {
++        return super.hashCode() ^ this.data.hashCode();
++    }
++
++    public String a_() {
 +        return this.data;
 +    }
 +}

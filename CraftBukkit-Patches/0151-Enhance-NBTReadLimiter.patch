@@ -1,0 +1,86 @@
+From 4fcb9e409df04093badc559a9f8c005bad4f94fd Mon Sep 17 00:00:00 2001
+From: md_5 <git@md-5.net>
+Date: Wed, 2 Jul 2014 18:04:23 +1000
+Subject: [PATCH] Enhance NBTReadLimiter.
+
+Add the ability to cap strings separate from total data.
+
+diff --git a/src/main/java/net/minecraft/server/NBTReadLimiter.java b/src/main/java/net/minecraft/server/NBTReadLimiter.java
+index d469016..9a9eb87 100644
+--- a/src/main/java/net/minecraft/server/NBTReadLimiter.java
++++ b/src/main/java/net/minecraft/server/NBTReadLimiter.java
+@@ -6,9 +6,23 @@ public class NBTReadLimiter {
+     private final long b;
+     private long c;
+ 
++    // Spigot start
++    private final int strLen;
+     public NBTReadLimiter(long i) {
++        this(i, Short.MAX_VALUE);
++    }
++
++    public NBTReadLimiter(long i, int strLen) {
+         this.b = i;
++        this.strLen = strLen;
++    }
++
++    public void str(int i){
++        if (i > strLen) {
++            throw new RuntimeException("Tried to read NBT string tag that was too big; tried to allocate: " + i + " chars where mac allowed: " + strLen);
++        }
+     }
++    // Spigot end
+ 
+     public void a(long i) {
+         this.c += i / 8L;
+diff --git a/src/main/java/net/minecraft/server/NBTTagString.java b/src/main/java/net/minecraft/server/NBTTagString.java
+index 9b06979..8a504c9 100644
+--- a/src/main/java/net/minecraft/server/NBTTagString.java
++++ b/src/main/java/net/minecraft/server/NBTTagString.java
+@@ -25,6 +25,7 @@ public class NBTTagString extends NBTBase {
+ 
+     void load(DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) throws IOException {
+         this.data = datainput.readUTF();
++        nbtreadlimiter.str(this.data.length()); // Spigot
+         nbtreadlimiter.a((long) (16 * this.data.length()));
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/PacketDataSerializer.java b/src/main/java/net/minecraft/server/PacketDataSerializer.java
+index 855e85e..85ae8a0 100644
+--- a/src/main/java/net/minecraft/server/PacketDataSerializer.java
++++ b/src/main/java/net/minecraft/server/PacketDataSerializer.java
+@@ -74,7 +74,13 @@ public class PacketDataSerializer extends ByteBuf {
+         }
+     }
+ 
++    // Spigot start
+     public NBTTagCompound b() {
++        return b(new NBTReadLimiter(2097152L));
++    }
++    // Spigot end
++
++    public NBTTagCompound b(NBTReadLimiter limit) {
+         short short1 = this.readShort();
+ 
+         if (short1 < 0) {
+@@ -83,7 +89,7 @@ public class PacketDataSerializer extends ByteBuf {
+             byte[] abyte = new byte[short1];
+ 
+             this.readBytes(abyte);
+-            return NBTCompressedStreamTools.a(abyte, new NBTReadLimiter(2097152L));
++            return NBTCompressedStreamTools.a(abyte, limit); // Spigot
+         }
+     }
+ 
+@@ -113,7 +119,7 @@ public class PacketDataSerializer extends ByteBuf {
+             short short2 = this.readShort();
+ 
+             itemstack = new ItemStack(Item.d(short1), b0, short2);
+-            itemstack.tag = this.b();
++            itemstack.tag = this.b(new NBTReadLimiter(2097152L, 1024)); // Spigot
+             // CraftBukkit start
+             if (itemstack.tag != null) {
+                 CraftItemStack.setItemMeta(itemstack, CraftItemStack.getItemMeta(itemstack));
+-- 
+1.9.1
+
