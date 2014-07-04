@@ -1,0 +1,95 @@
+From 6685bc58361012a382f7bc1bd068b8a7eeba8b2a Mon Sep 17 00:00:00 2001
+From: Thinkofdeath <thinkofdeath@spigotmc.org>
+Date: Fri, 4 Jul 2014 09:50:02 +0100
+Subject: [PATCH] Move player ticking into the main loop
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index de20c6a..93b974a 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -175,7 +175,14 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         return 1.62F;
+     }
+ 
++    // Spigot start
++    private AxisAlignedBB groundCheck = AxisAlignedBB.a( 0, 0, 0, 0, 0, 0 );
++
+     public void h() {
++        groundCheck.b( locX - 0.3, locY - 0.1, locZ - 0.3, locX + 0.3, locY, locZ + 0.3 );
++        onGround = world.c(groundCheck);
++    // Spigot end
++
+         // CraftBukkit start
+         if (this.joining) {
+             this.joining = false;
+@@ -254,8 +261,19 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         if (this.bX > 0L && this.server.getIdleTimeout() > 0 && MinecraftServer.ar() - this.bX > (long) (this.server.getIdleTimeout() * 1000 * 60)) {
+             this.playerConnection.disconnect("You have been idle for too long!");
+         }
++    // Spigot start
++        this.i();
++        if ( Double.isNaN( previousY ) )
++        {
++            previousY = locY;
++        }
++        this.b(locY - previousY, onGround);
++        previousY = locY;
+     }
+ 
++    private double previousY = Double.NaN;
++    // Spigot end
++
+     public void i() {
+         try {
+             super.h();
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 1221319..baa89ef 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -289,8 +289,6 @@ public class PlayerConnection implements PacketPlayInListener {
+                         f1 = packetplayinflying.h();
+                     }
+ 
+-                    this.player.onGround = packetplayinflying.i();
+-                    this.player.i();
+                     this.player.V = 0.0F;
+                     this.player.setLocation(d1, d2, d3, f, f1);
+                     if (this.player.vehicle != null) {
+@@ -309,7 +307,6 @@ public class PlayerConnection implements PacketPlayInListener {
+                 }
+ 
+                 if (this.player.isSleeping()) {
+-                    this.player.i();
+                     this.player.setLocation(this.y, this.z, this.q, this.player.yaw, this.player.pitch);
+                     worldserver.playerJoinedWorld(this.player);
+                     return;
+@@ -353,7 +350,6 @@ public class PlayerConnection implements PacketPlayInListener {
+                     f3 = packetplayinflying.h();
+                 }
+ 
+-                this.player.i();
+                 this.player.V = 0.0F;
+                 this.player.setLocation(this.y, this.z, this.q, f2, f3);
+                 if (!this.checkMovement) {
+@@ -384,7 +380,6 @@ public class PlayerConnection implements PacketPlayInListener {
+                 }
+ 
+                 this.player.move(d4, d5, d6);
+-                this.player.onGround = packetplayinflying.i();
+                 this.player.checkMovement(d4, d5, d6);
+                 double d11 = d5;
+ 
+@@ -426,9 +421,7 @@ public class PlayerConnection implements PacketPlayInListener {
+                     this.f = 0;
+                 }
+ 
+-                this.player.onGround = packetplayinflying.i();
+                 this.minecraftServer.getPlayerList().d(this.player);
+-                this.player.b(this.player.locY - d0, packetplayinflying.i());
+             } else if (this.e % 20 == 0) {
+                 this.a(this.y, this.z, this.q, this.player.yaw, this.player.pitch);
+             }
+-- 
+1.9.1
+
