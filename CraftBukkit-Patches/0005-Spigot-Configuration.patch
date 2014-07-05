@@ -1,4 +1,4 @@
-From 6d59b5f0af9444b554212aee50340f9598ab07e7 Mon Sep 17 00:00:00 2001
+From 20fae9e21a45d70457985ec2b2d10ae6429d9d28 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 7 Jul 2013 09:32:53 +1000
 Subject: [PATCH] Spigot Configuration
@@ -55,10 +55,10 @@ index eb5da2a..c6ba026 100644
          this.world = new CraftWorld((WorldServer) this, gen, env);
          this.ticksPerAnimalSpawns = this.getServer().getTicksPerAnimalSpawns(); // CraftBukkit
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 77735b7..9de9327 100644
+index dec909b..ab28677 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -325,8 +325,10 @@ public final class CraftServer implements Server {
+@@ -323,8 +323,10 @@ public final class CraftServer implements Server {
          updater.getOnUpdate().addAll(configuration.getStringList("auto-updater.on-update"));
          updater.check(serverVersion);
  
@@ -71,7 +71,7 @@ index 77735b7..9de9327 100644
      }
  
      public boolean getCommandBlockOverride(String command) {
-@@ -791,6 +793,7 @@ public final class CraftServer implements Server {
+@@ -789,6 +791,7 @@ public final class CraftServer implements Server {
              logger.log(Level.WARNING, "Failed to load banned-players.json, " + ex.getMessage());
          }
  
@@ -79,7 +79,7 @@ index 77735b7..9de9327 100644
          for (WorldServer world : console.worlds) {
              world.difficulty = difficulty;
              world.setSpawnFlags(monsters, animals);
-@@ -805,11 +808,14 @@ public final class CraftServer implements Server {
+@@ -803,11 +806,14 @@ public final class CraftServer implements Server {
              } else {
                  world.ticksPerMonsterSpawns = this.getTicksPerMonsterSpawns();
              }
