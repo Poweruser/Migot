@@ -1,8 +1,9 @@
-From 0094c2822caafc637fff7309e009c67424aabc2a Mon Sep 17 00:00:00 2001
+From 2e1b4d5e4ba2c1f0a20b839ee98e611155ca7ae9 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Tue, 11 Jun 2013 12:09:45 +1000
 Subject: [PATCH] More Efficient Chunk Save Queue
 
+Optimizes the data structures behind the chunk save queue into ones more suitable for the type of data and access which they are used for.
 
 diff --git a/src/main/java/net/minecraft/server/ChunkRegionLoader.java b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
 index 26bafe0..49acc9a 100644
@@ -96,5 +97,5 @@ index 26bafe0..49acc9a 100644
  
          if (pendingchunktosave != null) {
 -- 
-1.8.3.2
+1.9.1
 

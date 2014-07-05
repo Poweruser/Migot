@@ -1,8 +1,9 @@
-From 0ed4d284bbdfffc523e2c2c731443a31df66de15 Mon Sep 17 00:00:00 2001
+From 8a6b113d0c21d832308b408ae87a64bf409fd65c Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Fri, 21 Jun 2013 17:13:47 +1000
 Subject: [PATCH] LongHash Tweaks
 
+Tweaks the LongHash algorithm and provides a large array based map to look up values centered around the origin, ie the access normally seen on a Minecraft server.
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/LongHash.java b/src/main/java/org/bukkit/craftbukkit/util/LongHash.java
 index 691cafd..9d54472 100644
@@ -220,5 +221,5 @@ index 0000000..9416f6e
 +    }
 +}
 -- 
-1.8.3.2
+1.9.1
 

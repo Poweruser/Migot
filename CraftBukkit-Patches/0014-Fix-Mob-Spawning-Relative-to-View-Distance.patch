@@ -1,8 +1,11 @@
-From b6d66e9fbda1a31a0a9f4f487b8956c8dbe8a0a7 Mon Sep 17 00:00:00 2001
+From 85a8e263c0027cef58b841262d37fa876f06a864 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Fri, 21 Jun 2013 17:29:54 +1000
 Subject: [PATCH] Fix Mob Spawning Relative to View Distance
 
+Changes the mob spawning algorithm to properly account for view distance and the range around players.
+
+Needs better documentation.
 
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
 index d770e4e..39767d0 100644

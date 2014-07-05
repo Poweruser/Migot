@@ -1,8 +1,9 @@
-From d47836dcadcf198a086296ca6ec93692aed9d2ea Mon Sep 17 00:00:00 2001
+From f5aa2c2b1398566b0f7cbe379c87ebdbce7280cc Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Fri, 21 Jun 2013 17:17:20 +1000
 Subject: [PATCH] Crop Growth Rates
 
+Allows configuring the growth rates of crops as a percentage of their normal growth rate.
 
 diff --git a/src/main/java/net/minecraft/server/Block.java b/src/main/java/net/minecraft/server/Block.java
 index 14c00c5..51f8279 100644

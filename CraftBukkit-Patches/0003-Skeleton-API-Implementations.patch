@@ -1,8 +1,9 @@
-From 59b4d5f7a05bcd2a37573713843d2598e069e38e Mon Sep 17 00:00:00 2001
+From 09e62a68a9fb35a5d65536705d48795a6f89cbf9 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 2 Jun 2013 15:10:56 +1000
 Subject: [PATCH] Skeleton API Implementations
 
+This contains the basic, empty implementations for some Spigot-API extensions. They are included early in the patching progress so that compilation will still succeed midway despite the APIs only being provided by subsequent patches.
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 index 9bc72aa..fc3aece 100644
@@ -64,7 +65,7 @@ index fe0f200..e026c1f 100644
 +    // Spigot end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 55ea121..dea26e0 100644
+index a0e27bc..f700f0b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -1285,4 +1285,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

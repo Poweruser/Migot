@@ -1,8 +1,9 @@
-From 622e47b08274e5a09f6a7e0bcf98300fb438062f Mon Sep 17 00:00:00 2001
+From 04303264fb5fc83f128a0e0c499c8130d6bd04ea Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Tue, 11 Jun 2013 12:56:02 +1000
 Subject: [PATCH] Better Chunk Tick Selection
 
+An optimized chunk ticking algorithm which better selects chunks around players which are active on the server.
 
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 index c6ba026..02600a7 100644

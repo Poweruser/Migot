@@ -1,8 +1,9 @@
-From d80c6ef61f1b42d89a97cc71d5ea903383621df7 Mon Sep 17 00:00:00 2001
+From 9af95c493ed4a18394bac162f990478e9278deb6 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 1 Dec 2013 15:10:48 +1100
 Subject: [PATCH] mc-dev imports
 
+Imported files which are only modified by Spigot, not upstream. Files here should be completely unmodified aside from trivial changes such as adding throws statements to ensure proper compilation. You may need to add unrelated files in order to ensure a compilable result in the face of synthetic methods.
 
 diff --git a/src/main/java/net/minecraft/server/BanEntrySerializer.java b/src/main/java/net/minecraft/server/BanEntrySerializer.java
 new file mode 100644

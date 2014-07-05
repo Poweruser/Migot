@@ -1,8 +1,9 @@
-From 276590477a4794e95e28e8c2b5ff5eaa1188b5d0 Mon Sep 17 00:00:00 2001
+From 6d59b5f0af9444b554212aee50340f9598ab07e7 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 7 Jul 2013 09:32:53 +1000
 Subject: [PATCH] Spigot Configuration
 
+Provides the basic infrastructure to load and save the Spigot configuration file, spigot.yml
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
 index f1caa38..00f9b89 100644
