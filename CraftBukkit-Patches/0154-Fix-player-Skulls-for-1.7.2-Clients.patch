@@ -12,7 +12,7 @@ index 255e0de..74dd181 100644
  
              GameProfileSerializer.a(nbttagcompound1, this.j);
              nbttagcompound.set("Owner", nbttagcompound1);
-+            nbttagcompound.setString("ExtraType", nbttagcompound1.getString("Name"));
++            nbttagcompound.setString("ExtraType", nbttagcompound1.getString("Name")); // Spigot
          }
      }
  
