@@ -1,14 +1,14 @@
-From d522552c015ee9437dabb05d05e59c276ecdca43 Mon Sep 17 00:00:00 2001
+From c718af31f293c8abeaf214c5743faa2725840a86 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Fri, 4 Jul 2014 09:50:02 +0100
 Subject: [PATCH] Move player ticking into the main loop
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index de20c6a..108552e 100644
+index de20c6a..19b04dd 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -175,7 +175,17 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -175,7 +175,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return 1.62F;
      }
  
@@ -17,7 +17,8 @@ index de20c6a..108552e 100644
 +    public double stance;
 +    private int offGroundTicks = 0;
 +    private int moveHelper = 1;
-+    private long lastMovementTick = System.nanoTime();
++    public long lastMovementTick = System.nanoTime();
++    private double previousScale = 1;
 +
      public void h() {
 +        validateMovement();
@@ -26,7 +27,7 @@ index de20c6a..108552e 100644
          // CraftBukkit start
          if (this.joining) {
              this.joining = false;
-@@ -254,8 +264,230 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -254,8 +265,235 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          if (this.bX > 0L && this.server.getIdleTimeout() > 0 && MinecraftServer.ar() - this.bX > (long) (this.server.getIdleTimeout() * 1000 * 60)) {
              this.playerConnection.disconnect("You have been idle for too long!");
          }
@@ -64,7 +65,7 @@ index de20c6a..108552e 100644
 +                if ( isSleeping() )
 +                {
 +                    setLocation( lastX, lastY, lastZ, lastYaw, lastPitch );
-+                    lastMovementTick = currentTime;
++                    updateMovementLimits(currentTime);
 +                    return;
 +                }
 +
@@ -87,7 +88,7 @@ index de20c6a..108552e 100644
 +                    }
 +
 +                    MinecraftServer.getServer().getPlayerList().d( this );
-+                    lastMovementTick = currentTime;
++                    updateMovementLimits(currentTime);
 +                    return;
 +                }
 +
@@ -95,7 +96,7 @@ index de20c6a..108552e 100644
 +                if ( !world.getCubes( this, newBounds ).isEmpty() )
 +                {
 +                    playerConnection.a( lastX, lastY, lastZ, lastYaw, lastPitch );
-+                    lastMovementTick = currentTime;
++                    updateMovementLimits(currentTime);
 +                    return;
 +                }
 +                newBounds.grow( 0.01, 0.01, 0.01 );
@@ -107,12 +108,12 @@ index de20c6a..108552e 100644
 +                double moveZ = Math.max( Math.abs( diffZ ), Math.abs( motZ ) );
 +                double totalMovement = moveX * moveX + moveY * moveY + moveZ * moveZ;
 +
-+                double limit = 100.0 * Math.max( 1.0, (currentTime - lastMovementTick) / 50000000.0);
++                double limit = previousScale;
 +                if ( totalMovement > limit )
 +                {
 +                    bL.warn( getName() + " moved too quickly! " + diffX + "," + diffY + "," + diffZ + " (" + moveX + ", " + moveY + ", " + moveZ + ") with a limit of " + limit  );
 +                    playerConnection.a( lastX, lastY, lastZ, lastYaw, lastPitch );
-+                    lastMovementTick = currentTime;
++                    updateMovementLimits(currentTime);
 +                    return;
 +                }
 +
@@ -244,6 +245,11 @@ index de20c6a..108552e 100644
 +                throw new ReportedException( crashreport );
 +            }
 +        }
++        updateMovementLimits(currentTime);
++    }
++
++    private void updateMovementLimits(long currentTime) {
++        previousScale = 100.0 * Math.max( 1.0, (currentTime - lastMovementTick) / 50000000.0);
 +        lastMovementTick = currentTime;
      }
  
@@ -258,7 +264,7 @@ index de20c6a..108552e 100644
          try {
              super.h();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 1221319..7266c39 100644
+index 1221319..830b58a 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -105,7 +105,7 @@ public class PlayerConnection implements PacketPlayInListener {
@@ -315,9 +321,9 @@ index 1221319..7266c39 100644
 +        // CraftBukkit end
 +        double d10 = d7 * d7 + d8 * d8 + d9 * d9;
 +
-+        if (d10 > 100.0D && this.checkMovement && (!this.minecraftServer.N() || !this.minecraftServer.M().equals(this.player.getName()))) { // CraftBukkit - Added this.checkMovement condition to solve this check being triggered by teleports
-+            c.warn(this.player.getName() + " moved too quickly! " + d4 + "," + d5 + "," + d6 + " (" + d7 + ", " + d8 + ", " + d9 + ")");
-+            this.a(this.y, this.z, this.q, this.player.yaw, this.player.pitch);
++        double limit = 100.0 * Math.max( 1.0, (System.nanoTime() - player.lastMovementTick) / 50000000.0);
++
++        if (d10 > limit && this.checkMovement && (!this.minecraftServer.N() || !this.minecraftServer.M().equals(this.player.getName()))) { // CraftBukkit - Added this.checkMovement condition to solve this check being triggered by teleports
              return;
          }
 +
