@@ -1,11 +1,11 @@
-From c718af31f293c8abeaf214c5743faa2725840a86 Mon Sep 17 00:00:00 2001
+From bfa7021785966039a34097d3662aea0f4f5e91c2 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Fri, 4 Jul 2014 09:50:02 +0100
 Subject: [PATCH] Move player ticking into the main loop
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index de20c6a..19b04dd 100644
+index de20c6a..7dceecb 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -175,7 +175,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -27,7 +27,7 @@ index de20c6a..19b04dd 100644
          // CraftBukkit start
          if (this.joining) {
              this.joining = false;
-@@ -254,8 +265,235 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -254,8 +265,236 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          if (this.bX > 0L && this.server.getIdleTimeout() > 0 && MinecraftServer.ar() - this.bX > (long) (this.server.getIdleTimeout() * 1000 * 60)) {
              this.playerConnection.disconnect("You have been idle for too long!");
          }
@@ -128,8 +128,9 @@ index de20c6a..19b04dd 100644
 +                }
 +
 +                // Fly detection
-+                if ( !onGround && !MinecraftServer.getServer().getAllowFlight() && !abilities.canFly
-+                        && diffY >= -0.03125D )
++                if ( !MinecraftServer.getServer().getAllowFlight() && !abilities.canFly
++                        && diffY >= -0.03125D
++                        && !world.c( newBounds.clone().grow( 0.0625F, 0.0625F, 0.0625F ).a(0.0D, -0.55D, 0.0D) ) )
 +                {
 +                    offGroundTicks++;
 +                    if ( offGroundTicks > 80 )
