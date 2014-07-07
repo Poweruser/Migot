@@ -1,4 +1,4 @@
-From b1dcd5bfb51249023019a871be0586f76faf18ba Mon Sep 17 00:00:00 2001
+From 5a41526b6604e7507d6be3ed558840286929d2b7 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Thu, 4 Jul 2013 20:05:19 +1000
 Subject: [PATCH] Update Depends
@@ -6,7 +6,7 @@ Subject: [PATCH] Update Depends
 - All of these changes have been reviewed to be binary compatible and in general contract compatible with previous versions of the libraries.
 
 diff --git a/pom.xml b/pom.xml
-index b394a33..4252e34 100644
+index f7d100a..fc62bbf 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -76,21 +76,21 @@

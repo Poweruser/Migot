@@ -1,4 +1,4 @@
-From e06634303760fe6b57780877dc81d8469c6c6d5c Mon Sep 17 00:00:00 2001
+From 14c33735e70cf30530064512cf010581b3ffd3a5 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 3 Feb 2013 05:10:21 -0500
 Subject: [PATCH] Entity Activation Range
@@ -9,7 +9,7 @@ This will drastically cut down on tick timings for entities that are not in rang
 This change can have dramatic impact on gameplay if configured too low. Balance according to your servers desired gameplay.
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index a0ce6dd..9c3227a 100644
+index 9283721..08de2f2 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -90,7 +90,7 @@ public abstract class Entity {
@@ -137,10 +137,10 @@ index a228a2c..0a81006 100644
          super(world);
          this.a(0.25F, 0.25F);
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 095a97f..e620903 100644
+index 16c33fd..3a4e4f9 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -81,6 +81,13 @@ public abstract class EntityLiving extends Entity {
+@@ -83,6 +83,13 @@ public abstract class EntityLiving extends Entity {
      public int maxAirTicks = 300;
      ArrayList<org.bukkit.inventory.ItemStack> drops = null;
      // CraftBukkit end
@@ -155,7 +155,7 @@ index 095a97f..e620903 100644
      public EntityLiving(World world) {
          super(world);
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 3e93cfd..0cb803e 100644
+index f2345c5..6ca4479 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -1316,6 +1316,7 @@ public abstract class World implements IBlockAccess {
@@ -182,10 +182,10 @@ index 3e93cfd..0cb803e 100644
              // CraftBukkit end
              entity.S = entity.locX;
 diff --git a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
-index 8340c13..541dfe4 100644
+index 558574f..41d2d87 100644
 --- a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
 +++ b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
-@@ -30,6 +30,9 @@ public class SpigotTimings {
+@@ -39,6 +39,9 @@ public class SpigotTimings {
  
      public static final CustomTimingsHandler playerCommandTimer = new CustomTimingsHandler("** playerCommand");
  

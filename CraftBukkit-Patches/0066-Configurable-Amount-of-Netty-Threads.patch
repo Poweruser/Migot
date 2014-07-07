@@ -1,4 +1,4 @@
-From 40b2e57e59be6a767d50c6a8f7415786e0611613 Mon Sep 17 00:00:00 2001
+From 0544a40e8f39ab7fcf5ace69cc63db3e00f56eed Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Fri, 13 Dec 2013 11:58:58 +1100
 Subject: [PATCH] Configurable Amount of Netty Threads
@@ -6,7 +6,7 @@ Subject: [PATCH] Configurable Amount of Netty Threads
 This brings back the option that the Spigot version of netty saw. By default Netty will try and use cores*2 threads, however if running multiple servers on the same machine, this can be too many threads. Additionally some people have 16 core servers. If 32 Netty threads are allowed in this setup, then the lock contention, and thus blocking between threads becomes much greater, leading to decreased performance.
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 51f1761..64fa9ab 100644
+index 6438a6c..2d9fe5e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -54,7 +54,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
@@ -27,7 +27,7 @@ index 51f1761..64fa9ab 100644
          this.o = new CommandDispatcher();
          // this.convertable = new WorldLoaderServer(file1); // CraftBukkit - moved to DedicatedServer.init
          this.T = new YggdrasilAuthenticationService(proxy, UUID.randomUUID().toString());
-@@ -1250,7 +1250,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+@@ -1260,7 +1260,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
      }
      // Spigot End
      public ServerConnection ai() {

@@ -1,4 +1,4 @@
-From 34e18f07fb26667f9d7ec3d149997e44584613ec Mon Sep 17 00:00:00 2001
+From aad103692244a993848e7aeed5c8ad74ea220a87 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 30 Mar 2014 15:58:22 +1100
 Subject: [PATCH] Remove deprecation on some player lookup methods
@@ -6,7 +6,7 @@ Subject: [PATCH] Remove deprecation on some player lookup methods
 Most of these methods still have plenty of use given that only one player with each name can exist at a time. Deprecating these methods renders even basic functionality such as /msg <name> impossible without causing compiler warnings. We will maintain this API and it should be considered safe and appropriate for most use cases.
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 1eaf92d..b693257 100644
+index 7b25817..34f44af 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -197,7 +197,6 @@ public final class Bukkit {
@@ -25,7 +25,7 @@ index 1eaf92d..b693257 100644
      public static List<Player> matchPlayer(String name) {
          return server.matchPlayer(name);
      }
-@@ -447,7 +445,6 @@ public final class Bukkit {
+@@ -448,7 +446,6 @@ public final class Bukkit {
      /**
       * @see Server#getPlayerExact(String name)
       */

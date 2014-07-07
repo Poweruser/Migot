@@ -1,4 +1,4 @@
-From 07f1e37031ec86f69acce0c4c66deb0d1a978473 Mon Sep 17 00:00:00 2001
+From c077c421b50327a16f32d0ca88de5fb24d02d8fa Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 3 Aug 2013 19:20:50 +1000
 Subject: [PATCH] Player Collision API
@@ -37,5 +37,5 @@ index c6bb787..b879ecb 100644
  
      Spigot spigot();
 -- 
-1.8.5.2.msysgit.0
+1.9.1
 

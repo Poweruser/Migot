@@ -1,4 +1,4 @@
-From c912d68bc70567c6067b6743ffe9b7162adc4999 Mon Sep 17 00:00:00 2001
+From 69ffe754ca96abab70cfcda510daaf8a7d6b5a7c Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sat, 12 Apr 2014 17:49:14 +1000
 Subject: [PATCH] Fix several occurances of missed diff.
@@ -44,10 +44,10 @@ index 0f1bcc7..5eb893f 100644
  
      public void setItemStack(ItemStack itemstack) {
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index c4c7b7b..d7dff1e 100644
+index 50852e4..fded359 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1736,7 +1736,7 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -1737,7 +1737,7 @@ public class PlayerConnection implements PacketPlayInListener {
                      }
  
                      if (itemstack.getItem() == Items.WRITTEN_BOOK && itemstack1.getItem() == Items.BOOK_AND_QUILL) {

@@ -1,11 +1,11 @@
-From 7ae074a1a99b434a80833f89dea8f2658922cb0e Mon Sep 17 00:00:00 2001
+From 6c1df6dfd24fdea8537b12c807c3d947665a6f75 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 23 Feb 2013 12:33:20 +1100
 Subject: [PATCH] Watchdog Thread.
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 007fb86..51f1761 100644
+index bfc3b88..6438a6c 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -498,6 +498,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
@@ -16,7 +16,7 @@ index 007fb86..51f1761 100644
                  this.stop();
                  this.isStopped = true;
              } catch (Throwable throwable1) {
-@@ -688,6 +689,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+@@ -698,6 +699,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
          SpigotTimings.tickablesTimer.stopTiming(); // Spigot
  
          this.methodProfiler.b();

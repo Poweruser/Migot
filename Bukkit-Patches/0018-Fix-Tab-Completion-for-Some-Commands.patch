@@ -1,4 +1,4 @@
-From 7962f8977790ecd6de241dff015c3d105984ff14 Mon Sep 17 00:00:00 2001
+From af67cedb0ba1960b11bd5d57d1b557a16d552bbd Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Tue, 24 Dec 2013 10:14:25 +1100
 Subject: [PATCH] Fix Tab Completion for Some Commands
@@ -22,10 +22,10 @@ index b888da1..e21d167 100644
 +    // Spigot End
  }
 diff --git a/src/main/java/org/bukkit/command/defaults/ReloadCommand.java b/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
-index ffbcac1..16dfdbd 100644
+index fb3c90f..a08ae80 100644
 --- a/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/ReloadCommand.java
-@@ -26,4 +26,12 @@ public class ReloadCommand extends BukkitCommand {
+@@ -25,4 +25,12 @@ public class ReloadCommand extends BukkitCommand {
  
          return true;
      }
@@ -81,5 +81,5 @@ index c9ac1ce..a687fef 100644
 +    // Spigot End
  }
 -- 
-1.8.3.2
+1.9.1
 

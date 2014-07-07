@@ -1,4 +1,4 @@
-From 8e9bba3a806a6d5d2304117410300b74d30b436d Mon Sep 17 00:00:00 2001
+From c73f17dbabce4cba999a20025e7d3c5f14c28a1e Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 2 Jun 2013 15:20:49 +1000
 Subject: [PATCH] BungeeCord Support
@@ -99,5 +99,5 @@ index b74b7b8..081e994 100644
       * Gets the current result of the login, as an enum
       *
 -- 
-1.8.5.2.msysgit.0
+1.9.1
 

@@ -1,4 +1,4 @@
-From e97e54dbdcfe6c517061020a5fc377a2249fbd4e Mon Sep 17 00:00:00 2001
+From c2f6c98c2fa991a89767677e7da5b5c6be7ef5c4 Mon Sep 17 00:00:00 2001
 From: ninja- <xninja@openmailbox.org>
 Date: Tue, 8 Oct 2013 14:35:58 +0200
 Subject: [PATCH] Add respawn API.
@@ -24,5 +24,5 @@ index b879ecb..6559243 100644
  
      Spigot spigot();
 -- 
-1.8.5.2.msysgit.0
+1.9.1
 

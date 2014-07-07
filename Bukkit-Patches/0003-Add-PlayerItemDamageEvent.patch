@@ -1,4 +1,4 @@
-From eaceb28e82b974d618828104f86074e74529b2e9 Mon Sep 17 00:00:00 2001
+From c001db7ab859187d7bb3a031d43563f9138bba90 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Mon, 4 Mar 2013 18:31:20 +1100
 Subject: [PATCH] Add PlayerItemDamageEvent
@@ -65,5 +65,5 @@ index 0000000..38a72ab
 +    }
 +}
 -- 
-1.8.3.2
+1.9.1
 

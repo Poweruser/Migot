@@ -1,14 +1,14 @@
-From 8ae722672332a461d9cca2c40138c81c852b8601 Mon Sep 17 00:00:00 2001
+From f8da1c504dbaf9527fc090a5cabbd1fc7060f5c1 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Wed, 12 Feb 2014 18:18:01 +1100
 Subject: [PATCH] Allow Disabling Creative Item Filter
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index fab0ee8..0e46f3b 100644
+index dc97a1d..451200a 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1497,7 +1497,7 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -1498,7 +1498,7 @@ public class PlayerConnection implements PacketPlayInListener {
              ItemStack itemstack = packetplayinsetcreativeslot.getItemStack();
              boolean flag1 = packetplayinsetcreativeslot.c() >= 1 && packetplayinsetcreativeslot.c() < 36 + PlayerInventory.getHotbarSize();
              // CraftBukkit - Add invalidItems check

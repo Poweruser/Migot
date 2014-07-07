@@ -1,4 +1,4 @@
-From 42fb4c3837a133f6bbfd221dbe690c5a59e3c561 Mon Sep 17 00:00:00 2001
+From ad774e86b3c2e8dcf7ccb029a21e6d9d44666d18 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Thu, 17 Apr 2014 19:35:13 +1000
 Subject: [PATCH] Add Score.isScoreSet()Z API.
@@ -27,5 +27,5 @@ index 4c10346..2410cbd 100644
       * Gets the scoreboard for the associated objective.
       *
 -- 
-1.8.3.2
+1.9.1
 

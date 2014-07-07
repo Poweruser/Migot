@@ -1,4 +1,4 @@
-From 267dd31ea425a46cc9c6169944a397dc285f5270 Mon Sep 17 00:00:00 2001
+From e064b2f81c1085058a594ae0fb022dc1a1b7aca2 Mon Sep 17 00:00:00 2001
 From: Tux <write@imaginarycode.com>
 Date: Sun, 9 Feb 2014 14:02:11 -0500
 Subject: [PATCH] Add support for fetching hidden players
@@ -26,5 +26,5 @@ index 2cc19a7..37c8a58 100644
  
      Spigot spigot();
 -- 
-1.8.5.2.msysgit.0
+1.9.1
 

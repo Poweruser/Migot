@@ -1,14 +1,14 @@
-From 1178aaf2d5f5f58841bc37a5a229d680335cda97 Mon Sep 17 00:00:00 2001
+From 8dfe1998754ce8fb5740debb29043366e14cb756 Mon Sep 17 00:00:00 2001
 From: agentk20 <agentkid20@gmail.com>
 Date: Sat, 3 Aug 2013 19:28:48 +1000
 Subject: [PATCH] Fully Disable Snooper When Not Required
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 21cf068..007fb86 100644
+index 061a65d..bfc3b88 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -583,11 +583,11 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+@@ -585,11 +585,11 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
          this.g[this.ticks % 100] = System.nanoTime() - i;
          this.methodProfiler.b();
          this.methodProfiler.a("snooper");

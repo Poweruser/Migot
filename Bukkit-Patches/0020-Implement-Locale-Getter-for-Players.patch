@@ -1,4 +1,4 @@
-From 57dfad3a6d1085ebc7006402c196285e10e27d6f Mon Sep 17 00:00:00 2001
+From e534c46551a4f619b3a3ef1f85375406a026d843 Mon Sep 17 00:00:00 2001
 From: Smove <jan@lavasurvival.net>
 Date: Sat, 1 Feb 2014 18:10:49 +1100
 Subject: [PATCH] Implement Locale Getter for Players
@@ -26,5 +26,5 @@ index 6559243..2cc19a7 100644
  
      Spigot spigot();
 -- 
-1.8.5.2.msysgit.0
+1.9.1
 

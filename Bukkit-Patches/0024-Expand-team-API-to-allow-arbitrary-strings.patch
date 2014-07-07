@@ -1,4 +1,4 @@
-From 8bfe38430d6e27b6d5d7343162c47f9bb9636566 Mon Sep 17 00:00:00 2001
+From 9661b16a5a5be3acd9dcb65cc1740d308f951fd5 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Thu, 17 Apr 2014 19:22:26 +1000
 Subject: [PATCH] Expand team API to allow arbitrary strings.
@@ -71,5 +71,5 @@ index 50c6f76..b90b9c3 100644
 +    // Spigot end
  }
 -- 
-1.8.3.2
+1.9.1
 

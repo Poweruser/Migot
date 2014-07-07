@@ -1,4 +1,4 @@
-From a4659b2634e53721ab1f46d0539415c1bbf290e4 Mon Sep 17 00:00:00 2001
+From d8ebaffdb486b5c8ee45145f3dae2de6de44c626 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Thu, 23 Jan 2014 13:17:38 +1100
 Subject: [PATCH] Add Spigot Links
@@ -25,5 +25,5 @@ index a51766e..1905b8d 100644
  Compilation
  -----------
 -- 
-1.8.3.2
+1.9.1
 

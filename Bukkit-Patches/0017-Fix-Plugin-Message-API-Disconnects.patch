@@ -1,4 +1,4 @@
-From eef94addd975a73d35545f162b33c192290c15b7 Mon Sep 17 00:00:00 2001
+From 6a80bec35ef357d46cf9c241d516746a8079cb8a Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 19 Oct 2013 12:59:42 +1100
 Subject: [PATCH] Fix Plugin Message API Disconnects
@@ -26,5 +26,5 @@ index a906f8d..4c171e8 100644
      }
  
 -- 
-1.8.3.2
+1.9.1
 
