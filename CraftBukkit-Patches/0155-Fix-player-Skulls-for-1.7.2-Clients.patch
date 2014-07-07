@@ -1,11 +1,11 @@
-From a612b1c28b5acd652ef27930e9e833f84272e82f Mon Sep 17 00:00:00 2001
+From ef07646ca98fa20c77da271621b8b095a6008ca9 Mon Sep 17 00:00:00 2001
 From: geNAZt <fabian.fassbender42@googlemail.com>
 Date: Tue, 8 Jul 2014 00:04:00 +0200
 Subject: [PATCH] Fix player Skulls for 1.7.2 Clients
 
 
 diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
-index 255e0de..74dd181 100644
+index 255e0de..1441239 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySkull.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
 @@ -37,6 +37,7 @@ public class TileEntitySkull extends TileEntity {
@@ -17,5 +17,5 @@ index 255e0de..74dd181 100644
      }
  
 -- 
-1.9.4.msysgit.0
+1.9.1
 
