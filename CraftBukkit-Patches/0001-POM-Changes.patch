@@ -1,4 +1,4 @@
-From bed2413d118e21a62b88a56f444c5f84aa6d5ebf Mon Sep 17 00:00:00 2001
+From d711c78f38e7ec6b6c472f83e4070229e18174f6 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Tue, 2 Jul 2013 13:07:39 +1000
 Subject: [PATCH] POM Changes
@@ -6,7 +6,7 @@ Subject: [PATCH] POM Changes
 Basic changes to the build system which mark the artifact as Spigot, and the necessary code changes to ensure proper functionality. Also disables the auto updater provided by CraftBukkit as it is useless to us.
 
 diff --git a/pom.xml b/pom.xml
-index b2e2002..df02bd3 100644
+index b2e2002..77c014b 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,12 +1,12 @@
@@ -57,7 +57,7 @@ index b2e2002..df02bd3 100644
  
    <repositories>
      <repository>
-@@ -53,8 +41,8 @@
+@@ -53,16 +41,16 @@
  
    <dependencies>
      <dependency>
@@ -68,6 +68,16 @@ index b2e2002..df02bd3 100644
        <version>${project.version}</version>
        <type>jar</type>
        <scope>compile</scope>
+     </dependency>
+     <dependency>
+-      <groupId>org.bukkit</groupId>
++      <groupId>org.spigotmc</groupId>
+       <artifactId>minecraft-server</artifactId>
+-      <version>${minecraft.version}</version>
++      <version>${minecraft.version}-SNAPSHOT</version>
+       <type>jar</type>
+       <scope>compile</scope>
+     </dependency>
 @@ -107,33 +95,6 @@
        <artifactId>gson</artifactId>
        <version>2.1</version>
