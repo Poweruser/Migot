@@ -1,11 +1,11 @@
-From 4ee5922bad87f78d680dcad336ec37857e8b9aa4 Mon Sep 17 00:00:00 2001
+From 34036f35609a0ca1dcca172e85484ba70a472f76 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Sun, 20 Apr 2014 13:18:55 +0100
 Subject: [PATCH] Convert player skulls async
 
 
 diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
-index 748f00a..255e0de 100644
+index 7c3757f..8c4a468 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySkull.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
 @@ -6,11 +6,25 @@ import net.minecraft.util.com.google.common.collect.Iterables;
@@ -38,7 +38,7 @@ index 748f00a..255e0de 100644
      private void d() {
          if (this.j != null && !UtilColor.b(this.j.getName())) {
              if (!this.j.isComplete() || !this.j.getProperties().containsKey("textures")) {
--                GameProfile gameprofile = MinecraftServer.getServer().getUserCache().a(this.j.getName());
+-                GameProfile gameprofile = MinecraftServer.getServer().getUserCache().getProfile(this.j.getName());
 -
 -                if (gameprofile != null) {
 -                    Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), null);

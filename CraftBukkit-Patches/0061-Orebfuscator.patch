@@ -1,11 +1,11 @@
-From e6e2c2b1951a290ae4b96cc6342718d02d0c1ea4 Mon Sep 17 00:00:00 2001
+From 2ef1534d47ff5eb2ffe89a2318d3a1c0f66e5eac Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Thu, 16 May 2013 18:51:05 +1000
 Subject: [PATCH] Orebfuscator
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityFallingBlock.java b/src/main/java/net/minecraft/server/EntityFallingBlock.java
-index e0b9936..bfce163 100644
+index 5576f15..df602bd 100644
 --- a/src/main/java/net/minecraft/server/EntityFallingBlock.java
 +++ b/src/main/java/net/minecraft/server/EntityFallingBlock.java
 @@ -83,6 +83,7 @@ public class EntityFallingBlock extends Entity {
@@ -37,7 +37,7 @@ index 56fa999..4502f68 100644
                      double d0 = (double) ((float) i + this.world.random.nextFloat());
                      double d1 = (double) ((float) j + this.world.random.nextFloat());
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
-index fd88bb4..bf3bd8e 100644
+index 613c1f1..7479600 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 @@ -28,6 +28,7 @@ public class PacketPlayOutMapChunk extends Packet {
@@ -47,7 +47,7 @@ index fd88bb4..bf3bd8e 100644
 +        chunk.world.spigotConfig.antiXrayInstance.obfuscateSync(chunk.locX, chunk.locZ, i, chunkmap.a, chunk.world); // Spigot
  
          try {
-             this.buffer = chunkmap.a;
+             this.f = chunkmap.a;
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
 index bf3a139..30bf8a7 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
@@ -103,7 +103,7 @@ index bf3a139..30bf8a7 100644
          Deflater deflater = localDeflater.get();
          deflater.reset();
 diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src/main/java/net/minecraft/server/PlayerInteractManager.java
-index 2db45ad..97fe53c 100644
+index 7607155..b4461b9 100644
 --- a/src/main/java/net/minecraft/server/PlayerInteractManager.java
 +++ b/src/main/java/net/minecraft/server/PlayerInteractManager.java
 @@ -173,6 +173,7 @@ public class PlayerInteractManager {
@@ -115,7 +115,7 @@ index 2db45ad..97fe53c 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index dcbf520..8e633de 100644
+index 3806f7f..c7c33b0 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -237,9 +237,16 @@ public abstract class World implements IBlockAccess {
@@ -147,7 +147,7 @@ index dcbf520..8e633de 100644
      public void b(int i, int j, int k, Block block, int l) {
 diff --git a/src/main/java/org/spigotmc/AntiXray.java b/src/main/java/org/spigotmc/AntiXray.java
 new file mode 100644
-index 0000000..d0fc0a9
+index 0000000..fad22e2
 --- /dev/null
 +++ b/src/main/java/org/spigotmc/AntiXray.java
 @@ -0,0 +1,227 @@
@@ -183,7 +183,7 @@ index 0000000..d0fc0a9
 +        TByteSet blocks = new TByteHashSet();
 +        for ( Integer i : config.hiddenBlocks )
 +        {
-+            Block block = Block.e( i );
++            Block block = Block.getById( i );
 +            // Check it exists and is not a tile entity
 +            if ( block != null && !block.isTileEntity() )
 +            {
@@ -326,7 +326,7 @@ index 0000000..d0fc0a9
 +            Block block = world.getType(x, y, z);
 +
 +            // See if it needs update
-+            if ( updateSelf && obfuscateBlocks[Block.b(block)] )
++            if ( updateSelf && obfuscateBlocks[Block.getId( block )] )
 +            {
 +                // Send the update
 +                world.notify( x, y, z );

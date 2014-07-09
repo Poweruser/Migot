@@ -1,4 +1,4 @@
-From 78fb6ba31fec49a0af90667c86562c84a3b21c38 Mon Sep 17 00:00:00 2001
+From 7a2bd98d4764d254ecd97211e12a2d3e5ca8162f Mon Sep 17 00:00:00 2001
 From: Alex Bennett <alex.eugene.bennett@gmail.com>
 Date: Thu, 11 Jul 2013 15:31:32 -0500
 Subject: [PATCH] Added getAllSessionData() to the Conversation API.

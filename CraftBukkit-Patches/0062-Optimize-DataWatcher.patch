@@ -1,4 +1,4 @@
-From 564b28c649dd1025a0307e2754a4cc14da27e51b Mon Sep 17 00:00:00 2001
+From a3aa6a2f301802f0f67f3b2f328188d7ade9a46e Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Fri, 13 Dec 2013 11:45:47 +1100
 Subject: [PATCH] Optimize DataWatcher
@@ -6,7 +6,7 @@ Subject: [PATCH] Optimize DataWatcher
 Use primitive orientated collections, as well as more effective copies across collections.
 
 diff --git a/src/main/java/net/minecraft/server/DataWatcher.java b/src/main/java/net/minecraft/server/DataWatcher.java
-index 90a2a80..f30e9f8 100644
+index 2d1da33..e368514 100644
 --- a/src/main/java/net/minecraft/server/DataWatcher.java
 +++ b/src/main/java/net/minecraft/server/DataWatcher.java
 @@ -14,8 +14,13 @@ public class DataWatcher {

@@ -1,4 +1,4 @@
-From fca577382ca9153ffdff355694996363dd88265f Mon Sep 17 00:00:00 2001
+From 295913440fb0a974bdf0db6f4515663d26fba7b8 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Fri, 11 Apr 2014 11:16:34 +0100
 Subject: [PATCH] Display 'Spigot' in client crashes, server lists and Mojang
@@ -6,7 +6,7 @@ Subject: [PATCH] Display 'Spigot' in client crashes, server lists and Mojang
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index bc61e11..f18b908 100644
+index d6cd151..03630d1 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -979,7 +979,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo

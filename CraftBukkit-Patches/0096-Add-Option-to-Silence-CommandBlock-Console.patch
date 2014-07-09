@@ -1,11 +1,11 @@
-From 276dac3b1110ead9d84fcdcedf8e1ff9706fc15d Mon Sep 17 00:00:00 2001
+From 2d6cc9a8f768221a53edd0167d6b54e2cff473e3 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 9 Feb 2014 14:39:01 +1100
 Subject: [PATCH] Add Option to Silence CommandBlock Console
 
 
 diff --git a/src/main/java/net/minecraft/server/CommandDispatcher.java b/src/main/java/net/minecraft/server/CommandDispatcher.java
-index 2676e9e..caced26 100644
+index 0644276..84bcca1 100644
 --- a/src/main/java/net/minecraft/server/CommandDispatcher.java
 +++ b/src/main/java/net/minecraft/server/CommandDispatcher.java
 @@ -83,7 +83,7 @@ public class CommandDispatcher extends CommandHandler implements ICommandDispatc

@@ -1,17 +1,17 @@
-From 9b1fae185976a7a8d79bac6745d508633c9c41d4 Mon Sep 17 00:00:00 2001
+From 234a194a08b4010dffb0d2c587723eca682b6535 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Mon, 2 Dec 2013 23:42:09 +0000
 Subject: [PATCH] Fix some chunks not being sent to the client
 
 
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index e59a9ca..318fbc4 100644
+index 6112709..04c0d64 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
 @@ -955,7 +955,15 @@ public class Chunk {
      }
  
-     public boolean k() {
+     public boolean isReady() {
 -        return this.m && this.done && this.lit;
 +        // Spigot Start
 +        /*

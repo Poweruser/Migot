@@ -1,11 +1,11 @@
-From 73bc576eb749c39474141a65930eafbc7b021231 Mon Sep 17 00:00:00 2001
+From 1ecd6973a49bd16d96f20d2fdb00ead94f2f99cf Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Tue, 15 Apr 2014 10:48:35 +1000
 Subject: [PATCH] Check Skull canPlace
 
 
 diff --git a/src/main/java/net/minecraft/server/ItemSkull.java b/src/main/java/net/minecraft/server/ItemSkull.java
-index f20c69e..15c60bb 100644
+index 4a40068..3deacc6 100644
 --- a/src/main/java/net/minecraft/server/ItemSkull.java
 +++ b/src/main/java/net/minecraft/server/ItemSkull.java
 @@ -42,6 +42,12 @@ public class ItemSkull extends Item {

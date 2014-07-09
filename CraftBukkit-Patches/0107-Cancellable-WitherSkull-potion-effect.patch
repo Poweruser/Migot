@@ -1,11 +1,11 @@
-From 75a796281df0ba408bba82cd6fcc48a5e66d1b3a Mon Sep 17 00:00:00 2001
+From 287cada1d65bbe1b018a495875ddfbe8d21c3fe6 Mon Sep 17 00:00:00 2001
 From: drXor <mcyoungsota@gmail.com>
 Date: Tue, 25 Feb 2014 15:15:26 -0400
 Subject: [PATCH] Cancellable WitherSkull potion effect
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityWitherSkull.java b/src/main/java/net/minecraft/server/EntityWitherSkull.java
-index d749175..b8c3cef 100644
+index b797f8a..144ed17 100644
 --- a/src/main/java/net/minecraft/server/EntityWitherSkull.java
 +++ b/src/main/java/net/minecraft/server/EntityWitherSkull.java
 @@ -35,15 +35,19 @@ public class EntityWitherSkull extends EntityFireball {

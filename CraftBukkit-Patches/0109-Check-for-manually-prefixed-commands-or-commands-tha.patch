@@ -1,4 +1,4 @@
-From 0e1bfaa216094ca66b01ddfcaabfbd7d81372777 Mon Sep 17 00:00:00 2001
+From b0c5753313592e81ae080aef0c3ead91ea91d0f3 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Sun, 23 Mar 2014 01:12:10 +0000
 Subject: [PATCH] Check for manually prefixed commands or commands that don't
@@ -6,7 +6,7 @@ Subject: [PATCH] Check for manually prefixed commands or commands that don't
 
 
 diff --git a/src/main/java/net/minecraft/server/CommandBlockListenerAbstract.java b/src/main/java/net/minecraft/server/CommandBlockListenerAbstract.java
-index da235e5..0b04e94 100644
+index 0cd512d..278832c 100644
 --- a/src/main/java/net/minecraft/server/CommandBlockListenerAbstract.java
 +++ b/src/main/java/net/minecraft/server/CommandBlockListenerAbstract.java
 @@ -110,6 +110,14 @@ public abstract class CommandBlockListenerAbstract implements ICommandListener {

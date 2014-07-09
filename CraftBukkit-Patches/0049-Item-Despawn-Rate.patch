@@ -1,11 +1,11 @@
-From 94045bfba25863e2934f74d5530d488f1c9045c2 Mon Sep 17 00:00:00 2001
+From 1516f2ee15c86afee40f177aafd6be011cbb8412 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 22 Sep 2013 19:10:53 +1000
 Subject: [PATCH] Item Despawn Rate
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
-index 95beb11..0f1bcc7 100644
+index c8c0d6a..a45bed9 100644
 --- a/src/main/java/net/minecraft/server/EntityItem.java
 +++ b/src/main/java/net/minecraft/server/EntityItem.java
 @@ -104,7 +104,7 @@ public class EntityItem extends Entity {

@@ -1,11 +1,11 @@
-From a3706a512eaa9a7b65e934f754b87602de07eec3 Mon Sep 17 00:00:00 2001
+From eb9ab3071de9fcfaf291a6ac0e86e79833abc238 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Tue, 2 Jul 2013 20:32:49 +1000
 Subject: [PATCH] Entity Mount and Dismount Events
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 2fe4254..56dec36 100644
+index 18e4d8d..85d7665 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -1450,6 +1450,7 @@ public abstract class Entity {
@@ -35,7 +35,7 @@ index 2fe4254..56dec36 100644
              if (this.vehicle != null) {
                  this.vehicle.passenger = null;
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
-index a5dfcf4..ba44cba 100644
+index 03485fe..54c77f8 100644
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
 @@ -323,6 +323,7 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen

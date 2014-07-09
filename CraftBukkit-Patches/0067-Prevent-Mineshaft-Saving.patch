@@ -1,4 +1,4 @@
-From 8e49eb8dda7c8c091db43185000ce0364b5cda83 Mon Sep 17 00:00:00 2001
+From a4405b1189b4033840aa1e52bd70c2e667b1a1ba Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Fri, 13 Dec 2013 15:21:02 +1100
 Subject: [PATCH] Prevent Mineshaft Saving

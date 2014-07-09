@@ -1,11 +1,11 @@
-From 3130e0782aafac70e3d1a2e10613ccdbc73d97f5 Mon Sep 17 00:00:00 2001
+From 45035a9e07239a2893b0fd3b479cbe108d526beb Mon Sep 17 00:00:00 2001
 From: ninja <xninja@openmailbox.org>
 Date: Tue, 8 Apr 2014 14:05:19 +0200
 Subject: [PATCH] Implement PlayerSpawnLocationEvent.
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
-index 49837b4..bbef888 100644
+index 4b8835d..ea9fcd9 100644
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
 @@ -36,6 +36,7 @@ import org.bukkit.event.player.PlayerQuitEvent;

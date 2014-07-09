@@ -1,11 +1,11 @@
-From cab53057fc40d041a64765f5e2719cc192107758 Mon Sep 17 00:00:00 2001
+From ba99b9a9a2b0b4945d5378efb3a2d2578318c805 Mon Sep 17 00:00:00 2001
 From: Dmck2b <dmck2b+github@gmail.com>
 Date: Mon, 20 Jan 2014 20:18:23 +0000
 Subject: [PATCH] Allow toggling of ZombiePigmen spawning in portal blocks
 
 
 diff --git a/src/main/java/net/minecraft/server/BlockPortal.java b/src/main/java/net/minecraft/server/BlockPortal.java
-index 1356f13..b361775 100644
+index bec5aa8..222e3ac 100644
 --- a/src/main/java/net/minecraft/server/BlockPortal.java
 +++ b/src/main/java/net/minecraft/server/BlockPortal.java
 @@ -15,7 +15,7 @@ public class BlockPortal extends BlockHalfTransparent {

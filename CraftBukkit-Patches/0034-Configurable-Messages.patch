@@ -1,29 +1,29 @@
-From 8ce843260f4f62991815422f627ddb9735242679 Mon Sep 17 00:00:00 2001
+From 117dfebd98fe44f6eba7c294fcb8341ad2f42d3e Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Fri, 21 Jun 2013 19:21:58 +1000
 Subject: [PATCH] Configurable Messages
 
 
 diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/main/java/net/minecraft/server/HandshakeListener.java
-index 9cc9581..b98079c 100644
+index 52bc69b..b98079c 100644
 --- a/src/main/java/net/minecraft/server/HandshakeListener.java
 +++ b/src/main/java/net/minecraft/server/HandshakeListener.java
 @@ -64,11 +64,11 @@ public class HandshakeListener implements PacketHandshakingInListener {
              // CraftBukkit end
  
              if (packethandshakinginsetprotocol.d() > 5) {
--                chatcomponenttext = new ChatComponentText("Outdated server! I\'m still on 1.7.9");
+-                chatcomponenttext = new ChatComponentText("Outdated server! I\'m still on 1.7.10");
 +                chatcomponenttext = new ChatComponentText( org.spigotmc.SpigotConfig.outdatedServerMessage ); // Spigot
                  this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
                  this.b.close(chatcomponenttext);
              } else if (packethandshakinginsetprotocol.d() < 5) {
--                chatcomponenttext = new ChatComponentText("Outdated client! Please use 1.7.9");
+-                chatcomponenttext = new ChatComponentText("Outdated client! Please use 1.7.10");
 +                chatcomponenttext = new ChatComponentText( org.spigotmc.SpigotConfig.outdatedClientMessage ); // Spigot
                  this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
                  this.b.close(chatcomponenttext);
              } else {
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
-index 2a15271..e156a5a 100644
+index 9eb25df..110b7e0 100644
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
 @@ -365,7 +365,7 @@ public abstract class PlayerList {
@@ -32,7 +32,7 @@ index 2a15271..e156a5a 100644
              // return "You are not white-listed on this server!";
 -            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, "You are not white-listed on this server!");
 +            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot
-         } else if (this.k.isBanned(socketaddress) && !this.j.get(gameprofile).e()) { // Should be hasExpired
+         } else if (this.k.isBanned(socketaddress) && !this.k.get(gameprofile).hasExpired()) {
              IpBanEntry ipbanentry = this.k.get(socketaddress);
  
 @@ -379,7 +379,7 @@ public abstract class PlayerList {
@@ -45,7 +45,7 @@ index 2a15271..e156a5a 100644
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index c97e7f6..67b922f 100644
+index fdac2f6..f8e2f0f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -745,11 +745,7 @@ public final class CraftServer implements Server {

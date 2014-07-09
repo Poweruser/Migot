@@ -1,4 +1,4 @@
-From 92d19317e679d365169b9c82a9c2f5c6f5aadc3c Mon Sep 17 00:00:00 2001
+From 690655989aba7b911df73dbb490f245ea5975042 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Thu, 9 Jan 2014 14:19:12 +0000
 Subject: [PATCH] Fix anvil collisions

@@ -1,4 +1,4 @@
-From d711c78f38e7ec6b6c472f83e4070229e18174f6 Mon Sep 17 00:00:00 2001
+From 191d925c165b18ef460bb2956e4084602f676bf6 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Tue, 2 Jul 2013 13:07:39 +1000
 Subject: [PATCH] POM Changes
@@ -6,7 +6,7 @@ Subject: [PATCH] POM Changes
 Basic changes to the build system which mark the artifact as Spigot, and the necessary code changes to ensure proper functionality. Also disables the auto updater provided by CraftBukkit as it is useless to us.
 
 diff --git a/pom.xml b/pom.xml
-index b2e2002..77c014b 100644
+index 8dc82eb..6aeffa8 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,12 +1,12 @@
@@ -18,7 +18,7 @@ index b2e2002..77c014b 100644
 +  <groupId>org.spigotmc</groupId>
 +  <artifactId>spigot</artifactId>
    <packaging>jar</packaging>
-   <version>1.7.9-R0.3-SNAPSHOT</version>
+   <version>1.7.10-R0.1-SNAPSHOT</version>
 -  <name>CraftBukkit</name>
 -  <url>http://www.bukkit.org</url>
 +  <name>Spigot</name>
@@ -141,7 +141,7 @@ index b2e2002..77c014b 100644
            <execution>
              <phase>package</phase>
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 883f809..dec909b 100644
+index a666131..eb0b342 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -317,7 +317,7 @@ public final class CraftServer implements Server {

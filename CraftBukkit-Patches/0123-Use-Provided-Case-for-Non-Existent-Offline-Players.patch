@@ -1,11 +1,11 @@
-From 2c24e8844f76c3593b21793f3c0a9181c29cd2ed Mon Sep 17 00:00:00 2001
+From 717b173d007cfd0d96328a4c5b4e009098dba8a7 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Mon, 14 Apr 2014 09:46:20 +1000
 Subject: [PATCH] Use Provided Case for Non Existent Offline Players
 
 
 diff --git a/src/main/java/net/minecraft/server/UserCache.java b/src/main/java/net/minecraft/server/UserCache.java
-index cde2651..bcccaa9 100644
+index a283204..bbbcc86 100644
 --- a/src/main/java/net/minecraft/server/UserCache.java
 +++ b/src/main/java/net/minecraft/server/UserCache.java
 @@ -126,7 +126,7 @@ public class UserCache {

@@ -1,11 +1,11 @@
-From 3fd4eb1bb08665889697fd15f69d9bd3b5bbd2ff Mon Sep 17 00:00:00 2001
+From a2d1c2c9c0c8760024727826b306f7ffb3cd6911 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Sat, 18 Jan 2014 19:32:42 +0000
 Subject: [PATCH] Support non-prefixed URLs
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java b/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
-index 2b57bf8..ce2c6bb 100644
+index 256f053..6491b10 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
 @@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap.Builder;

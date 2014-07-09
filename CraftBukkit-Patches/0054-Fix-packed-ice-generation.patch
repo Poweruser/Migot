@@ -1,11 +1,11 @@
-From d4efc3124b309ff3ca63fc4390049c9675fd2b51 Mon Sep 17 00:00:00 2001
+From 1655f0ec885e96045d38ab18bcfcdfc13ed0510f Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 1 Dec 2013 17:52:14 +1100
 Subject: [PATCH] Fix packed ice generation
 
 
 diff --git a/src/main/java/net/minecraft/server/WorldGenPackedIce2.java b/src/main/java/net/minecraft/server/WorldGenPackedIce2.java
-index c0db754..a830758 100644
+index c207a9c..ae1bf65 100644
 --- a/src/main/java/net/minecraft/server/WorldGenPackedIce2.java
 +++ b/src/main/java/net/minecraft/server/WorldGenPackedIce2.java
 @@ -41,13 +41,13 @@ public class WorldGenPackedIce2 extends WorldGenerator {

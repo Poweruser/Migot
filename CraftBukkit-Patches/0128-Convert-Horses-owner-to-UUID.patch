@@ -1,11 +1,11 @@
-From 223d755417d57292a2bc79da27dac00209248739 Mon Sep 17 00:00:00 2001
+From a37c07be1e02ba83aa5dc8f633adde6cc38710d5 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Wed, 16 Apr 2014 01:40:30 -0400
 Subject: [PATCH] Convert Horses owner to UUID
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityHorse.java b/src/main/java/net/minecraft/server/EntityHorse.java
-index 7138862..76bde8c 100644
+index d167c00..e9f6236 100644
 --- a/src/main/java/net/minecraft/server/EntityHorse.java
 +++ b/src/main/java/net/minecraft/server/EntityHorse.java
 @@ -993,6 +993,14 @@ public class EntityHorse extends EntityAnimal implements IInventoryListener {

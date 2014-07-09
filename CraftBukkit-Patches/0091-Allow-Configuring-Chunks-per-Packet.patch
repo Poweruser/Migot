@@ -1,11 +1,11 @@
-From f0f8b8c8ed8f1714c7b52079f51f9b7455034d33 Mon Sep 17 00:00:00 2001
+From 0422aac3444aea045a7adb330c1c86d303755260 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Tue, 28 Jan 2014 20:35:35 +1100
 Subject: [PATCH] Allow Configuring Chunks per Packet
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 367472d..d5a5426 100644
+index f74e175..8ffa3bc 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -214,7 +214,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {

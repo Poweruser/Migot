@@ -1,4 +1,4 @@
-From 85a8e263c0027cef58b841262d37fa876f06a864 Mon Sep 17 00:00:00 2001
+From 807522ab058396ece9c943ade1698f28fb476ed0 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Fri, 21 Jun 2013 17:29:54 +1000
 Subject: [PATCH] Fix Mob Spawning Relative to View Distance
@@ -8,7 +8,7 @@ Changes the mob spawning algorithm to properly account for view distance and the
 Needs better documentation.
 
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index d770e4e..39767d0 100644
+index 9acfe12..b6f3761 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
 @@ -40,6 +40,7 @@ public class Chunk {
@@ -66,7 +66,7 @@ index d770e4e..39767d0 100644
  
      public boolean d(int i, int j, int k) {
 diff --git a/src/main/java/net/minecraft/server/SpawnerCreature.java b/src/main/java/net/minecraft/server/SpawnerCreature.java
-index 2ef15d2..23d6611 100644
+index 1dfc346..75427b5 100644
 --- a/src/main/java/net/minecraft/server/SpawnerCreature.java
 +++ b/src/main/java/net/minecraft/server/SpawnerCreature.java
 @@ -27,6 +27,23 @@ public final class SpawnerCreature {
@@ -124,7 +124,7 @@ index 2ef15d2..23d6611 100644
                          long key = ((Long) iterator.next()).longValue();
  
 @@ -160,6 +184,13 @@ public final class SpawnerCreature {
-                                                                 groupdataentity = entityinsentient.a(groupdataentity);
+                                                                 groupdataentity = entityinsentient.prepare(groupdataentity);
                                                                  worldserver.addEntity(entityinsentient, SpawnReason.NATURAL);
                                                                  // CraftBukkit end
 +                                                                // Spigot start

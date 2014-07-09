@@ -1,4 +1,4 @@
-From 2dfa0880789e1bd0e3a87bd9acd5a2a745096b4c Mon Sep 17 00:00:00 2001
+From f86d3c9ff3e66a352db8bd95ea2ae1e46f8d2917 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Mon, 23 Dec 2013 14:07:41 +1100
 Subject: [PATCH] Warn if PermGen may be insufficient

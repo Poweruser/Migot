@@ -1,4 +1,4 @@
-From ff4d2b5a8480266055f215d64691ecf743274433 Mon Sep 17 00:00:00 2001
+From 282a00a36ded6a33a307a4f2b3c8c1a08b435161 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Thu, 27 Jun 2013 17:26:09 +1000
 Subject: [PATCH] Properly Close Inventories
@@ -6,7 +6,7 @@ Subject: [PATCH] Properly Close Inventories
 Properly close inventories when unloading and switching worlds.
 
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index 5ef6865..d74586e 100644
+index 40c878b..6112709 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
 @@ -783,6 +783,15 @@ public class Chunk {
@@ -42,7 +42,7 @@ index 5ef6865..d74586e 100644
                  // Do not pass along players, as doing so can get them stuck outside of time.
                  // (which for example disables inventory icon updates and prevents block breaking)
 diff --git a/src/main/java/net/minecraft/server/EntityMinecartContainer.java b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
-index b599eeb..2065e5a 100644
+index 13b75ff..bf8e745 100644
 --- a/src/main/java/net/minecraft/server/EntityMinecartContainer.java
 +++ b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
 @@ -149,6 +149,12 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp

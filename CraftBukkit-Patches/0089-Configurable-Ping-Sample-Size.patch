@@ -1,4 +1,4 @@
-From 3b17182b53f364daed764e96ca0ad25ce6c7eaf4 Mon Sep 17 00:00:00 2001
+From 8dcc705c4dba07a21324db06169776c965b77893 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 26 Jan 2014 21:48:34 +1100
 Subject: [PATCH] Configurable Ping Sample Size

@@ -1,4 +1,4 @@
-From 9af95c493ed4a18394bac162f990478e9278deb6 Mon Sep 17 00:00:00 2001
+From cb40f6653f46921e3572c53b543500ad7ca96d0b Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 1 Dec 2013 15:10:48 +1100
 Subject: [PATCH] mc-dev imports
@@ -102,7 +102,7 @@ index 0000000..3b4b596
 +}
 diff --git a/src/main/java/net/minecraft/server/BiomeDecorator.java b/src/main/java/net/minecraft/server/BiomeDecorator.java
 new file mode 100644
-index 0000000..b048d6c
+index 0000000..c5701f6
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/BiomeDecorator.java
 @@ -0,0 +1,279 @@
@@ -198,19 +198,19 @@ index 0000000..b048d6c
 +        for (i = 0; i < this.F; ++i) {
 +            j = this.c + this.b.nextInt(16) + 8;
 +            k = this.d + this.b.nextInt(16) + 8;
-+            this.f.a(this.a, this.b, j, this.a.i(j, k), k);
++            this.f.generate(this.a, this.b, j, this.a.i(j, k), k);
 +        }
 +
 +        for (i = 0; i < this.G; ++i) {
 +            j = this.c + this.b.nextInt(16) + 8;
 +            k = this.d + this.b.nextInt(16) + 8;
-+            this.e.a(this.a, this.b, j, this.a.i(j, k), k);
++            this.e.generate(this.a, this.b, j, this.a.i(j, k), k);
 +        }
 +
 +        for (i = 0; i < this.E; ++i) {
 +            j = this.c + this.b.nextInt(16) + 8;
 +            k = this.d + this.b.nextInt(16) + 8;
-+            this.g.a(this.a, this.b, j, this.a.i(j, k), k);
++            this.g.generate(this.a, this.b, j, this.a.i(j, k), k);
 +        }
 +
 +        i = this.x;
@@ -228,7 +228,7 @@ index 0000000..b048d6c
 +            WorldGenTreeAbstract worldgentreeabstract = biomebase.a(this.b);
 +
 +            worldgentreeabstract.a(1.0D, 1.0D, 1.0D);
-+            if (worldgentreeabstract.a(this.a, this.b, k, i1, l)) {
++            if (worldgentreeabstract.generate(this.a, this.b, k, i1, l)) {
 +                worldgentreeabstract.b(this.a, this.b, k, i1, l);
 +            }
 +        }
@@ -236,7 +236,7 @@ index 0000000..b048d6c
 +        for (j = 0; j < this.H; ++j) {
 +            k = this.c + this.b.nextInt(16) + 8;
 +            l = this.d + this.b.nextInt(16) + 8;
-+            this.s.a(this.a, this.b, k, this.a.getHighestBlockYAt(k, l), l);
++            this.s.generate(this.a, this.b, k, this.a.getHighestBlockYAt(k, l), l);
 +        }
 +
 +        for (j = 0; j < this.y; ++j) {
@@ -248,7 +248,7 @@ index 0000000..b048d6c
 +
 +            if (blockflowers.getMaterial() != Material.AIR) {
 +                this.p.a(blockflowers, BlockFlowers.f(s));
-+                this.p.a(this.a, this.b, k, i1, l);
++                this.p.generate(this.a, this.b, k, i1, l);
 +            }
 +        }
 +
@@ -258,14 +258,14 @@ index 0000000..b048d6c
 +            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
 +            WorldGenerator worldgenerator = biomebase.b(this.b);
 +
-+            worldgenerator.a(this.a, this.b, k, i1, l);
++            worldgenerator.generate(this.a, this.b, k, i1, l);
 +        }
 +
 +        for (j = 0; j < this.A; ++j) {
 +            k = this.c + this.b.nextInt(16) + 8;
 +            l = this.d + this.b.nextInt(16) + 8;
 +            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
-+            (new WorldGenDeadBush(Blocks.DEAD_BUSH)).a(this.a, this.b, k, i1, l);
++            (new WorldGenDeadBush(Blocks.DEAD_BUSH)).generate(this.a, this.b, k, i1, l);
 +        }
 +
 +        for (j = 0; j < this.w; ++j) {
@@ -276,7 +276,7 @@ index 0000000..b048d6c
 +                ;
 +            }
 +
-+            this.v.a(this.a, this.b, k, i1, l);
++            this.v.generate(this.a, this.b, k, i1, l);
 +        }
 +
 +        for (j = 0; j < this.B; ++j) {
@@ -284,14 +284,14 @@ index 0000000..b048d6c
 +                k = this.c + this.b.nextInt(16) + 8;
 +                l = this.d + this.b.nextInt(16) + 8;
 +                i1 = this.a.getHighestBlockYAt(k, l);
-+                this.q.a(this.a, this.b, k, i1, l);
++                this.q.generate(this.a, this.b, k, i1, l);
 +            }
 +
 +            if (this.b.nextInt(8) == 0) {
 +                k = this.c + this.b.nextInt(16) + 8;
 +                l = this.d + this.b.nextInt(16) + 8;
 +                i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
-+                this.r.a(this.a, this.b, k, i1, l);
++                this.r.generate(this.a, this.b, k, i1, l);
 +            }
 +        }
 +
@@ -299,42 +299,42 @@ index 0000000..b048d6c
 +            j = this.c + this.b.nextInt(16) + 8;
 +            k = this.d + this.b.nextInt(16) + 8;
 +            l = this.b.nextInt(this.a.getHighestBlockYAt(j, k) * 2);
-+            this.q.a(this.a, this.b, j, l, k);
++            this.q.generate(this.a, this.b, j, l, k);
 +        }
 +
 +        if (this.b.nextInt(8) == 0) {
 +            j = this.c + this.b.nextInt(16) + 8;
 +            k = this.d + this.b.nextInt(16) + 8;
 +            l = this.b.nextInt(this.a.getHighestBlockYAt(j, k) * 2);
-+            this.r.a(this.a, this.b, j, l, k);
++            this.r.generate(this.a, this.b, j, l, k);
 +        }
 +
 +        for (j = 0; j < this.C; ++j) {
 +            k = this.c + this.b.nextInt(16) + 8;
 +            l = this.d + this.b.nextInt(16) + 8;
 +            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
-+            this.t.a(this.a, this.b, k, i1, l);
++            this.t.generate(this.a, this.b, k, i1, l);
 +        }
 +
 +        for (j = 0; j < 10; ++j) {
 +            k = this.c + this.b.nextInt(16) + 8;
 +            l = this.d + this.b.nextInt(16) + 8;
 +            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
-+            this.t.a(this.a, this.b, k, i1, l);
++            this.t.generate(this.a, this.b, k, i1, l);
 +        }
 +
 +        if (this.b.nextInt(32) == 0) {
 +            j = this.c + this.b.nextInt(16) + 8;
 +            k = this.d + this.b.nextInt(16) + 8;
 +            l = this.b.nextInt(this.a.getHighestBlockYAt(j, k) * 2);
-+            (new WorldGenPumpkin()).a(this.a, this.b, j, l, k);
++            (new WorldGenPumpkin()).generate(this.a, this.b, j, l, k);
 +        }
 +
 +        for (j = 0; j < this.D; ++j) {
 +            k = this.c + this.b.nextInt(16) + 8;
 +            l = this.d + this.b.nextInt(16) + 8;
 +            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
-+            this.u.a(this.a, this.b, k, i1, l);
++            this.u.generate(this.a, this.b, k, i1, l);
 +        }
 +
 +        if (this.I) {
@@ -342,14 +342,14 @@ index 0000000..b048d6c
 +                k = this.c + this.b.nextInt(16) + 8;
 +                l = this.b.nextInt(this.b.nextInt(248) + 8);
 +                i1 = this.d + this.b.nextInt(16) + 8;
-+                (new WorldGenLiquids(Blocks.WATER)).a(this.a, this.b, k, l, i1);
++                (new WorldGenLiquids(Blocks.WATER)).generate(this.a, this.b, k, l, i1);
 +            }
 +
 +            for (j = 0; j < 20; ++j) {
 +                k = this.c + this.b.nextInt(16) + 8;
 +                l = this.b.nextInt(this.b.nextInt(this.b.nextInt(240) + 8) + 8);
 +                i1 = this.d + this.b.nextInt(16) + 8;
-+                (new WorldGenLiquids(Blocks.LAVA)).a(this.a, this.b, k, l, i1);
++                (new WorldGenLiquids(Blocks.LAVA)).generate(this.a, this.b, k, l, i1);
 +            }
 +        }
 +    }
@@ -360,7 +360,7 @@ index 0000000..b048d6c
 +            int j1 = this.b.nextInt(k - j) + j;
 +            int k1 = this.d + this.b.nextInt(16);
 +
-+            worldgenerator.a(this.a, this.b, i1, j1, k1);
++            worldgenerator.generate(this.a, this.b, i1, j1, k1);
 +        }
 +    }
 +
@@ -370,7 +370,7 @@ index 0000000..b048d6c
 +            int j1 = this.b.nextInt(k) + this.b.nextInt(k) + (j - k);
 +            int k1 = this.d + this.b.nextInt(16);
 +
-+            worldgenerator.a(this.a, this.b, i1, j1, k1);
++            worldgenerator.generate(this.a, this.b, i1, j1, k1);
 +        }
 +    }
 +
@@ -472,7 +472,7 @@ index 0000000..9e1ce2f
 +}
 diff --git a/src/main/java/net/minecraft/server/BlockBrewingStand.java b/src/main/java/net/minecraft/server/BlockBrewingStand.java
 new file mode 100644
-index 0000000..3287d77
+index 0000000..6ce80db
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/BlockBrewingStand.java
 @@ -0,0 +1,109 @@
@@ -577,7 +577,7 @@ index 0000000..3287d77
 +        return Items.BREWING_STAND;
 +    }
 +
-+    public boolean M() {
++    public boolean isComplexRedstone() {
 +        return true;
 +    }
 +
@@ -587,7 +587,7 @@ index 0000000..3287d77
 +}
 diff --git a/src/main/java/net/minecraft/server/BlockFlowerPot.java b/src/main/java/net/minecraft/server/BlockFlowerPot.java
 new file mode 100644
-index 0000000..ca6f4f0
+index 0000000..aa82a50
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/BlockFlowerPot.java
 @@ -0,0 +1,186 @@
@@ -694,7 +694,7 @@ index 0000000..ca6f4f0
 +            TileEntityFlowerPot tileentityflowerpot = this.e(world, i, j, k);
 +
 +            if (tileentityflowerpot != null) {
-+                tileentityflowerpot.a(Item.d(0), 0);
++                tileentityflowerpot.a(Item.getById(0), 0);
 +            }
 +        }
 +    }
@@ -779,7 +779,7 @@ index 0000000..ca6f4f0
 +}
 diff --git a/src/main/java/net/minecraft/server/BlockTNT.java b/src/main/java/net/minecraft/server/BlockTNT.java
 new file mode 100644
-index 0000000..e943676
+index 0000000..8cc7d5e
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/BlockTNT.java
 @@ -0,0 +1,80 @@
@@ -838,10 +838,10 @@ index 0000000..e943676
 +    }
 +
 +    public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman, int l, float f, float f1, float f2) {
-+        if (entityhuman.bE() != null && entityhuman.bE().getItem() == Items.FLINT_AND_STEEL) {
++        if (entityhuman.bF() != null && entityhuman.bF().getItem() == Items.FLINT_AND_STEEL) {
 +            this.a(world, i, j, k, 1, entityhuman);
 +            world.setAir(i, j, k);
-+            entityhuman.bE().damage(1, entityhuman);
++            entityhuman.bF().damage(1, entityhuman);
 +            return true;
 +        } else {
 +            return super.interact(world, i, j, k, entityhuman, l, f, f1, f2);
@@ -865,7 +865,7 @@ index 0000000..e943676
 +}
 diff --git a/src/main/java/net/minecraft/server/CommandDispatcher.java b/src/main/java/net/minecraft/server/CommandDispatcher.java
 new file mode 100644
-index 0000000..2676e9e
+index 0000000..0644276
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/CommandDispatcher.java
 @@ -0,0 +1,94 @@
@@ -946,10 +946,10 @@ index 0000000..2676e9e
 +            Iterator iterator = MinecraftServer.getServer().getPlayerList().players.iterator();
 +
 +            while (iterator.hasNext()) {
-+                EntityPlayer entityplayer = (EntityPlayer) iterator.next();
++                EntityHuman entityhuman = (EntityHuman) iterator.next();
 +
-+                if (entityplayer != icommandlistener && MinecraftServer.getServer().getPlayerList().isOp(entityplayer.getProfile()) && icommand.canUse(entityplayer) && (!(icommandlistener instanceof RemoteControlCommandListener) || MinecraftServer.getServer().m())) {
-+                    entityplayer.sendMessage(chatmessage);
++                if (entityhuman != icommandlistener && MinecraftServer.getServer().getPlayerList().isOp(entityhuman.getProfile()) && icommand.canUse(entityhuman) && (!(icommandlistener instanceof RemoteControlCommandListener) || MinecraftServer.getServer().m())) {
++                    entityhuman.sendMessage(chatmessage);
 +                }
 +            }
 +        }
@@ -965,7 +965,7 @@ index 0000000..2676e9e
 +}
 diff --git a/src/main/java/net/minecraft/server/DataWatcher.java b/src/main/java/net/minecraft/server/DataWatcher.java
 new file mode 100644
-index 0000000..90a2a80
+index 0000000..2d1da33
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/DataWatcher.java
 @@ -0,0 +1,306 @@
@@ -1013,7 +1013,7 @@ index 0000000..90a2a80
 +        }
 +    }
 +
-+    public void a(int i, int j) {
++    public void add(int i, int j) {
 +        WatchableObject watchableobject = new WatchableObject(j, i, null);
 +
 +        this.f.writeLock().lock();
@@ -1076,7 +1076,7 @@ index 0000000..90a2a80
 +        }
 +    }
 +
-+    public void h(int i) {
++    public void update(int i) {
 +        WatchableObject.a(this.i(i), true);
 +        this.e = true;
 +    }
@@ -1277,7 +1277,7 @@ index 0000000..90a2a80
 +}
 diff --git a/src/main/java/net/minecraft/server/GameProfileBanEntry.java b/src/main/java/net/minecraft/server/GameProfileBanEntry.java
 new file mode 100644
-index 0000000..33cfdb2
+index 0000000..2943244
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/GameProfileBanEntry.java
 @@ -0,0 +1,48 @@
@@ -1304,9 +1304,9 @@ index 0000000..33cfdb2
 +    }
 +
 +    protected void a(JsonObject jsonobject) {
-+        if (this.f() != null) {
-+            jsonobject.addProperty("uuid", ((GameProfile) this.f()).getId() == null ? "" : ((GameProfile) this.f()).getId().toString());
-+            jsonobject.addProperty("name", ((GameProfile) this.f()).getName());
++        if (this.getKey() != null) {
++            jsonobject.addProperty("uuid", ((GameProfile) this.getKey()).getId() == null ? "" : ((GameProfile) this.getKey()).getId().toString());
++            jsonobject.addProperty("name", ((GameProfile) this.getKey()).getName());
 +            super.a(jsonobject);
 +        }
 +    }
@@ -1400,7 +1400,7 @@ index 0000000..9858720
 +}
 diff --git a/src/main/java/net/minecraft/server/ItemSkull.java b/src/main/java/net/minecraft/server/ItemSkull.java
 new file mode 100644
-index 0000000..f20c69e
+index 0000000..4a40068
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/ItemSkull.java
 @@ -0,0 +1,111 @@
@@ -1465,7 +1465,7 @@ index 0000000..f20c69e
 +                            NBTTagCompound nbttagcompound = itemstack.getTag();
 +
 +                            if (nbttagcompound.hasKeyOfType("SkullOwner", 10)) {
-+                                gameprofile = GameProfileSerializer.a(nbttagcompound.getCompound("SkullOwner"));
++                                gameprofile = GameProfileSerializer.deserialize(nbttagcompound.getCompound("SkullOwner"));
 +                            } else if (nbttagcompound.hasKeyOfType("SkullOwner", 8) && nbttagcompound.getString("SkullOwner").length() > 0) {
 +                                gameprofile = new GameProfile((UUID) null, nbttagcompound.getString("SkullOwner"));
 +                            }
@@ -1504,7 +1504,7 @@ index 0000000..f20c69e
 +    public String n(ItemStack itemstack) {
 +        if (itemstack.getData() == 3 && itemstack.hasTag()) {
 +            if (itemstack.getTag().hasKeyOfType("SkullOwner", 10)) {
-+                return LocaleI18n.get("item.skull.player.name", new Object[] { GameProfileSerializer.a(itemstack.getTag().getCompound("SkullOwner")).getName()});
++                return LocaleI18n.get("item.skull.player.name", new Object[] { GameProfileSerializer.deserialize(itemstack.getTag().getCompound("SkullOwner")).getName()});
 +            }
 +
 +            if (itemstack.getTag().hasKeyOfType("SkullOwner", 8)) {
@@ -1517,10 +1517,10 @@ index 0000000..f20c69e
 +}
 diff --git a/src/main/java/net/minecraft/server/NBTBase.java b/src/main/java/net/minecraft/server/NBTBase.java
 new file mode 100644
-index 0000000..02206f5
+index 0000000..af13af5
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/NBTBase.java
-@@ -0,0 +1,129 @@
+@@ -0,0 +1,83 @@
 +package net.minecraft.server;
 +
 +import java.io.DataInput;
@@ -1581,52 +1581,6 @@ index 0000000..02206f5
 +
 +        default:
 +            return null;
-+        }
-+    }
-+
-+    public static String getTagName(int i) {
-+        switch (i) {
-+        case 0:
-+            return "TAG_End";
-+
-+        case 1:
-+            return "TAG_Byte";
-+
-+        case 2:
-+            return "TAG_Short";
-+
-+        case 3:
-+            return "TAG_Int";
-+
-+        case 4:
-+            return "TAG_Long";
-+
-+        case 5:
-+            return "TAG_Float";
-+
-+        case 6:
-+            return "TAG_Double";
-+
-+        case 7:
-+            return "TAG_Byte_Array";
-+
-+        case 8:
-+            return "TAG_String";
-+
-+        case 9:
-+            return "TAG_List";
-+
-+        case 10:
-+            return "TAG_Compound";
-+
-+        case 11:
-+            return "TAG_Int_Array";
-+
-+        case 99:
-+            return "Any Numeric Tag";
-+
-+        default:
-+            return "UNKNOWN";
 +        }
 +    }
 +
@@ -1794,7 +1748,7 @@ index 0000000..c7cea7f
 +}
 diff --git a/src/main/java/net/minecraft/server/NextTickListEntry.java b/src/main/java/net/minecraft/server/NextTickListEntry.java
 new file mode 100644
-index 0000000..06934a1
+index 0000000..cbb3576
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/NextTickListEntry.java
 @@ -0,0 +1,60 @@
@@ -1847,7 +1801,7 @@ index 0000000..06934a1
 +    }
 +
 +    public String toString() {
-+        return Block.b(this.g) + ": (" + this.a + ", " + this.b + ", " + this.c + "), " + this.d + ", " + this.e + ", " + this.h;
++        return Block.getId(this.g) + ": (" + this.a + ", " + this.b + ", " + this.c + "), " + this.d + ", " + this.e + ", " + this.h;
 +    }
 +
 +    public Block a() {
@@ -2032,10 +1986,10 @@ index 0000000..fcb9912
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 new file mode 100644
-index 0000000..c7b799a
+index 0000000..734faef
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
-@@ -0,0 +1,190 @@
+@@ -0,0 +1,189 @@
 +package net.minecraft.server;
 +
 +import java.io.IOException;
@@ -2050,17 +2004,17 @@ index 0000000..c7b799a
 +    private int c;
 +    private int d;
 +    private byte[] e;
-+    private byte[] buffer;
-+    private boolean inflatedBuffer;
-+    private int size;
-+    private static byte[] buildBuffer = new byte[196864];
++    private byte[] f;
++    private boolean g;
++    private int h;
++    private static byte[] i = new byte[196864];
 +
 +    public PacketPlayOutMapChunk() {}
 +
 +    public PacketPlayOutMapChunk(Chunk chunk, boolean flag, int i) {
 +        this.a = chunk.locX;
 +        this.b = chunk.locZ;
-+        this.inflatedBuffer = flag;
++        this.g = flag;
 +        ChunkMap chunkmap = a(chunk, flag, i);
 +        Deflater deflater = new Deflater(-1);
 +
@@ -2068,11 +2022,11 @@ index 0000000..c7b799a
 +        this.c = chunkmap.b;
 +
 +        try {
-+            this.buffer = chunkmap.a;
++            this.f = chunkmap.a;
 +            deflater.setInput(chunkmap.a, 0, chunkmap.a.length);
 +            deflater.finish();
 +            this.e = new byte[chunkmap.a.length];
-+            this.size = deflater.deflate(this.e);
++            this.h = deflater.deflate(this.e);
 +        } finally {
 +            deflater.end();
 +        }
@@ -2085,15 +2039,15 @@ index 0000000..c7b799a
 +    public void a(PacketDataSerializer packetdataserializer) throws IOException {
 +        this.a = packetdataserializer.readInt();
 +        this.b = packetdataserializer.readInt();
-+        this.inflatedBuffer = packetdataserializer.readBoolean();
++        this.g = packetdataserializer.readBoolean();
 +        this.c = packetdataserializer.readShort();
 +        this.d = packetdataserializer.readShort();
-+        this.size = packetdataserializer.readInt();
-+        if (buildBuffer.length < this.size) {
-+            buildBuffer = new byte[this.size];
++        this.h = packetdataserializer.readInt();
++        if (i.length < this.h) {
++            i = new byte[this.h];
 +        }
 +
-+        packetdataserializer.readBytes(buildBuffer, 0, this.size);
++        packetdataserializer.readBytes(i, 0, this.h);
 +        int i = 0;
 +
 +        int j;
@@ -2103,17 +2057,17 @@ index 0000000..c7b799a
 +        }
 +
 +        j = 12288 * i;
-+        if (this.inflatedBuffer) {
++        if (this.g) {
 +            j += 256;
 +        }
 +
-+        this.buffer = new byte[j];
++        this.f = new byte[j];
 +        Inflater inflater = new Inflater();
 +
-+        inflater.setInput(buildBuffer, 0, this.size);
++        inflater.setInput(PacketPlayOutMapChunk.i, 0, this.h);
 +
 +        try {
-+            inflater.inflate(this.buffer);
++            inflater.inflate(this.f);
 +        } catch (DataFormatException dataformatexception) {
 +            throw new IOException("Bad compressed data format");
 +        } finally {
@@ -2124,11 +2078,11 @@ index 0000000..c7b799a
 +    public void b(PacketDataSerializer packetdataserializer) {
 +        packetdataserializer.writeInt(this.a);
 +        packetdataserializer.writeInt(this.b);
-+        packetdataserializer.writeBoolean(this.inflatedBuffer);
++        packetdataserializer.writeBoolean(this.g);
 +        packetdataserializer.writeShort((short) (this.c & '\uffff'));
 +        packetdataserializer.writeShort((short) (this.d & '\uffff'));
-+        packetdataserializer.writeInt(this.size);
-+        packetdataserializer.writeBytes(this.e, 0, this.size);
++        packetdataserializer.writeInt(this.h);
++        packetdataserializer.writeBytes(this.e, 0, this.h);
 +    }
 +
 +    public void a(PacketPlayOutListener packetplayoutlistener) {
@@ -2136,15 +2090,15 @@ index 0000000..c7b799a
 +    }
 +
 +    public String b() {
-+        return String.format("x=%d, z=%d, full=%b, sects=%d, add=%d, size=%d", new Object[] { Integer.valueOf(this.a), Integer.valueOf(this.b), Boolean.valueOf(this.inflatedBuffer), Integer.valueOf(this.c), Integer.valueOf(this.d), Integer.valueOf(this.size)});
++        return String.format("x=%d, z=%d, full=%b, sects=%d, add=%d, size=%d", new Object[] { Integer.valueOf(this.a), Integer.valueOf(this.b), Boolean.valueOf(this.g), Integer.valueOf(this.c), Integer.valueOf(this.d), Integer.valueOf(this.h)});
 +    }
 +
 +    public static ChunkMap a(Chunk chunk, boolean flag, int i) {
 +        int j = 0;
-+        ChunkSection[] achunksection = chunk.i();
++        ChunkSection[] achunksection = chunk.getSections();
 +        int k = 0;
 +        ChunkMap chunkmap = new ChunkMap();
-+        byte[] abyte = buildBuffer;
++        byte[] abyte = PacketPlayOutMapChunk.i;
 +
 +        if (flag) {
 +            chunk.q = true;
@@ -2221,7 +2175,6 @@ index 0000000..c7b799a
 +        return chunkmap;
 +    }
 +
-+    @Override
 +    public void handle(PacketListener packetlistener) {
 +        this.a((PacketPlayOutListener) packetlistener);
 +    }
@@ -2516,7 +2469,7 @@ index 0000000..d7d93a0
 +}
 diff --git a/src/main/java/net/minecraft/server/ServerStatisticManager.java b/src/main/java/net/minecraft/server/ServerStatisticManager.java
 new file mode 100644
-index 0000000..819896f
+index 0000000..57a501f
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/ServerStatisticManager.java
 @@ -0,0 +1,202 @@
@@ -2709,7 +2662,7 @@ index 0000000..819896f
 +        while (iterator.hasNext()) {
 +            Achievement achievement = (Achievement) iterator.next();
 +
-+            if (this.a(achievement)) {
++            if (this.hasAchievement(achievement)) {
 +                hashmap.put(achievement, Integer.valueOf(this.getStatisticValue(achievement)));
 +                this.e.remove(achievement);
 +            }
@@ -2949,7 +2902,7 @@ index 0000000..97308d0
 +}
 diff --git a/src/main/java/net/minecraft/server/UserCache.java b/src/main/java/net/minecraft/server/UserCache.java
 new file mode 100644
-index 0000000..cde2651
+index 0000000..a283204
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/UserCache.java
 @@ -0,0 +1,247 @@
@@ -3054,7 +3007,7 @@ index 0000000..cde2651
 +        }
 +    }
 +
-+    public GameProfile a(String s) {
++    public GameProfile getProfile(String s) {
 +        String s1 = s.toLowerCase(Locale.ROOT);
 +        UserCacheEntry usercacheentry = (UserCacheEntry) this.c.get(s1);
 +
@@ -3169,9 +3122,9 @@ index 0000000..cde2651
 +            bufferedwriter.write(s);
 +            return;
 +        } catch (FileNotFoundException filenotfoundexception) {
-+            ;
-+        } catch (IOException ioexception) {
 +            return;
++        } catch (IOException ioexception) {
++            ;
 +        } finally {
 +            IOUtils.closeQuietly(bufferedwriter);
 +        }
@@ -3292,7 +3245,7 @@ index 0000000..678aa91
 +}
 diff --git a/src/main/java/net/minecraft/server/WorldGenForestTree.java b/src/main/java/net/minecraft/server/WorldGenForestTree.java
 new file mode 100644
-index 0000000..63c5af6
+index 0000000..c0d0ff9
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/WorldGenForestTree.java
 @@ -0,0 +1,166 @@
@@ -3306,7 +3259,7 @@ index 0000000..63c5af6
 +        super(flag);
 +    }
 +
-+    public boolean a(World world, Random random, int i, int j, int k) {
++    public boolean generate(World world, Random random, int i, int j, int k) {
 +        int l = random.nextInt(3) + random.nextInt(2) + 6;
 +        boolean flag = true;
 +
@@ -3567,7 +3520,7 @@ index 0000000..1e5efc4
 +}
 diff --git a/src/main/java/net/minecraft/server/WorldGenPackedIce2.java b/src/main/java/net/minecraft/server/WorldGenPackedIce2.java
 new file mode 100644
-index 0000000..c0db754
+index 0000000..c207a9c
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/WorldGenPackedIce2.java
 @@ -0,0 +1,101 @@
@@ -3579,7 +3532,7 @@ index 0000000..c0db754
 +
 +    public WorldGenPackedIce2() {}
 +
-+    public boolean a(World world, Random random, int i, int j, int k) {
++    public boolean generate(World world, Random random, int i, int j, int k) {
 +        while (world.isEmpty(i, j, k) && j > 2) {
 +            --j;
 +        }

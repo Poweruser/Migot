@@ -1,4 +1,4 @@
-From f5aa2c2b1398566b0f7cbe379c87ebdbce7280cc Mon Sep 17 00:00:00 2001
+From 4600e04f4209c804d64951143128240f3a68c3cf Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Fri, 21 Jun 2013 17:17:20 +1000
 Subject: [PATCH] Crop Growth Rates
@@ -6,7 +6,7 @@ Subject: [PATCH] Crop Growth Rates
 Allows configuring the growth rates of crops as a percentage of their normal growth rate.
 
 diff --git a/src/main/java/net/minecraft/server/Block.java b/src/main/java/net/minecraft/server/Block.java
-index 14c00c5..51f8279 100644
+index 9876ebf..c043b9a 100644
 --- a/src/main/java/net/minecraft/server/Block.java
 +++ b/src/main/java/net/minecraft/server/Block.java
 @@ -804,4 +804,16 @@ public class Block {
@@ -67,7 +67,7 @@ index abd991b..7c00158 100644
                      int j1 = j + random.nextInt(5) - 3;
                      int k1 = k + random.nextInt(3) - 1;
 diff --git a/src/main/java/net/minecraft/server/BlockMushroom.java b/src/main/java/net/minecraft/server/BlockMushroom.java
-index 5b90eb9..c720a7f 100644
+index 6671a84..4daa273 100644
 --- a/src/main/java/net/minecraft/server/BlockMushroom.java
 +++ b/src/main/java/net/minecraft/server/BlockMushroom.java
 @@ -19,7 +19,7 @@ public class BlockMushroom extends BlockPlant implements IBlockFragilePlantEleme
@@ -107,7 +107,7 @@ index a1350f6..6c04ad2 100644
                          world.setData(i, j, k, 0, 4);
                      } else {
 diff --git a/src/main/java/net/minecraft/server/BlockSapling.java b/src/main/java/net/minecraft/server/BlockSapling.java
-index 4152bd7..69aa745 100644
+index 89e60a8..8258395 100644
 --- a/src/main/java/net/minecraft/server/BlockSapling.java
 +++ b/src/main/java/net/minecraft/server/BlockSapling.java
 @@ -27,7 +27,7 @@ public class BlockSapling extends BlockPlant implements IBlockFragilePlantElemen

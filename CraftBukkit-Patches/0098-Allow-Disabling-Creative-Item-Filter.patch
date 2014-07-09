@@ -1,19 +1,19 @@
-From f8da1c504dbaf9527fc090a5cabbd1fc7060f5c1 Mon Sep 17 00:00:00 2001
+From ceff927b7e0582481ae9fbe800638ec3c0f8b3b5 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Wed, 12 Feb 2014 18:18:01 +1100
 Subject: [PATCH] Allow Disabling Creative Item Filter
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index dc97a1d..451200a 100644
+index 79d8fe0..c9e99e9 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1498,7 +1498,7 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -1499,7 +1499,7 @@ public class PlayerConnection implements PacketPlayInListener {
              ItemStack itemstack = packetplayinsetcreativeslot.getItemStack();
              boolean flag1 = packetplayinsetcreativeslot.c() >= 1 && packetplayinsetcreativeslot.c() < 36 + PlayerInventory.getHotbarSize();
              // CraftBukkit - Add invalidItems check
--            boolean flag2 = itemstack == null || itemstack.getItem() != null && !invalidItems.contains(Item.b(itemstack.getItem()));
-+            boolean flag2 = itemstack == null || itemstack.getItem() != null && (!invalidItems.contains(Item.b(itemstack.getItem())) || !org.spigotmc.SpigotConfig.filterCreativeItems); // Spigot
+-            boolean flag2 = itemstack == null || itemstack.getItem() != null && !invalidItems.contains(Item.getId(itemstack.getItem()));
++            boolean flag2 = itemstack == null || itemstack.getItem() != null && (!invalidItems.contains(Item.getId(itemstack.getItem())) || !org.spigotmc.SpigotConfig.filterCreativeItems); // Spigot
              boolean flag3 = itemstack == null || itemstack.getData() >= 0 && itemstack.count <= 64 && itemstack.count > 0;
  
              // CraftBukkit start - Call click event

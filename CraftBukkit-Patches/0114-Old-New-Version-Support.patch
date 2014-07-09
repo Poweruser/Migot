@@ -1,4 +1,4 @@
-From 3b5ccbb6a72116d264ffae89963c3f23de005407 Mon Sep 17 00:00:00 2001
+From a87c3ebd7c378045e8ce2e11fd5e30223724c5d7 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sat, 12 Apr 2014 15:11:15 +1000
 Subject: [PATCH] Old / New Version Support.
@@ -68,7 +68,7 @@ index 31d6008..04af15c 100644
      public NetworkManager(boolean flag) {
          this.j = flag;
 diff --git a/src/main/java/net/minecraft/server/PacketDataSerializer.java b/src/main/java/net/minecraft/server/PacketDataSerializer.java
-index f6f870f..855e85e 100644
+index 8d3cf1f..a5be533 100644
 --- a/src/main/java/net/minecraft/server/PacketDataSerializer.java
 +++ b/src/main/java/net/minecraft/server/PacketDataSerializer.java
 @@ -19,10 +19,19 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack; // CraftBukkit
@@ -194,7 +194,7 @@ index 0000000..a244f00
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
-index 7bae405..5e24f7e 100644
+index 0023f18..ccd4cec 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
 @@ -66,8 +66,9 @@ public class PacketPlayOutNamedEntitySpawn extends Packet {

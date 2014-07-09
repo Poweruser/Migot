@@ -1,4 +1,4 @@
-From 471a1fe21a2e95ba4ef5ca494444fe897c6e684f Mon Sep 17 00:00:00 2001
+From 7aee70e4557c231ec2b8fc2cdd24602f4f35681d Mon Sep 17 00:00:00 2001
 From: Andy Shulman <andy.shulman@hotmail.com>
 Date: Mon, 15 Apr 2013 20:06:37 -0500
 Subject: [PATCH] Implement SpawnerSpawnEvent.
@@ -6,7 +6,7 @@ Subject: [PATCH] Implement SpawnerSpawnEvent.
 Adds BUKKIT-267
 
 diff --git a/src/main/java/net/minecraft/server/MobSpawnerAbstract.java b/src/main/java/net/minecraft/server/MobSpawnerAbstract.java
-index 06f9b1f..b97ac4b 100644
+index 93bb1ad..e39d533 100644
 --- a/src/main/java/net/minecraft/server/MobSpawnerAbstract.java
 +++ b/src/main/java/net/minecraft/server/MobSpawnerAbstract.java
 @@ -5,7 +5,11 @@ import java.util.Collection;
@@ -51,19 +51,19 @@ index 06f9b1f..b97ac4b 100644
 @@ -163,7 +177,12 @@ public abstract class MobSpawnerAbstract {
              }
          } else if (entity instanceof EntityLiving && entity.world != null) {
-             ((EntityInsentient) entity).a((GroupDataEntity) null);
+             ((EntityInsentient) entity).prepare((GroupDataEntity) null);
 -            this.a().addEntity(entity, CreatureSpawnEvent.SpawnReason.SPAWNER); // CraftBukkit
-+            // CraftBukkit start - call SpawnerSpawnEvent, abort if cancelled
++            // Spigot start - call SpawnerSpawnEvent, abort if cancelled
 +            SpawnerSpawnEvent event = CraftEventFactory.callSpawnerSpawnEvent(entity, this.b(), this.c(), this.d());
 +            if (!event.isCancelled()) {
 +                this.a().addEntity(entity, CreatureSpawnEvent.SpawnReason.SPAWNER); // CraftBukkit
 +            }
-+            // CraftBukkit end
++            // Spigot end
          }
  
          return entity;
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-index 8d2c80f..e6377c1 100644
+index 2d5182a..ae5869b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 @@ -40,6 +40,7 @@ import org.bukkit.Statistic.Type;

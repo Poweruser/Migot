@@ -1,4 +1,4 @@
-From 99209e4565e2dbee9976f72d8dd49bbaa0bd4d72 Mon Sep 17 00:00:00 2001
+From 4f1e6119b9ddff74e4940a99c28aa9bf62e739b8 Mon Sep 17 00:00:00 2001
 From: Dylan Xaldin <Puremin0rez515@gmail.com>
 Date: Thu, 12 Dec 2013 18:05:03 -0600
 Subject: [PATCH] Allow Disabling Zombie Villager Aggression
@@ -6,7 +6,7 @@ Subject: [PATCH] Allow Disabling Zombie Villager Aggression
 Ability to configure if Zombies will be aggressive towards Villagers.
 
 diff --git a/src/main/java/net/minecraft/server/EntityZombie.java b/src/main/java/net/minecraft/server/EntityZombie.java
-index 89fc4c5..6cb5b14 100644
+index 7d8cb93..f732579 100644
 --- a/src/main/java/net/minecraft/server/EntityZombie.java
 +++ b/src/main/java/net/minecraft/server/EntityZombie.java
 @@ -30,7 +30,7 @@ public class EntityZombie extends EntityMonster {

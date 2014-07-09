@@ -1,14 +1,14 @@
-From 94a9557de900da6c603aef7c7a384ac1db6c7d75 Mon Sep 17 00:00:00 2001
+From 940a7f0509755361eaadacffc57136d06dcda85a Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Sun, 29 Jun 2014 21:10:34 +0100
 Subject: [PATCH] Limit block placement/interaction packets
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index c6fbf44..1221319 100644
+index b723b73..8485d6b 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -572,7 +572,18 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -573,7 +573,18 @@ public class PlayerConnection implements PacketPlayInListener {
          }
      }
  
@@ -27,7 +27,7 @@ index c6fbf44..1221319 100644
          WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
  
          // CraftBukkit start
-@@ -615,10 +626,14 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -616,10 +627,14 @@ public class PlayerConnection implements PacketPlayInListener {
  
              // CraftBukkit start
              int itemstackAmount = itemstack.count;
@@ -42,7 +42,7 @@ index c6fbf44..1221319 100644
  
              // CraftBukkit - notch decrements the counter by 1 in the above method with food,
              // snowballs and so forth, but he does it in a place that doesn't cause the
-@@ -639,7 +654,7 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -640,7 +655,7 @@ public class PlayerConnection implements PacketPlayInListener {
                  return;
              }
  

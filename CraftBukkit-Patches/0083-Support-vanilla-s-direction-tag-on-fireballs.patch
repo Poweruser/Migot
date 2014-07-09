@@ -1,11 +1,11 @@
-From 3614e5215c34fb99b9d16add7145148372bf03d6 Mon Sep 17 00:00:00 2001
+From a438fc85a97e9688f91592c00f0f79b47f7d3adb Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Sat, 18 Jan 2014 14:27:03 +0000
 Subject: [PATCH] Support vanilla's direction tag on fireballs
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityFireball.java b/src/main/java/net/minecraft/server/EntityFireball.java
-index 9cbcfc9..ca3b939 100644
+index 02d90aa..663714d 100644
 --- a/src/main/java/net/minecraft/server/EntityFireball.java
 +++ b/src/main/java/net/minecraft/server/EntityFireball.java
 @@ -199,6 +199,8 @@ public abstract class EntityFireball extends Entity {

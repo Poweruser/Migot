@@ -1,11 +1,11 @@
-From 5501d32c48bba9a7aaaa283f42c8dd8c48aca37b Mon Sep 17 00:00:00 2001
+From 1a4bdcc271e8a0c2416c04fd4a60e1108739231c Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 12 Jan 2014 20:56:41 +1100
 Subject: [PATCH] Try and Debug Crash Reports Crashing
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 6ebe13e..9c70814 100644
+index ee74b03..edd781e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -661,7 +661,13 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo

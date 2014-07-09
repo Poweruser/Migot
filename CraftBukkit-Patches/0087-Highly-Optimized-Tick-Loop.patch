@@ -1,11 +1,11 @@
-From 569883c814179991429a6d40533017275302cec3 Mon Sep 17 00:00:00 2001
+From c2c282cd5443fbbac4b824c614a2f1f0fcd4a62c Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sat, 25 Jan 2014 14:08:35 +1100
 Subject: [PATCH] Highly Optimized Tick Loop
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index b52c101..b905ceb 100644
+index 622e522..d6cd151 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -107,6 +107,12 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
@@ -36,7 +36,7 @@ index b52c101..b905ceb 100644
          try {
              if (this.init()) {
 @@ -442,38 +455,34 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
-                 this.q.setServerInfo(new ServerPingServerData("1.7.9", 5));
+                 this.q.setServerInfo(new ServerPingServerData("1.7.10", 5));
                  this.a(this.q);
  
 +                // Spigot start

@@ -1,4 +1,4 @@
-From 6f642103dece4774bbaffd880812980fe567fb09 Mon Sep 17 00:00:00 2001
+From ac1bd066ff3a98c29dd177254837d7f1f8e51abe Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Sun, 23 Mar 2014 10:53:48 +0000
 Subject: [PATCH] Cap window names to prevent client disconnects

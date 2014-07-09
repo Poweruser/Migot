@@ -1,4 +1,4 @@
-From acce538aaff0ffae5bf6a6bcda63c3f9274345e8 Mon Sep 17 00:00:00 2001
+From af1d627cd858b3f429774965ca2f65a521a2db27 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Fri, 31 Jan 2014 11:18:34 -0500
 Subject: [PATCH] Cap Entity Collisions
@@ -7,7 +7,7 @@ Limit a single entity to colliding a max of configurable times per tick.
 This will alleviate issues where living entities are hoarded in 1x1 pens.
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 1b1a8ad..e9b499c 100644
+index f1bad28..b258f15 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -1012,6 +1012,7 @@ public abstract class Entity {
@@ -19,7 +19,7 @@ index 1b1a8ad..e9b499c 100644
          if (entity.passenger != this && entity.vehicle != this) {
              double d0 = entity.locX - this.locX;
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index b16670c..6b4cd2c 100644
+index 41866f5..67484dc 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
 @@ -1567,7 +1567,9 @@ public abstract class EntityLiving extends Entity {
@@ -35,7 +35,7 @@ index b16670c..6b4cd2c 100644
 @@ -1578,9 +1580,12 @@ public abstract class EntityLiving extends Entity {
                  // CraftBukkit end
  
-                 if (entity.R()) {
+                 if (entity.S()) {
 +                    entity.numCollisions++; // Spigot
 +                    numCollisions++; // Spigot
                      this.o(entity);

@@ -1,4 +1,4 @@
-From af67cedb0ba1960b11bd5d57d1b557a16d552bbd Mon Sep 17 00:00:00 2001
+From 7c38108c86881c6904493f24d41a0434e10368c4 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Tue, 24 Dec 2013 10:14:25 +1100
 Subject: [PATCH] Fix Tab Completion for Some Commands

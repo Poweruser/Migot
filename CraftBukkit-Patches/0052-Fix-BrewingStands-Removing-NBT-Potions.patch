@@ -1,11 +1,11 @@
-From aefc46ecb9d622dc58680c8f3a2903552786b2ef Mon Sep 17 00:00:00 2001
+From ec811040fba08b7084c23760094615bdf41b3e39 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Wed, 9 Oct 2013 18:20:05 +1100
 Subject: [PATCH] Fix BrewingStands Removing NBT / Potions
 
 
 diff --git a/src/main/java/net/minecraft/server/BlockBrewingStand.java b/src/main/java/net/minecraft/server/BlockBrewingStand.java
-index 3287d77..eabea5a 100644
+index 6ce80db..9f49f43 100644
 --- a/src/main/java/net/minecraft/server/BlockBrewingStand.java
 +++ b/src/main/java/net/minecraft/server/BlockBrewingStand.java
 @@ -86,7 +86,13 @@ public class BlockBrewingStand extends BlockContainer {

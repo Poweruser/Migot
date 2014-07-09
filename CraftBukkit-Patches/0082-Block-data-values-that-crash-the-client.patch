@@ -1,11 +1,11 @@
-From 5eb141636aae3e1b928a284e2a803701fbeb8ad6 Mon Sep 17 00:00:00 2001
+From 39c52a211d2398b4c7aad1c611a38207b4514fde Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Wed, 15 Jan 2014 21:52:47 +0000
 Subject: [PATCH] Block data values that crash the client
 
 
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index a48785b..45ae199 100644
+index 04c0d64..5641ad7 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
 @@ -143,7 +143,7 @@ public class Chunk {

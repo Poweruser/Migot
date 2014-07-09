@@ -1,4 +1,4 @@
-From cf7e10e2a374526c4585e5a06b2ab7a346d0391e Mon Sep 17 00:00:00 2001
+From 50fb4f7fa99fb1ba45cd06772d0e2b0a4def4610 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 2 Jun 2013 10:42:57 +1000
 Subject: [PATCH] Spigot Timings
@@ -68,7 +68,7 @@ index d75380c..f15b95d 100644
          }
  
 diff --git a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java b/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
-index 05cfcb0..77e846e 100644
+index 05cfcb0..22926d6 100644
 --- a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
 @@ -19,23 +19,97 @@ import org.bukkit.util.StringUtil;

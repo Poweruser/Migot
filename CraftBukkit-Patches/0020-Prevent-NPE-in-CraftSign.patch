@@ -1,4 +1,4 @@
-From 36e7b54fd16fc63f91316c004e8df1ba2a9fa7a0 Mon Sep 17 00:00:00 2001
+From 31decbb03eaed1acb57f79fc9a128dd806029373 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Mon, 18 Mar 2013 20:01:44 +1100
 Subject: [PATCH] Prevent NPE in CraftSign

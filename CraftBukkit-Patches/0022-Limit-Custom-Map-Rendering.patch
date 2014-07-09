@@ -1,4 +1,4 @@
-From ccb5b908518218d431790d9e4b5447f58500e0a9 Mon Sep 17 00:00:00 2001
+From db9b904657edc497a64cf54815bc9e0a45c6e59e Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 23 Mar 2013 19:08:41 +1100
 Subject: [PATCH] Limit Custom Map Rendering
@@ -6,7 +6,7 @@ Subject: [PATCH] Limit Custom Map Rendering
 The default CraftBukkit render sequence for maps is ridiculously slow. By only using it when a custom renderer has been added (rarely in most cases), we can fallback to the Vanilla renderer for general usage. This leads to a much higher effiency overall, especially if no plugins are rendering such maps.
 
 diff --git a/src/main/java/net/minecraft/server/WorldMapHumanTracker.java b/src/main/java/net/minecraft/server/WorldMapHumanTracker.java
-index ec708d1..ef56386 100644
+index ec708d1..d22b6c9 100644
 --- a/src/main/java/net/minecraft/server/WorldMapHumanTracker.java
 +++ b/src/main/java/net/minecraft/server/WorldMapHumanTracker.java
 @@ -37,23 +37,29 @@ public class WorldMapHumanTracker {
@@ -21,7 +21,7 @@ index ec708d1..ef56386 100644
              if (--this.g < 0) {
                  this.g = 4;
 -                abyte = new byte[render.cursors.size() * 3 + 1]; // CraftBukkit
-+                abyte = new byte[((custom) ? render.cursors.size() : this.worldMap.g.size()) * 3 + 1]; // CraftBukkit
++                abyte = new byte[((custom) ? render.cursors.size() : this.worldMap.decorations.size()) * 3 + 1]; // CraftBukkit
                  abyte[0] = 1;
                  i = 0;
  
@@ -34,7 +34,7 @@ index ec708d1..ef56386 100644
 -                    abyte[i * 3 + 2] = (byte) cursor.getX();
 -                    abyte[i * 3 + 3] = (byte) cursor.getY();
 +                // Spigot start
-+                for (Iterator iterator = ((custom) ? render.cursors.iterator() : this.worldMap.g.values().iterator()); iterator.hasNext(); ++i) {
++                for (Iterator iterator = ((custom) ? render.cursors.iterator() : this.worldMap.decorations.values().iterator()); iterator.hasNext(); ++i) {
 +                    org.bukkit.map.MapCursor cursor = (custom) ? (org.bukkit.map.MapCursor) iterator.next() : null;
 +                    if (cursor != null && !cursor.isVisible()) continue;
 +                    WorldMapDecoration deco = (custom) ? null : (WorldMapDecoration) iterator.next();

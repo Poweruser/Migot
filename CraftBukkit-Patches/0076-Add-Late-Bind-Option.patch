@@ -1,4 +1,4 @@
-From 603c614ab3b8ace44f1cb336d6636ed50f030369 Mon Sep 17 00:00:00 2001
+From bc9ac63da56b9f64559bf83f7780e46c8c9ab464 Mon Sep 17 00:00:00 2001
 From: slide23 <me@slide.ws>
 Date: Fri, 20 Dec 2013 20:15:33 -0600
 Subject: [PATCH] Add Late Bind Option
@@ -6,44 +6,42 @@ Subject: [PATCH] Add Late Bind Option
 Add late-bind config option to delay binding until loading is done.
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 3c68d95..a173c25 100644
+index 58e68da..19f328b 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -120,6 +120,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
-         this.a(MinecraftEncryption.b());
-         i.info("Starting Minecraft server on " + (this.getServerIp().length() == 0 ? "*" : this.getServerIp()) + ":" + this.L());
+@@ -127,6 +127,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+             this.a(MinecraftEncryption.b());
+             i.info("Starting Minecraft server on " + (this.getServerIp().length() == 0 ? "*" : this.getServerIp()) + ":" + this.L());
  
 +        if (!org.spigotmc.SpigotConfig.lateBind) {
-         try {
-             this.ai().a(inetaddress, this.L());
-         } catch (Throwable ioexception) { // CraftBukkit - IOException -> Throwable
-@@ -128,6 +129,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
-             i.warn("Perhaps a server is already running on that port?");
-             return false;
-         }
+             try {
+                 this.ai().a(inetaddress, this.L());
+             } catch (Throwable ioexception) { // CraftBukkit - IOException -> Throwable
+@@ -135,6 +136,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+                 i.warn("Perhaps a server is already running on that port?");
+                 return false;
+             }
 +        }
  
-         // Spigot Start - Move DedicatedPlayerList up and bring plugin loading from CraftServer to here
-         // this.a((PlayerList) (new DedicatedPlayerList(this)));
-@@ -194,6 +196,18 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
-             String s3 = String.format("%.3fs", new Object[] { Double.valueOf((double) i1 / 1.0E9D)});
+             // Spigot Start - Move DedicatedPlayerList up and bring plugin loading from CraftServer to here
+             // this.a((PlayerList) (new DedicatedPlayerList(this))); // CraftBukkit
+@@ -224,6 +226,16 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+                 }
+                 // CraftBukkit end
  
-             i.info("Done (" + s3 + ")! For help, type \"help\" or \"?\"");
-+
-+        if (org.spigotmc.SpigotConfig.lateBind) {
-+        try {
-+            this.ai().a(inetaddress, this.L());
-+        } catch (Throwable ioexception) { // CraftBukkit - IOException -> Throwable
-+            i.warn("**** FAILED TO BIND TO PORT!");
-+            i.warn("The exception was: {}", new Object[] { ioexception.toString()});
-+            i.warn("Perhaps a server is already running on that port?");
-+            return false;
++        if (!org.spigotmc.SpigotConfig.lateBind) {
++            try {
++                this.ai().a(inetaddress, this.L());
++            } catch (Throwable ioexception) { // CraftBukkit - IOException -> Throwable
++                i.warn("**** FAILED TO BIND TO PORT!");
++                i.warn("The exception was: {}", new Object[] { ioexception.toString()});
++                i.warn("Perhaps a server is already running on that port?");
++                return false;
 +            }
 +        }
-+
-             if (this.propertyManager.getBoolean("enable-query", false)) {
-                 i.info("Starting GS4 status listener");
-                 this.k = new RemoteStatusListener(this);
+                 return true;
+             }
+         }
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
 index b3278fd..af73544 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java

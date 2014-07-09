@@ -1,11 +1,11 @@
-From 0d8fef7a1329427cb36a8273e9ff02d6f0c18b1a Mon Sep 17 00:00:00 2001
+From 234a923b8d160c7dcffe59c466fc9b8f0a2eb90f Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Mon, 23 Dec 2013 15:57:57 +1100
 Subject: [PATCH] Disable Connected Check on setScoreboard
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 82bd22f..1c4f3ae 100644
+index c8787cf..c96c432 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -1225,7 +1225,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

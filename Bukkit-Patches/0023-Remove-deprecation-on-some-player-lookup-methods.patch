@@ -1,4 +1,4 @@
-From aad103692244a993848e7aeed5c8ad74ea220a87 Mon Sep 17 00:00:00 2001
+From 350a5f4e14e622512b2a91e3f08f52ed4ef6802b Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 30 Mar 2014 15:58:22 +1100
 Subject: [PATCH] Remove deprecation on some player lookup methods

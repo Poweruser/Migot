@@ -1,11 +1,11 @@
-From 80c501124c6426c6b04785ea66cc48da314b5e29 Mon Sep 17 00:00:00 2001
+From b0a484ae25e8e2eeffb682eca6d6e01fe97f8b50 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 3 Aug 2013 19:27:07 +1000
 Subject: [PATCH] Player Collision API
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
-index ba44cba..57e2ae9 100644
+index 54c77f8..4bde9c1 100644
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
 @@ -430,7 +430,7 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
@@ -13,16 +13,16 @@ index ba44cba..57e2ae9 100644
              List list = this.world.getEntities(this, axisalignedbb);
  
 -            if (list != null) {
-+            if (list != null && this.R()) { // Spigot: Add this.R() condition
++            if (list != null && this.S()) { // Spigot: Add this.S() condition (second !this.isDead near bottom of EntityLiving)
                  for (int i = 0; i < list.size(); ++i) {
                      Entity entity = (Entity) list.get(i);
  
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 3a4e4f9..b16670c 100644
+index 485ca6b..41866f5 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
 @@ -1566,7 +1566,7 @@ public abstract class EntityLiving extends Entity {
-     protected void bn() {
+     protected void bo() {
          List list = this.world.getEntities(this, this.boundingBox.grow(0.20000000298023224D, 0.0D, 0.20000000298023224D));
  
 -        if (list != null && !list.isEmpty()) {
@@ -31,7 +31,7 @@ index 3a4e4f9..b16670c 100644
                  Entity entity = (Entity) list.get(i);
  
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 3a0d679..367472d 100644
+index adfaddf..f74e175 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -63,6 +63,21 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -42,25 +42,25 @@ index 3a0d679..367472d 100644
 +    public boolean collidesWithEntities = true;
 +
 +    @Override
-+    public boolean Q()
++    public boolean R()
 +    {
-+        return this.collidesWithEntities && super.Q();
++        return this.collidesWithEntities && super.R(); // (first !this.isDead near bottom of EntityLiving)
 +    }
 +
 +    @Override
-+    public boolean R()
++    public boolean S()
 +    {
-+        return this.collidesWithEntities && super.R();
++        return this.collidesWithEntities && super.S(); // (second !this.isDead near bottom of EntityLiving)
 +    }
 +    // Spigot end
  
      public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
          super(worldserver, gameprofile);
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 4d2374d..a5002d8 100644
+index 8b599f2..ab1c5d8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1290,6 +1290,19 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1289,6 +1289,19 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      // Spigot start
      private final Player.Spigot spigot = new Player.Spigot()
      {

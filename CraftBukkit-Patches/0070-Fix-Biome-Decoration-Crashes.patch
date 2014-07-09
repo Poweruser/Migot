@@ -1,4 +1,4 @@
-From a643a78f5ddb78f46f94c2e867a47d86a7edc503 Mon Sep 17 00:00:00 2001
+From 17c1d897f3972aa4d2e2d2e3a46d9fa592bd3657 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 5 Jan 2014 09:35:01 +1100
 Subject: [PATCH] Fix Biome Decoration Crashes
@@ -6,7 +6,7 @@ Subject: [PATCH] Fix Biome Decoration Crashes
 We don't really know what affect this will have on the terrain generation, but its better than crashing and not having terrain generate at all!
 
 diff --git a/src/main/java/net/minecraft/server/BiomeDecorator.java b/src/main/java/net/minecraft/server/BiomeDecorator.java
-index b048d6c..962d719 100644
+index c5701f6..064a125 100644
 --- a/src/main/java/net/minecraft/server/BiomeDecorator.java
 +++ b/src/main/java/net/minecraft/server/BiomeDecorator.java
 @@ -147,7 +147,7 @@ public class BiomeDecorator {
@@ -17,14 +17,14 @@ index b048d6c..962d719 100644
 +            i1 = this.b.nextInt(this.getHighestBlockYAt(k, l) * 2); // Spigot
              WorldGenerator worldgenerator = biomebase.b(this.b);
  
-             worldgenerator.a(this.a, this.b, k, i1, l);
+             worldgenerator.generate(this.a, this.b, k, i1, l);
 @@ -156,7 +156,7 @@ public class BiomeDecorator {
          for (j = 0; j < this.A; ++j) {
              k = this.c + this.b.nextInt(16) + 8;
              l = this.d + this.b.nextInt(16) + 8;
 -            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
 +            i1 = this.b.nextInt(this.getHighestBlockYAt(k, l) * 2); // Spigot
-             (new WorldGenDeadBush(Blocks.DEAD_BUSH)).a(this.a, this.b, k, i1, l);
+             (new WorldGenDeadBush(Blocks.DEAD_BUSH)).generate(this.a, this.b, k, i1, l);
          }
  
 @@ -164,7 +164,7 @@ public class BiomeDecorator {
@@ -42,7 +42,7 @@ index b048d6c..962d719 100644
                  l = this.d + this.b.nextInt(16) + 8;
 -                i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
 +                i1 = this.b.nextInt(this.getHighestBlockYAt(k, l) * 2); // Spigot
-                 this.r.a(this.a, this.b, k, i1, l);
+                 this.r.generate(this.a, this.b, k, i1, l);
              }
          }
 @@ -190,42 +190,42 @@ public class BiomeDecorator {
@@ -51,7 +51,7 @@ index b048d6c..962d719 100644
              k = this.d + this.b.nextInt(16) + 8;
 -            l = this.b.nextInt(this.a.getHighestBlockYAt(j, k) * 2);
 +            l = this.b.nextInt(this.getHighestBlockYAt(j, k) * 2); // Spigot
-             this.q.a(this.a, this.b, j, l, k);
+             this.q.generate(this.a, this.b, j, l, k);
          }
  
          if (this.b.nextInt(8) == 0) {
@@ -59,7 +59,7 @@ index b048d6c..962d719 100644
              k = this.d + this.b.nextInt(16) + 8;
 -            l = this.b.nextInt(this.a.getHighestBlockYAt(j, k) * 2);
 +            l = this.b.nextInt(this.getHighestBlockYAt(j, k) * 2); // Spigot
-             this.r.a(this.a, this.b, j, l, k);
+             this.r.generate(this.a, this.b, j, l, k);
          }
  
          for (j = 0; j < this.C; ++j) {
@@ -67,7 +67,7 @@ index b048d6c..962d719 100644
              l = this.d + this.b.nextInt(16) + 8;
 -            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
 +            i1 = this.b.nextInt(this.getHighestBlockYAt(k, l) * 2); // Spigot
-             this.t.a(this.a, this.b, k, i1, l);
+             this.t.generate(this.a, this.b, k, i1, l);
          }
  
          for (j = 0; j < 10; ++j) {
@@ -75,7 +75,7 @@ index b048d6c..962d719 100644
              l = this.d + this.b.nextInt(16) + 8;
 -            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
 +            i1 = this.b.nextInt(this.getHighestBlockYAt(k, l) * 2); // Spigot
-             this.t.a(this.a, this.b, k, i1, l);
+             this.t.generate(this.a, this.b, k, i1, l);
          }
  
          if (this.b.nextInt(32) == 0) {
@@ -83,7 +83,7 @@ index b048d6c..962d719 100644
              k = this.d + this.b.nextInt(16) + 8;
 -            l = this.b.nextInt(this.a.getHighestBlockYAt(j, k) * 2);
 +            l = this.b.nextInt(this.getHighestBlockYAt(j, k) * 2); // Spigot
-             (new WorldGenPumpkin()).a(this.a, this.b, j, l, k);
+             (new WorldGenPumpkin()).generate(this.a, this.b, j, l, k);
          }
  
          for (j = 0; j < this.D; ++j) {
@@ -91,7 +91,7 @@ index b048d6c..962d719 100644
              l = this.d + this.b.nextInt(16) + 8;
 -            i1 = this.b.nextInt(this.a.getHighestBlockYAt(k, l) * 2);
 +            i1 = this.b.nextInt(this.getHighestBlockYAt(k, l) * 2); // Spigot
-             this.u.a(this.a, this.b, k, i1, l);
+             this.u.generate(this.a, this.b, k, i1, l);
          }
  
 @@ -276,4 +276,11 @@ public class BiomeDecorator {

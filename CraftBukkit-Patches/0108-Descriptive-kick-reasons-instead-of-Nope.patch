@@ -1,11 +1,11 @@
-From 4b21206d584965c800e4cf71d6c330608c522a7c Mon Sep 17 00:00:00 2001
+From 87c81012aff3a2051c2f0b9b83f4d3e926c1c9b6 Mon Sep 17 00:00:00 2001
 From: drXor <mcyoungsota@gmail.com>
 Date: Sat, 15 Mar 2014 01:30:05 -0400
 Subject: [PATCH] Descriptive kick reasons instead of Nope!
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 861ffeb..0635c20 100644
+index b258f15..56b5980 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -219,7 +219,7 @@ public abstract class Entity {
@@ -27,10 +27,10 @@ index 861ffeb..0635c20 100644
              f1 = 0;
          }
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 999cb64..c4c7b7b 100644
+index 20fe15e..b04969a 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -184,7 +184,7 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -185,7 +185,7 @@ public class PlayerConnection implements PacketPlayInListener {
          // CraftBukkit start - Check for NaN
          if (Double.isNaN(packetplayinflying.x) || Double.isNaN(packetplayinflying.y) || Double.isNaN(packetplayinflying.z) || Double.isNaN(packetplayinflying.stance)) {
              c.warn(player.getName() + " was caught trying to crash the server with an invalid position.");
@@ -39,7 +39,7 @@ index 999cb64..c4c7b7b 100644
              return;
          }
          // CraftBukkit end
-@@ -778,7 +778,7 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -779,7 +779,7 @@ public class PlayerConnection implements PacketPlayInListener {
              this.player.v();
          } else {
              c.warn(this.player.getName() + " tried to set an invalid carried item");

@@ -1,11 +1,11 @@
-From a014c198bdbb7486e7f46104af9bf94166ec0203 Mon Sep 17 00:00:00 2001
+From d98aa687a5dbd3438f42805463692b4848158ed6 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Wed, 5 Mar 2014 20:27:27 +0000
 Subject: [PATCH] Prevent hoppers from loading chunks
 
 
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index 51cbdad..b620394 100644
+index d77708b..ace3617 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
 @@ -542,6 +542,7 @@ public class TileEntityHopper extends TileEntity implements IHopper {

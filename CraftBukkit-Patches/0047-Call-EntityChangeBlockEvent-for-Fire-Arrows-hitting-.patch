@@ -1,4 +1,4 @@
-From a563fc07fb737f2963bf460865f12844f69116fe Mon Sep 17 00:00:00 2001
+From 4ba768774a4de3edd890f0f358adf4c513d559a7 Mon Sep 17 00:00:00 2001
 From: BlackHole <black-hole@live.com>
 Date: Tue, 16 Jul 2013 22:34:50 +0200
 Subject: [PATCH] Call EntityChangeBlockEvent for Fire Arrows hitting TNT
@@ -6,17 +6,17 @@ Subject: [PATCH] Call EntityChangeBlockEvent for Fire Arrows hitting TNT
 Adds BUKKIT-4355
 
 diff --git a/src/main/java/net/minecraft/server/BlockTNT.java b/src/main/java/net/minecraft/server/BlockTNT.java
-index e943676..7320a88 100644
+index 8cc7d5e..35bf1a3 100644
 --- a/src/main/java/net/minecraft/server/BlockTNT.java
 +++ b/src/main/java/net/minecraft/server/BlockTNT.java
 @@ -54,7 +54,7 @@ public class BlockTNT extends Block {
  
      public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman, int l, float f, float f1, float f2) {
-         if (entityhuman.bE() != null && entityhuman.bE().getItem() == Items.FLINT_AND_STEEL) {
+         if (entityhuman.bF() != null && entityhuman.bF().getItem() == Items.FLINT_AND_STEEL) {
 -            this.a(world, i, j, k, 1, entityhuman);
 +            this.a(world, i, j, k, 1, (EntityLiving) entityhuman); // Spigot - Fix decompile error!
              world.setAir(i, j, k);
-             entityhuman.bE().damage(1, entityhuman);
+             entityhuman.bF().damage(1, entityhuman);
              return true;
 @@ -68,6 +68,11 @@ public class BlockTNT extends Block {
              EntityArrow entityarrow = (EntityArrow) entity;

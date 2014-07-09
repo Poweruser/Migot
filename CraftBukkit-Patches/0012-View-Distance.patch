@@ -1,4 +1,4 @@
-From e58171001d40f747655e603fd0fdc2701be5e465 Mon Sep 17 00:00:00 2001
+From 96c3f91f9741f81bce19d0b681a8adaf05eb234f Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 23 Mar 2013 09:52:41 +1100
 Subject: [PATCH] View Distance
@@ -22,7 +22,7 @@ index ae53635..cc1b095 100644
  
      public WorldServer a() {
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 9b5b370..3d938d8 100644
+index 71626fa..8f25a15 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -55,7 +55,7 @@ public class WorldServer extends World {

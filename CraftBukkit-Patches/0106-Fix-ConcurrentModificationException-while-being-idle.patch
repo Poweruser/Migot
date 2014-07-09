@@ -1,4 +1,4 @@
-From 3e94c7bd3b8af010e85cd3a3b7c5925e7a17fb2d Mon Sep 17 00:00:00 2001
+From 6298487e76a7ec107f7a4a88d05fd7a8465351ba Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Tue, 14 Jan 2014 20:11:25 +0000
 Subject: [PATCH] Fix ConcurrentModificationException while being idle kicked
@@ -6,10 +6,10 @@ Subject: [PATCH] Fix ConcurrentModificationException while being idle kicked
 
 
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 37bfdda..d1390fc 100644
+index d5d5f9d..554023a 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -1130,23 +1130,24 @@ public abstract class World implements IBlockAccess {
+@@ -1131,23 +1131,24 @@ public abstract class World implements IBlockAccess {
              this.players.remove(entity);
              this.everyoneSleeping();
          }

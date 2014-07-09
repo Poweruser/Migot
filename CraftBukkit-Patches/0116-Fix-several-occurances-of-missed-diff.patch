@@ -1,4 +1,4 @@
-From 69ffe754ca96abab70cfcda510daaf8a7d6b5a7c Mon Sep 17 00:00:00 2001
+From 89eaf43685ccebad00b9ea4261edc19b1763c010 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sat, 12 Apr 2014 17:49:14 +1000
 Subject: [PATCH] Fix several occurances of missed diff.
@@ -18,7 +18,7 @@ index d16f035..9fe2a8b 100644
          World world = isourceblock.k();
          Random random = world.random;
 diff --git a/src/main/java/net/minecraft/server/EntityBoat.java b/src/main/java/net/minecraft/server/EntityBoat.java
-index 8250395..066a3be 100644
+index 8a3ea63..c9f2b13 100644
 --- a/src/main/java/net/minecraft/server/EntityBoat.java
 +++ b/src/main/java/net/minecraft/server/EntityBoat.java
 @@ -147,7 +147,7 @@ public class EntityBoat extends Entity {
@@ -31,7 +31,7 @@ index 8250395..066a3be 100644
          double prevX = this.locX;
          double prevY = this.locY;
 diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
-index 0f1bcc7..5eb893f 100644
+index a45bed9..98a4ac7 100644
 --- a/src/main/java/net/minecraft/server/EntityItem.java
 +++ b/src/main/java/net/minecraft/server/EntityItem.java
 @@ -320,7 +320,7 @@ public class EntityItem extends Entity {
@@ -44,10 +44,10 @@ index 0f1bcc7..5eb893f 100644
  
      public void setItemStack(ItemStack itemstack) {
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 50852e4..fded359 100644
+index b04969a..0804fe7 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1737,7 +1737,7 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -1738,7 +1738,7 @@ public class PlayerConnection implements PacketPlayInListener {
                      }
  
                      if (itemstack.getItem() == Items.WRITTEN_BOOK && itemstack1.getItem() == Items.BOOK_AND_QUILL) {
@@ -57,7 +57,7 @@ index 50852e4..fded359 100644
  
                      return;
 diff --git a/src/main/java/net/minecraft/server/PlayerSelector.java b/src/main/java/net/minecraft/server/PlayerSelector.java
-index e7615d3..2b2d510 100644
+index 819a133..14d44f0 100644
 --- a/src/main/java/net/minecraft/server/PlayerSelector.java
 +++ b/src/main/java/net/minecraft/server/PlayerSelector.java
 @@ -1,6 +1,10 @@
@@ -72,24 +72,6 @@ index e7615d3..2b2d510 100644
  import java.util.regex.Matcher;
  import java.util.regex.Pattern;
  
-diff --git a/src/main/java/net/minecraft/server/StatisticManager.java b/src/main/java/net/minecraft/server/StatisticManager.java
-index e86e21b..418ec40 100644
---- a/src/main/java/net/minecraft/server/StatisticManager.java
-+++ b/src/main/java/net/minecraft/server/StatisticManager.java
-@@ -8,11 +8,10 @@ public class StatisticManager {
- 
-     protected final Map a = Maps.newConcurrentMap();
- 
--    public StatisticManager() {
--    }
-+    public StatisticManager() {}
- 
-     public boolean a(Achievement achievement) {
--        return this.getStatisticValue((Statistic) achievement) > 0;
-+        return this.getStatisticValue(achievement) > 0;
-     }
- 
-     public boolean b(Achievement achievement) {
 -- 
 1.9.1
 
