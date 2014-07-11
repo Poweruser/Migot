@@ -1,11 +1,11 @@
-From c13dcb5e8adf08f5b5be422a0804aad7c1a3d841 Mon Sep 17 00:00:00 2001
+From c793551fade594dedfd401eb36971e76414b274a Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Thu, 26 Jun 2014 23:42:52 +0100
 Subject: [PATCH] Add damager to the unhandled error
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-index ae5869b..0444e98 100644
+index 9de61ce..48b5206 100644
 --- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 @@ -498,7 +498,7 @@ public class CraftEventFactory {
@@ -15,7 +15,7 @@ index ae5869b..0444e98 100644
 -                throw new RuntimeException("Unhandled entity damage");
 +                throw new RuntimeException("Unhandled entity damage from " + damager.getHandle().getName()); // Spigot - Add damager
              }
-             EntityDamageEvent event = callEvent(new EntityDamageByEntityEvent(damager, entity.getBukkitEntity(), cause, modifiers));
+             EntityDamageEvent event = callEvent(new EntityDamageByEntityEvent(damager, entity.getBukkitEntity(), cause, modifiers, modifierFunctions));
              if (!event.isCancelled()) {
 -- 
 1.9.1

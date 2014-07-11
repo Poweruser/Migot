@@ -1,4 +1,4 @@
-From af1d627cd858b3f429774965ca2f65a521a2db27 Mon Sep 17 00:00:00 2001
+From 829fad4ebc98932747f6f84251c6c4807c2a82f4 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Fri, 31 Jan 2014 11:18:34 -0500
 Subject: [PATCH] Cap Entity Collisions
@@ -19,10 +19,10 @@ index f1bad28..b258f15 100644
          if (entity.passenger != this && entity.vehicle != this) {
              double d0 = entity.locX - this.locX;
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 41866f5..67484dc 100644
+index 859e91f..546b952 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -1567,7 +1567,9 @@ public abstract class EntityLiving extends Entity {
+@@ -1597,7 +1597,9 @@ public abstract class EntityLiving extends Entity {
          List list = this.world.getEntities(this, this.boundingBox.grow(0.20000000298023224D, 0.0D, 0.20000000298023224D));
  
          if (this.R() && list != null && !list.isEmpty()) { // Spigot: Add this.R() condition
@@ -32,7 +32,7 @@ index 41866f5..67484dc 100644
                  Entity entity = (Entity) list.get(i);
  
                  // TODO better check now?
-@@ -1578,9 +1580,12 @@ public abstract class EntityLiving extends Entity {
+@@ -1608,9 +1610,12 @@ public abstract class EntityLiving extends Entity {
                  // CraftBukkit end
  
                  if (entity.S()) {

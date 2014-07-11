@@ -1,4 +1,4 @@
-From 04429002274ff5f629bcdca0f3ad09f61f137871 Mon Sep 17 00:00:00 2001
+From 6e24c42c19d80dffc6399503d3b23c936c0a116f Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 3 Feb 2013 05:10:21 -0500
 Subject: [PATCH] Entity Activation Range
@@ -137,10 +137,10 @@ index 759d46c..b977cf7 100644
          super(world);
          this.a(0.25F, 0.25F);
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 2629d17..485ca6b 100644
+index 6a0bee6..92ad5c7 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -83,6 +83,13 @@ public abstract class EntityLiving extends Entity {
+@@ -84,6 +84,13 @@ public abstract class EntityLiving extends Entity {
      public int maxAirTicks = 300;
      ArrayList<org.bukkit.inventory.ItemStack> drops = null;
      // CraftBukkit end

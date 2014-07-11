@@ -1,4 +1,4 @@
-From b0a484ae25e8e2eeffb682eca6d6e01fe97f8b50 Mon Sep 17 00:00:00 2001
+From 4f19ec1332b03d00e6f233ea6f0da5d19744ccf5 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 3 Aug 2013 19:27:07 +1000
 Subject: [PATCH] Player Collision API
@@ -18,10 +18,10 @@ index 54c77f8..4bde9c1 100644
                      Entity entity = (Entity) list.get(i);
  
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 485ca6b..41866f5 100644
+index 92ad5c7..859e91f 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -1566,7 +1566,7 @@ public abstract class EntityLiving extends Entity {
+@@ -1596,7 +1596,7 @@ public abstract class EntityLiving extends Entity {
      protected void bo() {
          List list = this.world.getEntities(this, this.boundingBox.grow(0.20000000298023224D, 0.0D, 0.20000000298023224D));
  
