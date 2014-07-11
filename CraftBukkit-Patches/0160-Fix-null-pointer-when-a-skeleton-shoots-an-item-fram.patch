@@ -1,0 +1,22 @@
+From e920cac71ab53976337d07ef5df4f3e9c82be836 Mon Sep 17 00:00:00 2001
+From: Thinkofdeath <thinkofdeath@spigotmc.org>
+Date: Fri, 11 Jul 2014 14:03:48 +0100
+Subject: [PATCH] Fix null pointer when a skeleton shoots an item frame
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+index 808229b..0841c01 100644
+--- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
++++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+@@ -587,7 +587,7 @@ public class CraftEventFactory {
+         if (entity instanceof EntityEnderCrystal && !(source instanceof EntityDamageSource)) {
+             return false;
+         }
+-        EntityDamageEvent event = handleEntityDamageEvent(entity, source, new EnumMap<DamageModifier, Double>(ImmutableMap.of(DamageModifier.BASE, (double) damage)), null);
++        EntityDamageEvent event = handleEntityDamageEvent(entity, source, new EnumMap<DamageModifier, Double>(ImmutableMap.of(DamageModifier.BASE, (double) damage)), new EnumMap<DamageModifier, Function<? super Double, Double>>(ImmutableMap.of(DamageModifier.BASE, ZERO)));
+         if (event == null) {
+             return false;
+         }
+-- 
+1.9.1
+
