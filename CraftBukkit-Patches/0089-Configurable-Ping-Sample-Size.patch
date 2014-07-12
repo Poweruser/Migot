@@ -1,4 +1,4 @@
-From 8dcc705c4dba07a21324db06169776c965b77893 Mon Sep 17 00:00:00 2001
+From f38d99e335046f768b3290c5d1fadf55264246a3 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 26 Jan 2014 21:48:34 +1100
 Subject: [PATCH] Configurable Ping Sample Size
@@ -23,10 +23,10 @@ index cd06305..6423aec 100644
  
          ServerPing ping = new ServerPing();
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index fe732bc..9b0cc28 100644
+index 3f45433..2c2b978 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
-@@ -249,4 +249,11 @@ public class SpigotConfig
+@@ -260,4 +260,11 @@ public class SpigotConfig
      {
          commands.put( "tps", new TicksPerSecondCommand( "tps" ) );
      }

@@ -1,4 +1,4 @@
-From c2c282cd5443fbbac4b824c614a2f1f0fcd4a62c Mon Sep 17 00:00:00 2001
+From f6ccc2acaa06c9fdbee90a4a05f40e39fd9160bc Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sat, 25 Jan 2014 14:08:35 +1100
 Subject: [PATCH] Highly Optimized Tick Loop
@@ -96,10 +96,10 @@ index 622e522..d6cd151 100644
                  this.a((CrashReport) null);
              }
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index ca87886..fe732bc 100644
+index e6709a8..3f45433 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
-@@ -244,4 +244,9 @@ public class SpigotConfig
+@@ -255,4 +255,9 @@ public class SpigotConfig
                      "screen." );
          }
      }

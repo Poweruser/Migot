@@ -1,4 +1,4 @@
-From f3778237967b1b966ba58c4d7429e446127a42cc Mon Sep 17 00:00:00 2001
+From 0f023ad8b4a2833d951bc18f4143d910b5331f9e Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Fri, 13 Dec 2013 11:58:58 +1100
 Subject: [PATCH] Configurable Amount of Netty Threads
@@ -37,10 +37,10 @@ index 256d2f9..b0157b2 100644
  
      public boolean ak() {
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index 8bfffa5..b3278fd 100644
+index 8da7267..978dd41 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
-@@ -202,4 +202,11 @@ public class SpigotConfig
+@@ -214,4 +214,11 @@ public class SpigotConfig
          }
          bungee = getBoolean( "settings.bungeecord", false );
      }

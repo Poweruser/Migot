@@ -1,4 +1,4 @@
-From 117dfebd98fe44f6eba7c294fcb8341ad2f42d3e Mon Sep 17 00:00:00 2001
+From 38a904acda80377fc8e29f41d58b6c1ef0ab81ef Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Fri, 21 Jun 2013 19:21:58 +1000
 Subject: [PATCH] Configurable Messages
@@ -62,7 +62,7 @@ index fdac2f6..f8e2f0f 100644
          return false;
      }
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index 20634f1..efcd193 100644
+index f8427ed..7a69092 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
 @@ -12,6 +12,7 @@ import java.util.Map;
@@ -71,9 +71,9 @@ index 20634f1..efcd193 100644
  import org.bukkit.Bukkit;
 +import org.bukkit.ChatColor;
  import org.bukkit.command.Command;
+ import org.bukkit.configuration.InvalidConfigurationException;
  import org.bukkit.configuration.file.YamlConfiguration;
- 
-@@ -153,4 +154,28 @@ public class SpigotConfig
+@@ -165,4 +166,28 @@ public class SpigotConfig
          }
          tabComplete = getInt( "commands.tab-complete", 0 );
      }

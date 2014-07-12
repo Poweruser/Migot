@@ -1,4 +1,4 @@
-From c8dadb0d8f034f7178fb2805e212a76f993d356b Mon Sep 17 00:00:00 2001
+From e2f43bd061323dff313a481882f3bdfacc39c807 Mon Sep 17 00:00:00 2001
 From: slide23 <me@slide.ws>
 Date: Fri, 20 Dec 2013 20:15:33 -0600
 Subject: [PATCH] Add Late Bind Option
@@ -43,10 +43,10 @@ index 58e68da..6ba9c8c 100644
              }
          }
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index b3278fd..af73544 100644
+index 978dd41..6ced245 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
-@@ -209,4 +209,9 @@ public class SpigotConfig
+@@ -221,4 +221,9 @@ public class SpigotConfig
          System.setProperty( "io.netty.eventLoopThreads", Integer.toString( count ) );
          Bukkit.getLogger().log( Level.INFO, "Using {0} threads for Netty based IO", count );
      }

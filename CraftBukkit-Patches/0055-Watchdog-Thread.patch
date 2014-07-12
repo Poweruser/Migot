@@ -1,4 +1,4 @@
-From 4d49a651d1daad155b7033e8b32ef4c5af062f78 Mon Sep 17 00:00:00 2001
+From ff6344c0774b53cff9aad1ae27f5d437c094194c Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 23 Feb 2013 12:33:20 +1100
 Subject: [PATCH] Watchdog Thread.
@@ -155,10 +155,10 @@ index 0000000..429c258
 +    }
 +}
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index efcd193..2b499fe 100644
+index 7a69092..d7e2087 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
-@@ -178,4 +178,18 @@ public class SpigotConfig
+@@ -190,4 +190,18 @@ public class SpigotConfig
          outdatedClientMessage = transform( getString( "messages.outdated-client", outdatedClientMessage ) );
          outdatedServerMessage = transform( getString( "messages.outdated-server", outdatedServerMessage ) );
      }

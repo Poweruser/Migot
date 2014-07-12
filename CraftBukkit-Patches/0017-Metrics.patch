@@ -1,4 +1,4 @@
-From 91d13cbfc3a3eda23dbe7670bdbca308d7efbe66 Mon Sep 17 00:00:00 2001
+From 726c32d9a80f49276d9596dc785664653cece467 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 23 Feb 2013 08:58:35 +1100
 Subject: [PATCH] Metrics
@@ -657,10 +657,10 @@ index 0000000..d9c3b63
 +}
 \ No newline at end of file
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index fd5997d..98fcb47 100644
+index a4de4e9..dc4d4b3 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
-@@ -35,6 +35,7 @@ public class SpigotConfig
+@@ -36,6 +36,7 @@ public class SpigotConfig
      static int version;
      static Map<String, Command> commands;
      /*========================================================================*/
@@ -668,7 +668,7 @@ index fd5997d..98fcb47 100644
  
      public static void init()
      {
-@@ -55,6 +56,18 @@ public class SpigotConfig
+@@ -67,6 +68,18 @@ public class SpigotConfig
          {
              MinecraftServer.getServer().server.getCommandMap().register( entry.getKey(), "Spigot", entry.getValue() );
          }
