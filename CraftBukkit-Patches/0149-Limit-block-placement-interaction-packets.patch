@@ -1,11 +1,11 @@
-From 054e4977daaa2ef01b5ab8c2951e9bcbcdfd9660 Mon Sep 17 00:00:00 2001
+From f6eb9e31fca92d09625a8ed923e230669eace264 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Sun, 29 Jun 2014 21:10:34 +0100
 Subject: [PATCH] Limit block placement/interaction packets
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index b723b73..4f7da33 100644
+index b723b73..9a7b256 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -573,7 +573,18 @@ public class PlayerConnection implements PacketPlayInListener {
@@ -13,15 +13,15 @@ index b723b73..4f7da33 100644
      }
  
 +    // Spigot start - limit place/interactions
-+    private int lastPlace = -1;
++    private long lastPlace = -1;
 +
      public void a(PacketPlayInBlockPlace packetplayinblockplace) {
 +        boolean throttled = false;
-+        if (lastPlace != -1 && MinecraftServer.currentTick - lastPlace < 1) {
++        if (lastPlace != -1 && packetplayinblockplace.timestamp - lastPlace < 5) {
 +            throttled = true;
 +        } else
 +        {
-+            lastPlace = MinecraftServer.currentTick;
++            lastPlace = packetplayinblockplace.timestamp;
 +        }
 +    // Spigot end
          WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
