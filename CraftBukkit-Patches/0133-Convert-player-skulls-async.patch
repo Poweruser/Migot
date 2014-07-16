@@ -1,20 +1,25 @@
-From 34036f35609a0ca1dcca172e85484ba70a472f76 Mon Sep 17 00:00:00 2001
+From 053a507641287dc6a35fff3b845e38e5f6d3c44e Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Sun, 20 Apr 2014 13:18:55 +0100
 Subject: [PATCH] Convert player skulls async
 
 
 diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
-index 7c3757f..8c4a468 100644
+index 7c3757f..b327e58 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySkull.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
-@@ -6,11 +6,25 @@ import net.minecraft.util.com.google.common.collect.Iterables;
+@@ -6,11 +6,52 @@ import net.minecraft.util.com.google.common.collect.Iterables;
  import net.minecraft.util.com.mojang.authlib.GameProfile;
  import net.minecraft.util.com.mojang.authlib.properties.Property;
  
 +// Spigot start
++import com.google.common.cache.Cache;
++import com.google.common.cache.CacheBuilder;
++import com.google.common.cache.CacheLoader;
 +import java.util.concurrent.Executor;
 +import java.util.concurrent.Executors;
++import java.util.concurrent.TimeUnit;
++
 +import com.google.common.util.concurrent.ThreadFactoryBuilder;
 +import net.minecraft.util.com.mojang.authlib.Agent;
 +// Spigot end
@@ -30,11 +35,33 @@ index 7c3757f..8c4a468 100644
 +                    .setNameFormat("Head Conversion Thread - %1$d")
 +                    .build()
 +    );
++    private static final Cache<String, GameProfile> skinCache = CacheBuilder.newBuilder()
++            .maximumSize( 5000 )
++            .expireAfterAccess( 60, TimeUnit.MINUTES )
++            .build( new CacheLoader<String, GameProfile>()
++            {
++                @Override
++                public GameProfile load(String key) throws Exception
++                {
++                    GameProfile[] profiles = new GameProfile[1];
++                    GameProfileLookup gameProfileLookup = new GameProfileLookup(profiles);
++
++                    MinecraftServer.getServer().getGameProfileRepository().findProfilesByNames(new String[] { key }, Agent.MINECRAFT, gameProfileLookup);
++                    if (!MinecraftServer.getServer().getOnlineMode() && profiles[0] == null) {
++                        UUID uuid = EntityHuman.a(new GameProfile(null, key));
++                        GameProfile profile = new GameProfile(uuid, key);
++
++                        gameProfileLookup.onProfileLookupSucceeded(profile);
++                    }
++
++                    return profiles[0];
++                }
++            } );
 +    // Spigot end
  
      public TileEntitySkull() {}
  
-@@ -65,18 +79,53 @@ public class TileEntitySkull extends TileEntity {
+@@ -65,18 +106,44 @@ public class TileEntitySkull extends TileEntity {
      private void d() {
          if (this.j != null && !UtilColor.b(this.j.getName())) {
              if (!this.j.isComplete() || !this.j.getProperties().containsKey("textures")) {
@@ -51,18 +78,9 @@ index 7c3757f..8c4a468 100644
 +                executor.execute(new Runnable() {
 +                    @Override
 +                    public void run() {
-+                        GameProfile[] profiles = new GameProfile[1];
-+                        GameProfileLookup gameProfileLookup = new GameProfileLookup(profiles);
 +
-+                        MinecraftServer.getServer().getGameProfileRepository().findProfilesByNames(new String[] { name }, Agent.MINECRAFT, gameProfileLookup);
-+                        if (!MinecraftServer.getServer().getOnlineMode() && profiles[0] == null) {
-+                            UUID uuid = EntityHuman.a(new GameProfile(null, name));
-+                            GameProfile profile = new GameProfile(uuid, name);
++                        GameProfile profile = skinCache.getUnchecked( name.toLowerCase() );
 +
-+                            gameProfileLookup.onProfileLookupSucceeded(profile);
-+                        }
-+
-+                        GameProfile profile = profiles[0];
 +                        if (profile != null) {
 +                            Property property = Iterables.getFirst(profile.getProperties().get("textures"), null);
 +

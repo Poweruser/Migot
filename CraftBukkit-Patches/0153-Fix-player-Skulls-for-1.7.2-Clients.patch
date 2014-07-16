@@ -1,14 +1,14 @@
-From d09913d1d6999b5971caf61270351b2a42072493 Mon Sep 17 00:00:00 2001
+From ad237c3c4126d7da6f3121272e50e5367c7118a7 Mon Sep 17 00:00:00 2001
 From: geNAZt <fabian.fassbender42@googlemail.com>
 Date: Tue, 8 Jul 2014 00:04:00 +0200
 Subject: [PATCH] Fix player Skulls for 1.7.2 Clients
 
 
 diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
-index 8c4a468..0843a29 100644
+index b327e58..82cd6af 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySkull.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
-@@ -37,6 +37,7 @@ public class TileEntitySkull extends TileEntity {
+@@ -64,6 +64,7 @@ public class TileEntitySkull extends TileEntity {
  
              GameProfileSerializer.serialize(nbttagcompound1, this.j);
              nbttagcompound.set("Owner", nbttagcompound1);
