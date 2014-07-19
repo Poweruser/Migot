@@ -1,0 +1,29 @@
+From 2fe129c2567622cfa0f0dbda31351ad092ae8f9a Mon Sep 17 00:00:00 2001
+From: Thinkofdeath <thinkofdeath@spigotmc.org>
+Date: Sat, 19 Jul 2014 19:54:41 +0100
+Subject: [PATCH] Prevent a crash involving attributes
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 625e6f3..6f6effb 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -1291,7 +1291,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+                 break;
+             }
+         }
++        // Spigot start
++        try
++        {
+         collection.add(new AttributeModifiable(getHandle().getAttributeMap(), (new AttributeRanged("generic.maxHealth", scaledHealth ? healthScale : getMaxHealth(), 0.0D, Float.MAX_VALUE)).a("Max Health").a(true)));
++        } catch ( Exception e )
++        {
++            // Prevent crash
++        }
++        // Spigot end
+     }
+ 
+     // Spigot start
+-- 
+1.9.1
+
