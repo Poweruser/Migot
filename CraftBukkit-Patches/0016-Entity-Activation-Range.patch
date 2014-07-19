@@ -1,4 +1,4 @@
-From 6e24c42c19d80dffc6399503d3b23c936c0a116f Mon Sep 17 00:00:00 2001
+From 2f2cee82dacd617632cee079e9e12f21f456ec54 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 3 Feb 2013 05:10:21 -0500
 Subject: [PATCH] Entity Activation Range
@@ -197,7 +197,7 @@ index 558574f..41d2d87 100644
      public static final HashMap<String, CustomTimingsHandler> pluginTaskTimingMap = new HashMap<String, CustomTimingsHandler>();
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
 new file mode 100644
-index 0000000..06284ad
+index 0000000..84a7dd6
 --- /dev/null
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -0,0 +1,296 @@
@@ -230,7 +230,6 @@ index 0000000..06284ad
 +import net.minecraft.server.MathHelper;
 +import net.minecraft.server.MinecraftServer;
 +import net.minecraft.server.World;
-+import org.bukkit.craftbukkit.CraftWorld;
 +import org.bukkit.craftbukkit.SpigotTimings;
 +
 +public class ActivationRange
@@ -489,7 +488,8 @@ index 0000000..06284ad
 +        int x = MathHelper.floor( entity.locX );
 +        int z = MathHelper.floor( entity.locZ );
 +        // Make sure not on edge of unloaded chunk
-+        if ( isActive && !entity.world.areChunksLoaded( x, 0, z, 16 ) )
++        Chunk chunk = entity.world.getChunkIfLoaded( x >> 4, z >> 4 );
++        if ( isActive && !( chunk != null && chunk.areNeighborsLoaded( 1 ) ) )
 +        {
 +            isActive = false;
 +        }
