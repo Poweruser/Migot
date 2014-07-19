@@ -1,49 +1,33 @@
-From e5f9816f583b1604fb37e34ee4faf78aaa3478e1 Mon Sep 17 00:00:00 2001
+From fafe3f373d8d97dc519dc899af22089aa863f852 Mon Sep 17 00:00:00 2001
 From: drXor <mcyoungsota@gmail.com>
 Date: Sat, 29 Mar 2014 13:44:25 -0400
 Subject: [PATCH] Configurable dragon death and wither spawn sounds
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityEnderDragon.java b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-index 51c4e6e..5df7944 100644
+index 78023c4..5d761aa 100644
 --- a/src/main/java/net/minecraft/server/EntityEnderDragon.java
 +++ b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-@@ -544,7 +544,14 @@ public class EntityEnderDragon extends EntityInsentient implements IComplex, IMo
-             }
- 
-             if (this.bB == 1) {
--                this.world.b(1018, (int) this.locX, (int) this.locY, (int) this.locZ, 0);
-+                // Spigot start
-+                if(this.world.spigotConfig.dragonDeathSoundRadius > 0){
-+                    this.world.getServer().getHandle().sendPacketNearby((int) this.locX, (int) this.locY, (int) this.locZ, this.world.spigotConfig.dragonDeathSoundRadius, this.dimension, new PacketPlayOutWorldEvent(1018, (int) this.locX, (int) this.locY, (int) this.locZ, 0, true));
-+                }
-+                else {
-+                    this.world.b(1018, (int) this.locX, (int) this.locY, (int) this.locZ, 0);
-+                }
-+                // Spigot end
-             }
-         }
- 
+@@ -551,6 +551,7 @@ public class EntityEnderDragon extends EntityInsentient implements IComplex, IMo
+                     double deltaX = this.locX - player.locX;
+                     double deltaZ = this.locZ - player.locZ;
+                     double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;
++                    if ( world.spigotConfig.dragonDeathSoundRadius > 0 && distanceSquared > world.spigotConfig.dragonDeathSoundRadius * world.spigotConfig.dragonDeathSoundRadius ) continue; // Spigot
+                     if (distanceSquared > viewDistance * viewDistance) {
+                         double deltaLength = Math.sqrt(distanceSquared);
+                         double relativeX = player.locX + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
-index 4161bb1..e261979 100644
+index 75b3ca3..434616d 100644
 --- a/src/main/java/net/minecraft/server/EntityWither.java
 +++ b/src/main/java/net/minecraft/server/EntityWither.java
-@@ -173,7 +173,14 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
-                 // CraftBukkit end
- 
-                 this.world.createExplosion(this, this.locX, this.locY + (double) this.getHeadHeight(), this.locZ, 7.0F, false, this.world.getGameRules().getBoolean("mobGriefing"));
--                this.world.b(1013, (int) this.locX, (int) this.locY, (int) this.locZ, 0);
-+                // Spigot start
-+                if(this.world.spigotConfig.witherSpawnSoundRadius > 0){
-+                    this.world.getServer().getHandle().sendPacketNearby((int) this.locX, (int) this.locY, (int) this.locZ, this.world.spigotConfig.witherSpawnSoundRadius, this.dimension, new PacketPlayOutWorldEvent(1013, (int) this.locX, (int) this.locY, (int) this.locZ, 0, true));
-+                }
-+                else {
-+                    this.world.b(1013, (int) this.locX, (int) this.locY, (int) this.locZ, 0);
-+                }
-+                // Spigot end
-             }
- 
-             this.s(i);
+@@ -180,6 +180,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
+                     double deltaX = this.locX - player.locX;
+                     double deltaZ = this.locZ - player.locZ;
+                     double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;
++                    if ( world.spigotConfig.witherSpawnSoundRadius > 0 && distanceSquared > world.spigotConfig.witherSpawnSoundRadius * world.spigotConfig.witherSpawnSoundRadius ) continue; // Spigot
+                     if (distanceSquared > viewDistance * viewDistance) {
+                         double deltaLength = Math.sqrt(distanceSquared);
+                         double relativeX = player.locX + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 index 9745982..3e6b1e6 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java

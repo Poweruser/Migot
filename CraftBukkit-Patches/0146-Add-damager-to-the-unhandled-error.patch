@@ -1,14 +1,14 @@
-From c793551fade594dedfd401eb36971e76414b274a Mon Sep 17 00:00:00 2001
+From f4d82b23f29eb3066c5e24a162c283e5fc34d998 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Thu, 26 Jun 2014 23:42:52 +0100
 Subject: [PATCH] Add damager to the unhandled error
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-index 9de61ce..48b5206 100644
+index 0db8897..c8e3db0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-@@ -498,7 +498,7 @@ public class CraftEventFactory {
+@@ -497,7 +497,7 @@ public class CraftEventFactory {
              } else if (source == DamageSource.FALL) {
                  cause = DamageCause.FALL;
              } else {

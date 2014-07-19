@@ -1,14 +1,14 @@
-From 1d1e60da53d183bb1599317695f816cd657d042c Mon Sep 17 00:00:00 2001
+From 305c369d605abe3053bb36ab9e132e6c6c3aad6b Mon Sep 17 00:00:00 2001
 From: Zach Brown <Zbob750@live.com>
 Date: Tue, 24 Jun 2014 09:51:05 -0500
 Subject: [PATCH] Fix ItemFrame and Fireball EntityDamageByEntityEvent
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-index 48b5206..808229b 100644
+index c8e3db0..ca201b1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-@@ -591,7 +591,7 @@ public class CraftEventFactory {
+@@ -597,7 +597,7 @@ public class CraftEventFactory {
          if (event == null) {
              return false;
          }

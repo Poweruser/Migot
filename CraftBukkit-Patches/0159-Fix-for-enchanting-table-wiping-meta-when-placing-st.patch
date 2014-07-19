@@ -1,4 +1,4 @@
-From c7c0a5f4cf3207a25c1e1bf6c13c258e3883b17a Mon Sep 17 00:00:00 2001
+From 21a2aadf517ff9e29cefe6756e021d8fed7b0d63 Mon Sep 17 00:00:00 2001
 From: drXor <mcyoungsota@gmail.com>
 Date: Thu, 17 Jul 2014 21:13:15 -0400
 Subject: [PATCH] Fix for enchanting table wiping meta when placing stacked
@@ -23,5 +23,5 @@ index 5f948e4..af3aa1d 100644
                  }
              }
 -- 
-1.8.4.2
+1.9.1
 

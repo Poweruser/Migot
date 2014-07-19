@@ -1,4 +1,4 @@
-From 7aee70e4557c231ec2b8fc2cdd24602f4f35681d Mon Sep 17 00:00:00 2001
+From ae39328c915d12f99f3dfa349331d8c17a4653e6 Mon Sep 17 00:00:00 2001
 From: Andy Shulman <andy.shulman@hotmail.com>
 Date: Mon, 15 Apr 2013 20:06:37 -0500
 Subject: [PATCH] Implement SpawnerSpawnEvent.
@@ -63,10 +63,10 @@ index 93bb1ad..e39d533 100644
  
          return entity;
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-index 2d5182a..ae5869b 100644
+index 2c0065d..0db8897 100644
 --- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-@@ -40,6 +40,7 @@ import org.bukkit.Statistic.Type;
+@@ -41,6 +41,7 @@ import org.bukkit.Statistic.Type;
  import org.bukkit.block.Block;
  import org.bukkit.block.BlockFace;
  import org.bukkit.block.BlockState;
@@ -74,7 +74,7 @@ index 2d5182a..ae5869b 100644
  import org.bukkit.craftbukkit.CraftServer;
  import org.bukkit.craftbukkit.CraftStatistic;
  import org.bukkit.craftbukkit.CraftWorld;
-@@ -151,6 +152,22 @@ public class CraftEventFactory {
+@@ -150,6 +151,22 @@ public class CraftEventFactory {
      }
  
      /**
