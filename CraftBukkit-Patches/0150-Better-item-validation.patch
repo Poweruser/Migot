@@ -1,9 +1,24 @@
-From 752bfba0d43847ccf738d4560f357bc28fb58918 Mon Sep 17 00:00:00 2001
+From 85358af86062bfa6c0b65ab4e5ce38a2337afa0c Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Wed, 2 Jul 2014 23:35:51 +0100
 Subject: [PATCH] Better item validation
 
 
+diff --git a/src/main/java/net/minecraft/server/PacketDataSerializer.java b/src/main/java/net/minecraft/server/PacketDataSerializer.java
+index a5be533..e4df5b3 100644
+--- a/src/main/java/net/minecraft/server/PacketDataSerializer.java
++++ b/src/main/java/net/minecraft/server/PacketDataSerializer.java
+@@ -97,6 +97,10 @@ public class PacketDataSerializer extends ByteBuf {
+             NBTTagCompound nbttagcompound = null;
+ 
+             if (itemstack.getItem().usesDurability() || itemstack.getItem().s()) {
++                // Spigot start - filter
++                itemstack = itemstack.cloneItemStack();
++                CraftItemStack.setItemMeta(itemstack, CraftItemStack.getItemMeta(itemstack));
++                // Spigot end
+                 nbttagcompound = itemstack.tag;
+             }
+ 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBook.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBook.java
 index 1cf8fce..bdc6364 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBook.java
