@@ -1,14 +1,14 @@
-From 053a507641287dc6a35fff3b845e38e5f6d3c44e Mon Sep 17 00:00:00 2001
+From e79194646901de64bc00da41ae5b79c02101da7d Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Sun, 20 Apr 2014 13:18:55 +0100
 Subject: [PATCH] Convert player skulls async
 
 
 diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
-index 7c3757f..b327e58 100644
+index 7c3757f..9a5b235 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySkull.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
-@@ -6,11 +6,52 @@ import net.minecraft.util.com.google.common.collect.Iterables;
+@@ -6,11 +6,61 @@ import net.minecraft.util.com.google.common.collect.Iterables;
  import net.minecraft.util.com.mojang.authlib.GameProfile;
  import net.minecraft.util.com.mojang.authlib.properties.Property;
  
@@ -54,14 +54,23 @@ index 7c3757f..b327e58 100644
 +                        gameProfileLookup.onProfileLookupSucceeded(profile);
 +                    }
 +
-+                    return profiles[0];
++                    GameProfile profile = profiles[0];
++
++                    Property property = Iterables.getFirst(profile.getProperties().get("textures"), null);
++
++                    if (property == null) {
++                        profile = MinecraftServer.getServer().av().fillProfileProperties(profile, true);
++                    }
++
++
++                    return profile;
 +                }
 +            } );
 +    // Spigot end
  
      public TileEntitySkull() {}
  
-@@ -65,18 +106,44 @@ public class TileEntitySkull extends TileEntity {
+@@ -65,18 +115,38 @@ public class TileEntitySkull extends TileEntity {
      private void d() {
          if (this.j != null && !UtilColor.b(this.j.getName())) {
              if (!this.j.isComplete() || !this.j.getProperties().containsKey("textures")) {
@@ -82,12 +91,6 @@ index 7c3757f..b327e58 100644
 +                        GameProfile profile = skinCache.getUnchecked( name.toLowerCase() );
 +
 +                        if (profile != null) {
-+                            Property property = Iterables.getFirst(profile.getProperties().get("textures"), null);
-+
-+                            if (property == null) {
-+                                profile = MinecraftServer.getServer().av().fillProfileProperties(profile, true);
-+                            }
-+
 +                            final GameProfile finalProfile = profile;
 +                            MinecraftServer.getServer().processQueue.add(new Runnable() {
 +                                @Override
