@@ -1,4 +1,4 @@
-From 27d5d92202da4e208533020f261253b3fca0f196 Mon Sep 17 00:00:00 2001
+From 5861c5581d2fd8f52c1df4ebcc81474558ac9b3f Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Sat, 19 Jul 2014 12:49:48 +0100
 Subject: [PATCH] Don't spawn bonus ocelots when plugins spawn ocelots

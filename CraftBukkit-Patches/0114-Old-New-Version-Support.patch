@@ -1,4 +1,4 @@
-From a87c3ebd7c378045e8ce2e11fd5e30223724c5d7 Mon Sep 17 00:00:00 2001
+From 169c4f84ee664ddff25530b4fb6a55f19e3f30bf Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sat, 12 Apr 2014 15:11:15 +1000
 Subject: [PATCH] Old / New Version Support.
@@ -229,6 +229,18 @@ index 6423aec..f1571f1 100644
  
          this.networkManager.handle(new PacketStatusOutServerInfo(ping), new GenericFutureListener[0]);
          // CraftBukkit end
+diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
+index 7c3757f..2a50db9 100644
+--- a/src/main/java/net/minecraft/server/TileEntitySkull.java
++++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
+@@ -23,6 +23,7 @@ public class TileEntitySkull extends TileEntity {
+ 
+             GameProfileSerializer.serialize(nbttagcompound1, this.j);
+             nbttagcompound.set("Owner", nbttagcompound1);
++            nbttagcompound.setString("ExtraType", nbttagcompound1.getString("Name")); // Spigot
+         }
+     }
+ 
 -- 
 1.9.1
 

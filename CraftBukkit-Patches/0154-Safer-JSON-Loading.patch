@@ -1,4 +1,4 @@
-From 76afeafb1f9742cb36828495624662a1fff795e4 Mon Sep 17 00:00:00 2001
+From a7dcf39630dd48c612104b9089aef4c0c7cd8068 Mon Sep 17 00:00:00 2001
 From: Suddenly <suddenly@suddenly.coffee>
 Date: Tue, 8 Jul 2014 09:44:18 +1000
 Subject: [PATCH] Safer JSON Loading

@@ -1,11 +1,11 @@
-From e79194646901de64bc00da41ae5b79c02101da7d Mon Sep 17 00:00:00 2001
+From 4c7348c0bc8d7ee0a5bc6d089b77ac5d7de0a256 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Sun, 20 Apr 2014 13:18:55 +0100
 Subject: [PATCH] Convert player skulls async
 
 
 diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
-index 7c3757f..9a5b235 100644
+index 2a50db9..2b59690 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySkull.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
 @@ -6,11 +6,61 @@ import net.minecraft.util.com.google.common.collect.Iterables;
@@ -70,7 +70,7 @@ index 7c3757f..9a5b235 100644
  
      public TileEntitySkull() {}
  
-@@ -65,18 +115,38 @@ public class TileEntitySkull extends TileEntity {
+@@ -66,18 +116,38 @@ public class TileEntitySkull extends TileEntity {
      private void d() {
          if (this.j != null && !UtilColor.b(this.j.getName())) {
              if (!this.j.isComplete() || !this.j.getProperties().containsKey("textures")) {
