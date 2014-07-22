@@ -1,4 +1,4 @@
-From 2f2cee82dacd617632cee079e9e12f21f456ec54 Mon Sep 17 00:00:00 2001
+From 696c8e0e4980786ee03c711cf5681cdf11f491af Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 3 Feb 2013 05:10:21 -0500
 Subject: [PATCH] Entity Activation Range
@@ -197,7 +197,7 @@ index 558574f..41d2d87 100644
      public static final HashMap<String, CustomTimingsHandler> pluginTaskTimingMap = new HashMap<String, CustomTimingsHandler>();
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
 new file mode 100644
-index 0000000..84a7dd6
+index 0000000..903172a
 --- /dev/null
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -0,0 +1,296 @@
@@ -327,7 +327,7 @@ index 0000000..84a7dd6
 +        maxRange = Math.max( maxRange, miscActivationRange );
 +        maxRange = Math.min( ( world.spigotConfig.viewDistance << 4 ) - 8, maxRange );
 +
-+        for ( Entity player : new ArrayList<Entity>( world.players ) )
++        for ( Entity player : (List<Entity>) world.players )
 +        {
 +
 +            player.activatedTick = MinecraftServer.currentTick;
