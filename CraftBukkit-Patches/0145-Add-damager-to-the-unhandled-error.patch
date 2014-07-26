@@ -1,4 +1,4 @@
-From f4d82b23f29eb3066c5e24a162c283e5fc34d998 Mon Sep 17 00:00:00 2001
+From 2a2b162d6ba595dee0e424f6362f71a8f6092e93 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Thu, 26 Jun 2014 23:42:52 +0100
 Subject: [PATCH] Add damager to the unhandled error

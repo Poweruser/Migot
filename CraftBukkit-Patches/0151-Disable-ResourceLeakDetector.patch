@@ -1,4 +1,4 @@
-From b19779ac57e47d3f95607efce1bea1c4ad7f13f9 Mon Sep 17 00:00:00 2001
+From 5d818b111c7462f49d3ffeaa3fa783a3379d8607 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Tue, 8 Jul 2014 09:01:50 +1000
 Subject: [PATCH] Disable ResourceLeakDetector

@@ -1,11 +1,11 @@
-From 5861c5581d2fd8f52c1df4ebcc81474558ac9b3f Mon Sep 17 00:00:00 2001
+From 63ecb388d010a1d3dded4d70c46ce0b962bb0555 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Sat, 19 Jul 2014 12:49:48 +0100
 Subject: [PATCH] Don't spawn bonus ocelots when plugins spawn ocelots
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityOcelot.java b/src/main/java/net/minecraft/server/EntityOcelot.java
-index 1f15e40..8abbcdf 100644
+index aba3748..22aac7b 100644
 --- a/src/main/java/net/minecraft/server/EntityOcelot.java
 +++ b/src/main/java/net/minecraft/server/EntityOcelot.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -16,7 +16,7 @@ index 1f15e40..8abbcdf 100644
      private PathfinderGoalTempt bq;
  
      public EntityOcelot(World world) {
-@@ -238,7 +239,7 @@ public class EntityOcelot extends EntityTameableAnimal {
+@@ -213,7 +214,7 @@ public class EntityOcelot extends EntityTameableAnimal {
  
      public GroupDataEntity prepare(GroupDataEntity groupdataentity) {
          groupdataentity = super.prepare(groupdataentity);

@@ -1,4 +1,4 @@
-From 46bc58b1fa5b417fdf572b6d9fb3391896a5d36d Mon Sep 17 00:00:00 2001
+From 4977cfc9db8806f69a67be2c4202b5ea327f8ae1 Mon Sep 17 00:00:00 2001
 From: Minecrell <dev@minecrell.net>
 Date: Thu, 24 Jul 2014 13:18:36 +0200
 Subject: [PATCH] Log debug levels to the log file.

@@ -1,4 +1,4 @@
-From 9a091fc2ff071969c3d1aae4b6218257e96b299e Mon Sep 17 00:00:00 2001
+From 6c1f3d82ae6e7de4c711f93ba2ce463040c84cf3 Mon Sep 17 00:00:00 2001
 From: Suddenly <suddenly@suddenly.coffee>
 Date: Mon, 14 Jul 2014 23:43:10 +0100
 Subject: [PATCH] Fix misnamed function from 1.7.10 update

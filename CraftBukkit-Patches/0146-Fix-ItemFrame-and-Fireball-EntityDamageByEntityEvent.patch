@@ -1,4 +1,4 @@
-From 305c369d605abe3053bb36ab9e132e6c6c3aad6b Mon Sep 17 00:00:00 2001
+From ec52a0819a83d5e91a44ddcd8c8efb9ac7112116 Mon Sep 17 00:00:00 2001
 From: Zach Brown <Zbob750@live.com>
 Date: Tue, 24 Jun 2014 09:51:05 -0500
 Subject: [PATCH] Fix ItemFrame and Fireball EntityDamageByEntityEvent
