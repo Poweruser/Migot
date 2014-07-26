@@ -1,4 +1,4 @@
-From 5943bb9bacef23b3c665d77a64d09c9cbf7ecf16 Mon Sep 17 00:00:00 2001
+From a56bb5f57e745406cdfefe109f24b0baa69c14e5 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 1 Dec 2013 18:18:41 +1100
 Subject: [PATCH] BungeeCord Support
@@ -192,10 +192,10 @@ index a77b2d9..e030666 100644
          {
              return getHandle().collidesWithEntities;
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index d7e2087..8da7267 100644
+index 069111c..7a0cb86 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
-@@ -204,4 +204,14 @@ public class SpigotConfig
+@@ -210,4 +210,14 @@ public class SpigotConfig
          commands.put( "restart", new RestartCommand( "restart" ) );
          WatchdogThread.doStart( timeoutTime, restartOnCrash );
      }
