@@ -1,0 +1,50 @@
+From 5dcc6ae5480af451edb5af1ce18e266f08483f34 Mon Sep 17 00:00:00 2001
+From: md_5 <git@md-5.net>
+Date: Mon, 28 Jul 2014 16:55:51 +1000
+Subject: [PATCH] Allow Attribute Capping.
+
+Apply some sensible defaults and allow server owners to customize the maximum values of selected common attributes.
+
+diff --git a/src/main/java/net/minecraft/server/GenericAttributes.java b/src/main/java/net/minecraft/server/GenericAttributes.java
+index 6202bba..70b60ac 100644
+--- a/src/main/java/net/minecraft/server/GenericAttributes.java
++++ b/src/main/java/net/minecraft/server/GenericAttributes.java
+@@ -10,11 +10,13 @@ import org.apache.logging.log4j.Logger;
+ public class GenericAttributes {
+ 
+     private static final Logger f = LogManager.getLogger();
+-    public static final IAttribute maxHealth = (new AttributeRanged("generic.maxHealth", 20.0D, 0.0D, Double.MAX_VALUE)).a("Max Health").a(true);
++    // Spigot Start
++    public static final IAttribute maxHealth = (new AttributeRanged("generic.maxHealth", 20.0D, 0.0D, org.spigotmc.SpigotConfig.maxHealth)).a("Max Health").a(true);
+     public static final IAttribute b = (new AttributeRanged("generic.followRange", 32.0D, 0.0D, 2048.0D)).a("Follow Range");
+     public static final IAttribute c = (new AttributeRanged("generic.knockbackResistance", 0.0D, 0.0D, 1.0D)).a("Knockback Resistance");
+-    public static final IAttribute d = (new AttributeRanged("generic.movementSpeed", 0.699999988079071D, 0.0D, Double.MAX_VALUE)).a("Movement Speed").a(true);
+-    public static final IAttribute e = new AttributeRanged("generic.attackDamage", 2.0D, 0.0D, Double.MAX_VALUE);
++    public static final IAttribute d = (new AttributeRanged("generic.movementSpeed", 0.699999988079071D, 0.0D, org.spigotmc.SpigotConfig.movementSpeed)).a("Movement Speed").a(true);
++    public static final IAttribute e = new AttributeRanged("generic.attackDamage", 2.0D, 0.0D, org.spigotmc.SpigotConfig.attackDamage);
++    // Spigot End
+ 
+     public static NBTTagList a(AttributeMapBase attributemapbase) {
+         NBTTagList nbttaglist = new NBTTagList();
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 0a63291..02f79aa 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -345,4 +345,14 @@ public class SpigotConfig
+     {
+         movedTooQuicklyThreshold = getDouble( "settings.moved-too-quickly-threshold", 100.0D );
+     }
++
++    public static double maxHealth;
++    public static double movementSpeed;
++    public static double attackDamage;
++    private static void attributeMaxes()
++    {
++        maxHealth = getDouble( "settings.attribute.maxHealth.max", 2048 );
++        movementSpeed = getDouble( "settings.attribute.movementSpeed.max", 2048 );
++        attackDamage = getDouble( "settings.attribute.attackDamage.max", 2048 );
++    }
+ }
+-- 
+1.9.1
+
