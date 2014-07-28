@@ -1,4 +1,4 @@
-From 5dcc6ae5480af451edb5af1ce18e266f08483f34 Mon Sep 17 00:00:00 2001
+From 5e98295946ce96450fe4d2448f494f74db54136a Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Mon, 28 Jul 2014 16:55:51 +1000
 Subject: [PATCH] Allow Attribute Capping.
@@ -27,7 +27,7 @@ index 6202bba..70b60ac 100644
      public static NBTTagList a(AttributeMapBase attributemapbase) {
          NBTTagList nbttaglist = new NBTTagList();
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index 0a63291..02f79aa 100644
+index 0a63291..7886ee3 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
 @@ -345,4 +345,14 @@ public class SpigotConfig
@@ -35,14 +35,14 @@ index 0a63291..02f79aa 100644
          movedTooQuicklyThreshold = getDouble( "settings.moved-too-quickly-threshold", 100.0D );
      }
 +
-+    public static double maxHealth;
-+    public static double movementSpeed;
-+    public static double attackDamage;
++    public static double maxHealth = 2048;
++    public static double movementSpeed = 2048;
++    public static double attackDamage = 2048;
 +    private static void attributeMaxes()
 +    {
-+        maxHealth = getDouble( "settings.attribute.maxHealth.max", 2048 );
-+        movementSpeed = getDouble( "settings.attribute.movementSpeed.max", 2048 );
-+        attackDamage = getDouble( "settings.attribute.attackDamage.max", 2048 );
++        maxHealth = getDouble( "settings.attribute.maxHealth.max", maxHealth );
++        movementSpeed = getDouble( "settings.attribute.movementSpeed.max", movementSpeed );
++        attackDamage = getDouble( "settings.attribute.attackDamage.max", attackDamage );
 +    }
  }
 -- 
