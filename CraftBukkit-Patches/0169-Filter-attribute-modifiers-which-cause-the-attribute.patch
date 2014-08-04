@@ -1,4 +1,4 @@
-From bc50c9e96a2e5fe1b126361b5927c977ef60b53e Mon Sep 17 00:00:00 2001
+From 87f83eae1c467d825a88eda96e0f173ba626c416 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Thu, 31 Jul 2014 17:48:20 +0100
 Subject: [PATCH] Filter attribute modifiers which cause the attribute to go

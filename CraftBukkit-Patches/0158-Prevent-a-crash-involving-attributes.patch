@@ -1,4 +1,4 @@
-From b5951cd2d48709431e590f91e17d7f2a91fb993d Mon Sep 17 00:00:00 2001
+From 301c77d4bb00809fb468bd64adb0f779f7b64fd8 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Sat, 19 Jul 2014 19:54:41 +0100
 Subject: [PATCH] Prevent a crash involving attributes

@@ -1,4 +1,4 @@
-From 0122f2622f2152df5e9d5514c390823267274752 Mon Sep 17 00:00:00 2001
+From e29aadb2b2776a43648bcc5cc7ecb3ac3bed4754 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 28 Jul 2014 11:42:11 +0100
 Subject: [PATCH] Add an option for a global cache for any request on Mojang's

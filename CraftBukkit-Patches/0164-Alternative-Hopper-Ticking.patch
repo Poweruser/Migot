@@ -1,4 +1,4 @@
-From 279d52a8a4df88177bef41685ecbe55fbdd992e5 Mon Sep 17 00:00:00 2001
+From affda6fbfed78dba4eb082876dd930c843a8950d Mon Sep 17 00:00:00 2001
 From: "Evan A. Haskell" <eah2119@gmail.com>
 Date: Sat, 19 Apr 2014 16:58:26 -0400
 Subject: [PATCH] Alternative Hopper Ticking

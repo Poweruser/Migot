@@ -1,4 +1,4 @@
-From 35d929c30b763f2a7b6be2ca17127abea4cae552 Mon Sep 17 00:00:00 2001
+From 9aaae6c09dc6660053239629832661110e0f7f0d Mon Sep 17 00:00:00 2001
 From: Suddenly <suddenly@suddenly.coffee>
 Date: Sat, 5 Jul 2014 16:56:44 +0100
 Subject: [PATCH] Add More Information to session.lock Errors
