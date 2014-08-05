@@ -1,4 +1,4 @@
-From 10438fb2e024f5a3ad04e8743bcaf26355ef0c11 Mon Sep 17 00:00:00 2001
+From 5e303f2adc1be5ff604fc25ab26e0206cd53d280 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Fri, 20 Dec 2013 21:36:06 +0000
 Subject: [PATCH] Particle API
@@ -18,7 +18,7 @@ index 7de0de5..7eca388 100644
              datavalue = 0;
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 28aa997..92c9851 100644
+index 28aa997..53a5d37 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -810,28 +810,18 @@ public class CraftWorld implements World {
@@ -78,7 +78,7 @@ index 28aa997..92c9851 100644
 +            {
 +                StringBuilder particleFullName = new StringBuilder();
 +                particleFullName.append( effect.getName() );
-+                if ( effect.getData() != null && ( effect.getData().equals( Material.class ) || effect.getData().equals( org.bukkit.material.MaterialData.class ) ) )
++                if ( effect.getData() != null && ( effect.getData().equals( org.bukkit.Material.class ) || effect.getData().equals( org.bukkit.material.MaterialData.class ) ) )
 +                {
 +                    particleFullName.append( '_' ).append( id );
 +                }
