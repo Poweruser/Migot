@@ -1,4 +1,4 @@
-From 282a00a36ded6a33a307a4f2b3c8c1a08b435161 Mon Sep 17 00:00:00 2001
+From 13bf7c59fcc316dd8adecba24c0dcbdc5b4ee654 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Thu, 27 Jun 2013 17:26:09 +1000
 Subject: [PATCH] Properly Close Inventories
@@ -6,35 +6,41 @@ Subject: [PATCH] Properly Close Inventories
 Properly close inventories when unloading and switching worlds.
 
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
-index 40c878b..6112709 100644
+index 40c878b..ab0af12 100644
 --- a/src/main/java/net/minecraft/server/Chunk.java
 +++ b/src/main/java/net/minecraft/server/Chunk.java
-@@ -783,6 +783,15 @@ public class Chunk {
+@@ -783,6 +783,18 @@ public class Chunk {
  
          while (iterator.hasNext()) {
              TileEntity tileentity = (TileEntity) iterator.next();
 +            // Spigot Start
 +            if ( tileentity instanceof IInventory )
 +            {
-+                for ( org.bukkit.craftbukkit.entity.CraftHumanEntity h : new ArrayList<org.bukkit.craftbukkit.entity.CraftHumanEntity>( (List) ( (IInventory) tileentity ).getViewers() ) )
++                for ( org.bukkit.entity.HumanEntity h : new ArrayList<org.bukkit.entity.HumanEntity>( (List) ( (IInventory) tileentity ).getViewers() ) )
 +                {
-+                    h.getHandle().closeInventory();
++                    if ( h instanceof org.bukkit.craftbukkit.entity.CraftHumanEntity )
++                    {
++                       ( (org.bukkit.craftbukkit.entity.CraftHumanEntity) h).getHandle().closeInventory();
++                    }
 +                }
 +            }
 +            // Spigot End
  
              this.world.a(tileentity);
          }
-@@ -792,6 +801,15 @@ public class Chunk {
+@@ -792,6 +804,18 @@ public class Chunk {
              java.util.Iterator<Object> iter = this.entitySlices[i].iterator();
              while (iter.hasNext()) {
                  Entity entity = (Entity) iter.next();
 +                // Spigot Start
 +                if ( entity instanceof IInventory )
 +                {
-+                    for ( org.bukkit.craftbukkit.entity.CraftHumanEntity h : new ArrayList<org.bukkit.craftbukkit.entity.CraftHumanEntity>( (List) ( (IInventory) entity ).getViewers() ) )
++                    for ( org.bukkit.entity.HumanEntity h : new ArrayList<org.bukkit.entity.HumanEntity>( (List) ( (IInventory) entity ).getViewers() ) )
 +                    {
-+                        h.getHandle().closeInventory();
++                        if ( h instanceof org.bukkit.craftbukkit.entity.CraftHumanEntity )
++                        {
++                           ( (org.bukkit.craftbukkit.entity.CraftHumanEntity) h).getHandle().closeInventory();
++                        }
 +                    }
 +                }
 +                // Spigot End
