@@ -1,18 +1,23 @@
-From 1a7e867230ef05948f03ed11cf92e8cf4ae596f0 Mon Sep 17 00:00:00 2001
+From 223d32f2761208dc152a2beae853586c3cbf5544 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 10 Aug 2014 11:01:02 +1000
 Subject: [PATCH] Force Close Inventory On Move
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 0e2bc03..c3212c0 100644
+index 0e2bc03..35bc081 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -189,6 +189,7 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -189,6 +189,12 @@ public class PlayerConnection implements PacketPlayInListener {
              return;
          }
          // CraftBukkit end
-+        getPlayer().closeInventory(); // Spigot
++        // Spigot start
++        if ( player.activeContainer != player.defaultContainer )
++        {
++            getPlayer().closeInventory();
++        }
++        // Spigot end
          WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
  
          this.g = true;
