@@ -1,11 +1,11 @@
-From 7c8dd938dbb63742bbe70d63e869c38541bed082 Mon Sep 17 00:00:00 2001
+From 216c519cf0932aae1322ad1ee23c32f0e12392ff Mon Sep 17 00:00:00 2001
 From: Suddenly <suddenly@suddenly.coffee>
 Date: Tue, 8 Jul 2014 09:44:18 +1000
 Subject: [PATCH] Safer JSON Loading
 
 
 diff --git a/src/main/java/net/minecraft/server/JsonList.java b/src/main/java/net/minecraft/server/JsonList.java
-index 9d1cb33..3ef40f2 100644
+index 9d1cb33..4695c5a 100644
 --- a/src/main/java/net/minecraft/server/JsonList.java
 +++ b/src/main/java/net/minecraft/server/JsonList.java
 @@ -146,6 +146,17 @@ public class JsonList {
@@ -15,10 +15,10 @@ index 9d1cb33..3ef40f2 100644
 +        // Spigot Start
 +        } catch ( java.io.FileNotFoundException ex )
 +        {
-+            a.info( "Unable to find file {0}, creating it.", this.c );
++            org.bukkit.Bukkit.getLogger().log( java.util.logging.Level.INFO, "Unable to find file {0}, creating it.", this.c );
 +        } catch ( net.minecraft.util.com.google.gson.JsonSyntaxException ex )
 +        {
-+            a.warn( "Unable to read file {0}, backing it up to {0}.backup and creating new copy.", this.c );
++            org.bukkit.Bukkit.getLogger().log( java.util.logging.Level.WARN, "Unable to read file {0}, backing it up to {0}.backup and creating new copy.", this.c );
 +            File backup = new File( this.c + ".backup" );
 +            this.c.renameTo( backup );
 +            this.c.delete();
