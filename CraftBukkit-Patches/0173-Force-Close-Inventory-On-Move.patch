@@ -1,11 +1,11 @@
-From 271a0274d4f1bcf8ed4490dedb085cde2c2ae003 Mon Sep 17 00:00:00 2001
+From cd528488848969a6d92f0ea1b1efa9b0d563bad8 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 10 Aug 2014 11:01:02 +1000
 Subject: [PATCH] Force Close Inventory On Move
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 0e2bc03..eec0108 100644
+index 0e2bc03..e8bfc41 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -489,6 +489,12 @@ public class PlayerConnection implements PacketPlayInListener {
@@ -34,20 +34,7 @@ index 0e2bc03..eec0108 100644
  
          ItemStack itemstack = this.player.inventory.getItemInHand();
          boolean flag = false;
-@@ -1027,6 +1039,12 @@ public class PlayerConnection implements PacketPlayInListener {
- 
-     public void a(PacketPlayInArmAnimation packetplayinarmanimation) {
-         if (this.player.dead) return; // CraftBukkit
-+        // Spigot start
-+        if ( player.activeContainer != player.defaultContainer )
-+        {
-+            getPlayer().closeInventory();
-+        }
-+        // Spigot end
-         this.player.v();
-         if (packetplayinarmanimation.d() == 1) {
-             // CraftBukkit start - Raytrace to look for 'rogue armswings'
-@@ -1118,6 +1136,12 @@ public class PlayerConnection implements PacketPlayInListener {
+@@ -1118,6 +1130,12 @@ public class PlayerConnection implements PacketPlayInListener {
              return;
          }
          // Spigot End
