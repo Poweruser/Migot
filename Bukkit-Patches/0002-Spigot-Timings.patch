@@ -1,4 +1,4 @@
-From 50fb4f7fa99fb1ba45cd06772d0e2b0a4def4610 Mon Sep 17 00:00:00 2001
+From c6cc65fa8a88292307fde549d297ee85df1a004c Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 2 Jun 2013 10:42:57 +1000
 Subject: [PATCH] Spigot Timings
@@ -242,7 +242,7 @@ index d2fe422..1d51908 100644
      }
  
 diff --git a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java b/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
-index b178c0d..6611342 100644
+index b178c0d..fe723c9 100644
 --- a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
 +++ b/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
 @@ -39,6 +39,7 @@ import org.bukkit.plugin.PluginLoader;
@@ -261,7 +261,7 @@ index b178c0d..6611342 100644
  
      /**
       * This class was not meant to be constructed explicitly
-@@ -283,13 +285,16 @@ public final class JavaPluginLoader implements PluginLoader {
+@@ -283,13 +285,19 @@ public final class JavaPluginLoader implements PluginLoader {
                  }
              }
  
@@ -272,13 +272,16 @@ index b178c0d..6611342 100644
                          if (!eventClass.isAssignableFrom(event.getClass())) {
                              return;
                          }
-+                        timings.startTiming(); // Spigot
++                        // Spigot start
++                        boolean isAsync = event.isAsynchronous();
++                        if (!isAsync) timings.startTiming();
                          method.invoke(listener, event);
-+                        timings.stopTiming(); // Spigot
++                        if (!isAsync) timings.stopTiming();
++                        // Spigot end
                      } catch (InvocationTargetException ex) {
                          throw new EventException(ex.getCause());
                      } catch (Throwable t) {
-@@ -297,7 +302,7 @@ public final class JavaPluginLoader implements PluginLoader {
+@@ -297,7 +305,7 @@ public final class JavaPluginLoader implements PluginLoader {
                      }
                  }
              };
