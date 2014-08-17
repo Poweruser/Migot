@@ -1,4 +1,4 @@
-From e8edeae49a039efe9f95b90af9d96dcbf2f3580a Mon Sep 17 00:00:00 2001
+From 02d6000e3231c61ffdde07bcbb012d794c4e277d Mon Sep 17 00:00:00 2001
 From: Maxim Van de Wynckel <maxim_vdw@hotmail.com>
 Date: Wed, 30 Jul 2014 01:19:51 +0200
 Subject: [PATCH] Only fetch an online UUID in online mode

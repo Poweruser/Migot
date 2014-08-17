@@ -1,4 +1,4 @@
-From cd528488848969a6d92f0ea1b1efa9b0d563bad8 Mon Sep 17 00:00:00 2001
+From 1f3a8100d2530397dc7e84bf2c5bcc67b481b360 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 10 Aug 2014 11:01:02 +1000
 Subject: [PATCH] Force Close Inventory On Move

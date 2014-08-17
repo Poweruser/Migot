@@ -1,4 +1,4 @@
-From 0e8a38fa3c640db472e020d5e191faa40a17ed73 Mon Sep 17 00:00:00 2001
+From d65061330c6dfc9cf7f1e28e6d2a79f9c48c0309 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Fri, 8 Aug 2014 19:57:03 +1000
 Subject: [PATCH] Plug WorldMap Memory Leak
