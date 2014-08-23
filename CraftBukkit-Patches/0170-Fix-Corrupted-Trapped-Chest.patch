@@ -1,4 +1,4 @@
-From 64d8821dd258edab66b97072518f7a60c6cc9250 Mon Sep 17 00:00:00 2001
+From 0617e6f461cf0086a576eb5e2a1a911df7243ea2 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Fri, 15 Aug 2014 00:56:41 -0400
 Subject: [PATCH] Fix Corrupted Trapped Chest
