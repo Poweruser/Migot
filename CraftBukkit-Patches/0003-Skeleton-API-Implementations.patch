@@ -1,4 +1,4 @@
-From 0a7ebe2d58f48601146a38caf4f782686e3116cb Mon Sep 17 00:00:00 2001
+From 41443ab4fd382be7274ac3b40f68c749021ac364 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 2 Jun 2013 15:10:56 +1000
 Subject: [PATCH] Skeleton API Implementations
@@ -79,27 +79,6 @@ index bbf310b..da0c78e 100644
 +    };
 +
 +    public Player.Spigot spigot()
-+    {
-+        return spigot;
-+    }
-+    // Spigot end
- }
-diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index c9738c4..32d4a67 100644
---- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-+++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-@@ -665,4 +665,16 @@ class CraftMetaItem implements ItemMeta, Repairable {
-     public final String toString() {
-         return SerializableMeta.classMap.get(getClass()) + "_META:" + serialize(); // TODO: cry
-     }
-+
-+    // Spigot start
-+    private final Spigot spigot = new Spigot()
-+    {
-+    };
-+
-+    @Override
-+    public Spigot spigot()
 +    {
 +        return spigot;
 +    }
