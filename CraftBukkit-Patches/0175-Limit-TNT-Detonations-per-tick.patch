@@ -1,4 +1,4 @@
-From 181e79d39dfb44867922c03db622b790feb5a4b7 Mon Sep 17 00:00:00 2001
+From 373358b33f3e334518b1863d6ec2d40af3c6ebf5 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Wed, 20 Aug 2014 18:12:32 -0400
 Subject: [PATCH] Limit TNT Detonations per tick
@@ -31,10 +31,10 @@ index f9dc0fc..91f036b 100644
  
      public void i() {
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index 3500931..4fcf914 100644
+index 3500931..5e3dbf9 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-@@ -338,4 +338,12 @@ public class SpigotWorldConfig
+@@ -338,4 +338,15 @@ public class SpigotWorldConfig
          combatExhaustion = (float) getDouble( "hunger.combat-exhaustion", 0.3 );
          regenExhaustion = (float) getDouble( "hunger.regen-exhaustion", 3 );
      }
@@ -42,10 +42,13 @@ index 3500931..4fcf914 100644
 +    public int currentPrimedTnt = 0;
 +    public int maxTntTicksPerTick;
 +    private void maxTntPerTick() {
-+        maxTntTicksPerTick = getInt( "max-tnt-per-tick", 4 );
++        if ( SpigotConfig.version < 7 )
++        {
++            set( "max-tnt-per-tick", 100 );
++        }
++        maxTntTicksPerTick = getInt( "max-tnt-per-tick", 100 );
 +        log( "Max TNT Explosions: " + maxTntTicksPerTick );
 +    }
-+
  }
 -- 
 1.9.1
