@@ -1,4 +1,4 @@
-From d01728251e434b325cb0962c0b9ecf2720cc6117 Mon Sep 17 00:00:00 2001
+From 42d243f1757e6453cec33192b542d68ff37a3503 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 28 Jul 2014 11:42:11 +0100
 Subject: [PATCH] Add an option for a global cache for any request on Mojang's
@@ -7,10 +7,10 @@ Subject: [PATCH] Add an option for a global cache for any request on Mojang's
 
 diff --git a/src/main/java/org/spigotmc/CachedMojangAPIConnection.java b/src/main/java/org/spigotmc/CachedMojangAPIConnection.java
 new file mode 100644
-index 0000000..9911438
+index 0000000..31cb490
 --- /dev/null
 +++ b/src/main/java/org/spigotmc/CachedMojangAPIConnection.java
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,133 @@
 +package org.spigotmc;
 +
 +import com.google.common.base.Charsets;
@@ -95,31 +95,40 @@ index 0000000..9911438
 +                            .append( "," );
 +                }
 +            }
-+            missingUsers.deleteCharAt( missingUsers.length() - 1 ).append( "]" );
-+            HttpURLConnection connection;
-+            if ( proxy == null )
++            if ( missingUsers.length() > 1 )
 +            {
-+                connection = (HttpURLConnection) cachedStreamHandler.getDefaultConnection( url );
-+            } else
-+            {
-+                connection = (HttpURLConnection) cachedStreamHandler.getDefaultConnection( url, proxy );
++                missingUsers.deleteCharAt( missingUsers.length() - 1 ).append( "]" );
 +            }
-+            connection.setRequestMethod( "POST" );
-+            connection.setRequestProperty( "Content-Type", "application/json" );
-+            connection.setDoInput( true );
-+            connection.setDoOutput( true );
-+            OutputStream out = connection.getOutputStream();
-+            out.write( missingUsers.toString().getBytes( Charsets.UTF_8 ) );
-+            out.flush();
-+            out.close();
-+            JsonArray newUsers = new JsonParser().parse( new InputStreamReader( connection.getInputStream(), Charsets.UTF_8 ) ).getAsJsonArray();
-+            for ( JsonElement user : newUsers )
++            if ( missingUsers.length() > 2 )
 +            {
-+                JsonObject u = user.getAsJsonObject();
-+                cache.put( u.get( "name" ).getAsString(), u.toString() );
-+                reply.append( u.toString() ).append( "," );
++                HttpURLConnection connection;
++                if ( proxy == null )
++                {
++                    connection = (HttpURLConnection) cachedStreamHandler.getDefaultConnection( url );
++                } else
++                {
++                    connection = (HttpURLConnection) cachedStreamHandler.getDefaultConnection( url, proxy );
++                }
++                connection.setRequestMethod( "POST" );
++                connection.setRequestProperty( "Content-Type", "application/json" );
++                connection.setDoInput( true );
++                connection.setDoOutput( true );
++                OutputStream out = connection.getOutputStream();
++                out.write( missingUsers.toString().getBytes( Charsets.UTF_8 ) );
++                out.flush();
++                out.close();
++                JsonArray newUsers = new JsonParser().parse( new InputStreamReader( connection.getInputStream(), Charsets.UTF_8 ) ).getAsJsonArray();
++                for ( JsonElement user : newUsers )
++                {
++                    JsonObject u = user.getAsJsonObject();
++                    cache.put( u.get( "name" ).getAsString(), u.toString() );
++                    reply.append( u.toString() ).append( "," );
++                }
 +            }
-+            reply.deleteCharAt( reply.length() - 1 );
++            if ( reply.length() > 1 )
++            {
++                reply.deleteCharAt( reply.length() - 1 );
++            }
 +            inputStream = new ByteArrayInputStream( reply.append( "]" ).toString().getBytes( Charsets.UTF_8 ) );
 +        }
 +        return inputStream;
@@ -257,7 +266,7 @@ index 0000000..02a5fe7
 +    }
 +}
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index 4ceeab6..9d2dfe9 100644
+index 06377b3..47ccffb 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
 @@ -6,6 +6,7 @@ import java.io.IOException;
