@@ -1,4 +1,4 @@
-From c6375be65f8716214295ff749bb253ba55f9e4c1 Mon Sep 17 00:00:00 2001
+From 2773c01c85be71551dedde4d220612b878aface2 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -3835,10 +3835,10 @@ index 0000000..0e30463
 +}
 diff --git a/src/main/java/org/spigotmc/SpigotBlockDebreakifier.java b/src/main/java/org/spigotmc/SpigotBlockDebreakifier.java
 new file mode 100644
-index 0000000..8479c09
+index 0000000..3e57442
 --- /dev/null
 +++ b/src/main/java/org/spigotmc/SpigotBlockDebreakifier.java
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,64 @@
 +package org.spigotmc;
 +
 +import com.google.common.base.Charsets;
@@ -3890,6 +3890,10 @@ index 0000000..8479c09
 +    public static int getCorrectedData(int id, int data)
 +    {
 +        if ( id > 197 ) return data;
++        if ( id == 175 && data > 8 )
++        {
++            data = 8;
++        }
 +        if ( validBlocks[ ( id << 4 ) | data ] )
 +        {
 +            return data;
