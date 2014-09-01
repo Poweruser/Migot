@@ -1,0 +1,28 @@
+From 55c36003f35e8abf41760a5a342240e3c4aec131 Mon Sep 17 00:00:00 2001
+From: Minecrell <dev@minecrell.net>
+Date: Mon, 1 Sep 2014 18:27:49 +0200
+Subject: [PATCH] Fix ProtocolLib compatibility.
+
+
+diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
+index 6d579e3..3bea0ec 100644
+--- a/src/main/java/net/minecraft/server/NetworkManager.java
++++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -250,7 +250,13 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+ 
+     // Spigot start - protocol patch
+     public void enableCompression() {
+-        m.pipeline().addBefore( "decoder", "decompress", new SpigotDecompressor() );
++        // Fix ProtocolLib compatibility
++        if ( m.pipeline().get("protocol_lib_decoder") != null ) {
++            m.pipeline().addBefore( "protocol_lib_decoder", "decompress", new SpigotDecompressor() );
++        } else {
++            m.pipeline().addBefore( "decoder", "decompress", new SpigotDecompressor() );
++        }
++
+         m.pipeline().addBefore( "encoder", "compress", new SpigotCompressor() );
+     }
+     // Spigot end
+-- 
+1.9.1
+

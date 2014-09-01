@@ -1,24 +1,19 @@
-From 73868eaeb5d482192a439a724ba689defffb0db7 Mon Sep 17 00:00:00 2001
+From b490483ae793cf71a383355208f40c0d38be0926 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Mon, 1 Sep 2014 19:36:20 +1000
-Subject: [PATCH] Skip loading of ProtocolLib and Orebfuscator.
+Subject: [PATCH] Skip loading of Orebfuscator.
 
 As it does not work with Spigot 1.8 builds!
 
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index 1d51908..9e5d4fd 100644
+index 1d51908..b3002e8 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -132,6 +132,18 @@ public final class SimplePluginManager implements PluginManager {
+@@ -132,6 +132,13 @@ public final class SimplePluginManager implements PluginManager {
              try {
                  description = loader.getPluginDescription(file);
                  String name = description.getName();
 +                // Spigot Start
-+                if ( name.equalsIgnoreCase( "ProtocolLib" ) && !description.getVersion().endsWith( "-HACK" ) )
-+                {
-+                    server.getLogger().log( Level.WARNING, "Skipping loading of ProtocolLib as it does not work with Spigot 1.8 builds!" );
-+                    continue;
-+                }
 +                if ( name.equalsIgnoreCase( "Orebfuscator" ) )
 +                {
 +                    server.getLogger().log( Level.WARNING, "Skipping loading of Orebfuscator as it does not work with Spigot 1.8 builds!" );
