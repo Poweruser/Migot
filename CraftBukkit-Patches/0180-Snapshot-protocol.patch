@@ -1,4 +1,4 @@
-From e27f4123e1565607643089e400ecf05282f69571 Mon Sep 17 00:00:00 2001
+From c6375be65f8716214295ff749bb253ba55f9e4c1 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -1355,10 +1355,10 @@ index c93e8bc..1d70129 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java b/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
-index 4c622e2..f24c809 100644
+index 4c622e2..25f45a0 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
-@@ -27,11 +27,20 @@ public class PacketPlayOutBlockChange extends Packet {
+@@ -27,11 +27,22 @@ public class PacketPlayOutBlockChange extends Packet {
      }
  
      public void b(PacketDataSerializer packetdataserializer) {
@@ -1378,7 +1378,9 @@ index 4c622e2..f24c809 100644
 +        } else
 +        {
 +            packetdataserializer.writePosition( a, b, c );
-+            packetdataserializer.b( (Block.getId( this.block ) << 4) | this.data );
++            int id = Block.getId( this.block );
++            data = org.spigotmc.SpigotBlockDebreakifier.getCorrectedData( id, data );
++            packetdataserializer.b( (id << 4) | this.data );
 +        }
 +        // Spigot end
      }
@@ -2042,10 +2044,10 @@ index 30bf8a7..b9db43c 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java b/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
-index 0a12db5..c483b31 100644
+index 0a12db5..0e3419f 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
-@@ -13,26 +13,41 @@ public class PacketPlayOutMultiBlockChange extends Packet {
+@@ -13,26 +13,44 @@ public class PacketPlayOutMultiBlockChange extends Packet {
      private ChunkCoordIntPair b;
      private byte[] c;
      private int d;
@@ -2083,7 +2085,10 @@ index 0a12db5..c483b31 100644
  
                  dataoutputstream.writeShort(ashort[k]);
 -                dataoutputstream.writeShort((short) ((Block.getId(chunk.getType(l, j1, i1)) & 4095) << 4 | chunk.getData(l, j1, i1) & 15));
-+                int id = ( Block.getId( chunk.getType( l, j1, i1 ) ) & 4095 ) << 4 | chunk.getData( l, j1, i1 ) & 15;
++                int blockId = Block.getId( chunk.getType( l, j1, i1 ) );
++                int data = chunk.getData( l, j1, i1 );
++                data = org.spigotmc.SpigotBlockDebreakifier.getCorrectedData( blockId, data );
++                int id = ( blockId & 4095 ) << 4 | data & 15;
 +                dataoutputstream.writeShort((short) id);
 +                blocks[k] = id;
              }
@@ -2091,7 +2096,7 @@ index 0a12db5..c483b31 100644
  
              this.c = bytearrayoutputstream.toByteArray();
              if (this.c.length != j) {
-@@ -56,15 +71,31 @@ public class PacketPlayOutMultiBlockChange extends Packet {
+@@ -56,15 +74,31 @@ public class PacketPlayOutMultiBlockChange extends Packet {
      }
  
      public void b(PacketDataSerializer packetdataserializer) {
