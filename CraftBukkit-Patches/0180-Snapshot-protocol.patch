@@ -1,4 +1,4 @@
-From abca9cbebadba6ec1714e2aa309e153420a99c7c Mon Sep 17 00:00:00 2001
+From e8d4337bcaea8857f99b9dc4624972645d98477a Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -2356,7 +2356,7 @@ index 860592d..8e9ea33 100644
      public void handle(PacketListener packetlistener) {
          this.a((PacketPlayOutListener) packetlistener);
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
-index 7cae01e..9585615 100644
+index 7cae01e..adb8e8f 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
 @@ -1,31 +1,138 @@
@@ -2419,7 +2419,7 @@ index 7cae01e..9585615 100644
 +
 +    public static PacketPlayOutPlayerInfo updateGamemode(EntityPlayer player) {
 +        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
-+        packet.action = UPDATE_LATENCY;
++        packet.action = UPDATE_GAMEMODE;
 +        packet.username = player.listName;
 +        packet.player = player.getProfile();
 +        packet.gamemode = player.playerInteractManager.getGameMode().getId();
