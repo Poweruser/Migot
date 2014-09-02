@@ -1,4 +1,4 @@
-From e8d4337bcaea8857f99b9dc4624972645d98477a Mon Sep 17 00:00:00 2001
+From ce9423dd27e15c68e9082bdc725c98fd6448e0be Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -555,7 +555,7 @@ index f654d58..46c4fb8 100644
                      if (!this.tracker.getDataWatcher().d()) {
                          entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityMetadata(this.tracker.getId(), this.tracker.getDataWatcher(), true));
 diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/main/java/net/minecraft/server/HandshakeListener.java
-index 09fdb88..3d659ea 100644
+index 09fdb88..e0a1708 100644
 --- a/src/main/java/net/minecraft/server/HandshakeListener.java
 +++ b/src/main/java/net/minecraft/server/HandshakeListener.java
 @@ -72,7 +72,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
@@ -563,7 +563,7 @@ index 09fdb88..3d659ea 100644
              // CraftBukkit end
  
 -            if (packethandshakinginsetprotocol.d() > 5) {
-+            if (packethandshakinginsetprotocol.d() > 5 && packethandshakinginsetprotocol.d() != 46) { // Spigot
++            if (packethandshakinginsetprotocol.d() > 5 && packethandshakinginsetprotocol.d() != 47) { // Spigot
                  chatcomponenttext = new ChatComponentText( org.spigotmc.SpigotConfig.outdatedServerMessage ); // Spigot
                  this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
                  this.b.close(chatcomponenttext);
@@ -658,7 +658,7 @@ index b905c6e..8c3950a 100644
          try {
              /* CraftBukkit start - Replace everything
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index ae3de2f..6d579e3 100644
+index ae3de2f..0cae021 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
 @@ -24,6 +24,8 @@ import org.apache.logging.log4j.Marker;
@@ -675,11 +675,11 @@ index ae3de2f..6d579e3 100644
      // Spigot Start
      public static final AttributeKey<Integer> protocolVersion = new AttributeKey<Integer>("protocol_version");
 -    public static final ImmutableSet<Integer> SUPPORTED_VERSIONS = ImmutableSet.of(4, 5);
-+    public static final ImmutableSet<Integer> SUPPORTED_VERSIONS = ImmutableSet.of(4, 5, 46);
++    public static final ImmutableSet<Integer> SUPPORTED_VERSIONS = ImmutableSet.of(4, 5, 47);
      public static final int CURRENT_VERSION = 5;
      public static int getVersion(Channel attr)
      {
-@@ -244,4 +246,12 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+@@ -244,4 +246,18 @@ public class NetworkManager extends SimpleChannelInboundHandler {
          return this.m.remoteAddress();
      }
      // Spigot End
@@ -687,7 +687,13 @@ index ae3de2f..6d579e3 100644
 +
 +    // Spigot start - protocol patch
 +    public void enableCompression() {
-+        m.pipeline().addBefore( "decoder", "decompress", new SpigotDecompressor() );
++        // Fix ProtocolLib compatibility
++        if ( m.pipeline().get("protocol_lib_decoder") != null ) {
++            m.pipeline().addBefore( "protocol_lib_decoder", "decompress", new SpigotDecompressor() );
++        } else {
++            m.pipeline().addBefore( "decoder", "decompress", new SpigotDecompressor() );
++        }
++
 +        m.pipeline().addBefore( "encoder", "compress", new SpigotCompressor() );
 +    }
 +    // Spigot end
