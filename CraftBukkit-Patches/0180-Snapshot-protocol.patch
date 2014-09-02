@@ -1,4 +1,4 @@
-From 391c7e6712848963e2ef45773e6ba6f4cd5efb1f Mon Sep 17 00:00:00 2001
+From 735f80a7b89fa8f4ba096cfe555cee7f55ceb56e Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -745,7 +745,7 @@ index 592ffc5..7a1e8f0 100644
          if (short1 < 0) {
              throw new IOException("Key was smaller than nothing!  Weird key!");
 diff --git a/src/main/java/net/minecraft/server/PacketDataSerializer.java b/src/main/java/net/minecraft/server/PacketDataSerializer.java
-index e4df5b3..90641d9 100644
+index e4df5b3..451f5fd 100644
 --- a/src/main/java/net/minecraft/server/PacketDataSerializer.java
 +++ b/src/main/java/net/minecraft/server/PacketDataSerializer.java
 @@ -8,6 +8,7 @@ import java.nio.ByteOrder;
@@ -805,7 +805,7 @@ index e4df5b3..90641d9 100644
      // Spigot End
  
      public static int a(int i) {
-@@ -63,29 +99,61 @@ public class PacketDataSerializer extends ByteBuf {
+@@ -63,35 +99,75 @@ public class PacketDataSerializer extends ByteBuf {
          this.writeByte(i);
      }
  
@@ -883,7 +883,22 @@ index e4df5b3..90641d9 100644
  
      public void a(ItemStack itemstack) {
          if (itemstack == null || itemstack.getItem() == null) { // CraftBukkit - NPE fix itemstack.getItem()
-@@ -104,6 +172,31 @@ public class PacketDataSerializer extends ByteBuf {
+             this.writeShort(-1);
+         } else {
+-            this.writeShort(Item.getId(itemstack.getItem()));
++            // Spigot start - protocol patch
++            if ( version >= 47 )
++            {
++                this.writeShort( org.spigotmc.SpigotDebreakifier.getItemId( Item.getId( itemstack.getItem() ) ) );
++            } else
++            {
++                this.writeShort( Item.getId( itemstack.getItem() ) );
++            }
++            // Spigot end
+             this.writeByte(itemstack.count);
+             this.writeShort(itemstack.getData());
+             NBTTagCompound nbttagcompound = null;
+@@ -104,6 +180,31 @@ public class PacketDataSerializer extends ByteBuf {
                  nbttagcompound = itemstack.tag;
              }
  
@@ -915,7 +930,7 @@ index e4df5b3..90641d9 100644
              this.a(nbttagcompound);
          }
      }
-@@ -120,6 +213,24 @@ public class PacketDataSerializer extends ByteBuf {
+@@ -120,6 +221,24 @@ public class PacketDataSerializer extends ByteBuf {
              itemstack.tag = this.b();
              // CraftBukkit start
              if (itemstack.tag != null) {
@@ -1394,7 +1409,7 @@ index c93e8bc..1d70129 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java b/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
-index 4c622e2..25f45a0 100644
+index 4c622e2..dfa68b0 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
 @@ -27,11 +27,22 @@ public class PacketPlayOutBlockChange extends Packet {
@@ -1418,7 +1433,7 @@ index 4c622e2..25f45a0 100644
 +        {
 +            packetdataserializer.writePosition( a, b, c );
 +            int id = Block.getId( this.block );
-+            data = org.spigotmc.SpigotBlockDebreakifier.getCorrectedData( id, data );
++            data = org.spigotmc.SpigotDebreakifier.getCorrectedData( id, data );
 +            packetdataserializer.b( (id << 4) | this.data );
 +        }
 +        // Spigot end
@@ -1882,7 +1897,7 @@ index 5980c2d..1c69026 100644
  
      public void a(PacketPlayOutListener packetplayoutlistener) {
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
-index 7479600..843f4e0 100644
+index 7479600..fcd126b 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 @@ -17,28 +17,24 @@ public class PacketPlayOutMapChunk extends Packet {
@@ -2005,7 +2020,7 @@ index 7479600..843f4e0 100644
 +                            Blocks.PORTAL.updateShape( chunk.world, ( chunk.locX << 4 ) + px, ( l << 4 ) + py, ( chunk.locZ << 4 ) + pz );
 +                        } else
 +                        {
-+                            data = org.spigotmc.SpigotBlockDebreakifier.getCorrectedData( id, data );
++                            data = org.spigotmc.SpigotDebreakifier.getCorrectedData( id, data );
 +                        }
 +                        char val = (char) ( id << 4 | data );
 +                        abyte[ j++ ] = (byte) ( val & 0xFF );
@@ -2132,7 +2147,7 @@ index 30bf8a7..b9db43c 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java b/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
-index 0a12db5..0e3419f 100644
+index 0a12db5..1e86a8f 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
 @@ -13,26 +13,44 @@ public class PacketPlayOutMultiBlockChange extends Packet {
@@ -2175,7 +2190,7 @@ index 0a12db5..0e3419f 100644
 -                dataoutputstream.writeShort((short) ((Block.getId(chunk.getType(l, j1, i1)) & 4095) << 4 | chunk.getData(l, j1, i1) & 15));
 +                int blockId = Block.getId( chunk.getType( l, j1, i1 ) );
 +                int data = chunk.getData( l, j1, i1 );
-+                data = org.spigotmc.SpigotBlockDebreakifier.getCorrectedData( blockId, data );
++                data = org.spigotmc.SpigotDebreakifier.getCorrectedData( blockId, data );
 +                int id = ( blockId & 4095 ) << 4 | data & 15;
 +                dataoutputstream.writeShort((short) id);
 +                blocks[k] = id;
@@ -2224,7 +2239,7 @@ index 0a12db5..0e3419f 100644
  
      public void a(PacketPlayOutListener packetplayoutlistener) {
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
-index ccd4cec..ecc28be 100644
+index ccd4cec..80857c9 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
 @@ -64,8 +64,10 @@ public class PacketPlayOutNamedEntitySpawn extends Packet {
@@ -2239,7 +2254,7 @@ index ccd4cec..ecc28be 100644
          packetdataserializer.a( uuid == null ? "" : ( ( packetdataserializer.version >= 5 ) ? uuid.toString() : uuid.toString().replaceAll( "-", "" ) ) ); // Spigot
          packetdataserializer.a(this.b.getName().length() > 16 ? this.b.getName().substring(0, 16) : this.b.getName()); // CraftBukkit - Limit name length to 16 characters
          if (packetdataserializer.version >= 5 ) { // Spigot
-@@ -79,7 +81,12 @@ public class PacketPlayOutNamedEntitySpawn extends Packet {
+@@ -79,14 +81,26 @@ public class PacketPlayOutNamedEntitySpawn extends Packet {
              packetdataserializer.a(property.getValue());
              packetdataserializer.a(property.getSignature());
          }
@@ -2253,6 +2268,21 @@ index ccd4cec..ecc28be 100644
  
          packetdataserializer.writeInt(this.c);
          packetdataserializer.writeInt(this.d);
+         packetdataserializer.writeInt(this.e);
+         packetdataserializer.writeByte(this.f);
+         packetdataserializer.writeByte(this.g);
+-        packetdataserializer.writeShort(this.h);
++        // Spigot start - protocol patch
++        if ( packetdataserializer.version >= 47 )
++        {
++            packetdataserializer.writeShort( org.spigotmc.SpigotDebreakifier.getItemId( this.h ) );
++        } else
++        {
++            packetdataserializer.writeShort( this.h );
++        }
+         this.i.a(packetdataserializer);
+     }
+ 
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutOpenSignEditor.java b/src/main/java/net/minecraft/server/PacketPlayOutOpenSignEditor.java
 index d67a364..052da02 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutOpenSignEditor.java
@@ -3962,76 +3992,6 @@ index 0000000..0e30463
 +        }
 +    }
 +}
-diff --git a/src/main/java/org/spigotmc/SpigotBlockDebreakifier.java b/src/main/java/org/spigotmc/SpigotBlockDebreakifier.java
-new file mode 100644
-index 0000000..3e57442
---- /dev/null
-+++ b/src/main/java/org/spigotmc/SpigotBlockDebreakifier.java
-@@ -0,0 +1,64 @@
-+package org.spigotmc;
-+
-+import com.google.common.base.Charsets;
-+import com.google.gson.JsonArray;
-+import com.google.gson.JsonElement;
-+import com.google.gson.JsonParser;
-+
-+import java.io.IOException;
-+import java.io.InputStream;
-+import java.io.InputStreamReader;
-+import java.util.Arrays;
-+
-+public class SpigotBlockDebreakifier
-+{
-+
-+    private static final boolean[] validBlocks = new boolean[ 198 << 4 ];
-+    private static final int[] correctedValues = new int[ 198 ];
-+
-+    static
-+    {
-+        Arrays.fill( correctedValues, -1 );
-+        InputStream in = SpigotBlockDebreakifier.class.getResourceAsStream( "/blocks.json" );
-+        try
-+        {
-+            JsonArray e = new JsonParser().parse( new InputStreamReader( in, Charsets.UTF_8 ) ).getAsJsonArray();
-+            for ( JsonElement entry : e )
-+            {
-+                String[] parts = entry.getAsString().split( ":" );
-+                int id = Integer.parseInt( parts[ 0 ] );
-+                int data = Integer.parseInt( parts[ 1 ] );
-+                validBlocks[ ( id << 4 ) | data ] = true;
-+                if ( correctedValues[ id ] == -1 || data < correctedValues[ id ] )
-+                {
-+                    correctedValues[ id ] = data;
-+                }
-+            }
-+        } finally
-+        {
-+            try
-+            {
-+                in.close();
-+            } catch ( IOException e )
-+            {
-+                throw new RuntimeException( e );
-+            }
-+        }
-+    }
-+
-+    public static int getCorrectedData(int id, int data)
-+    {
-+        if ( id > 197 ) return data;
-+        if ( id == 175 && data > 8 )
-+        {
-+            data = 8;
-+        }
-+        if ( validBlocks[ ( id << 4 ) | data ] )
-+        {
-+            return data;
-+        } else
-+        {
-+            return correctedValues[ id ] & 0xF;
-+        }
-+    }
-+}
 diff --git a/src/main/java/org/spigotmc/SpigotComponentReverter.java b/src/main/java/org/spigotmc/SpigotComponentReverter.java
 new file mode 100644
 index 0000000..6093d62
@@ -4190,6 +4150,114 @@ index 0000000..2e0857e
 +            }
 +            deflater.reset();
 +        }
++    }
++}
+diff --git a/src/main/java/org/spigotmc/SpigotDebreakifier.java b/src/main/java/org/spigotmc/SpigotDebreakifier.java
+new file mode 100644
+index 0000000..d811f55
+--- /dev/null
++++ b/src/main/java/org/spigotmc/SpigotDebreakifier.java
+@@ -0,0 +1,102 @@
++package org.spigotmc;
++
++import com.google.common.base.Charsets;
++import com.google.gson.JsonArray;
++import com.google.gson.JsonElement;
++import com.google.gson.JsonParser;
++import net.minecraft.server.Block;
++import net.minecraft.server.Blocks;
++import net.minecraft.server.Item;
++import net.minecraft.server.Items;
++import net.minecraft.util.gnu.trove.map.hash.TIntIntHashMap;
++
++import java.io.IOException;
++import java.io.InputStream;
++import java.io.InputStreamReader;
++import java.util.Arrays;
++
++public class SpigotDebreakifier
++{
++
++    private static final boolean[] validBlocks = new boolean[ 198 << 4 ];
++    private static final int[] correctedValues = new int[ 198 ];
++
++    static
++    {
++        Arrays.fill( correctedValues, -1 );
++        InputStream in = SpigotDebreakifier.class.getResourceAsStream( "/blocks.json" );
++        try
++        {
++            JsonArray e = new JsonParser().parse( new InputStreamReader( in, Charsets.UTF_8 ) ).getAsJsonArray();
++            for ( JsonElement entry : e )
++            {
++                String[] parts = entry.getAsString().split( ":" );
++                int id = Integer.parseInt( parts[ 0 ] );
++                int data = Integer.parseInt( parts[ 1 ] );
++                validBlocks[ ( id << 4 ) | data ] = true;
++                if ( correctedValues[ id ] == -1 || data < correctedValues[ id ] )
++                {
++                    correctedValues[ id ] = data;
++                }
++            }
++        } finally
++        {
++            try
++            {
++                in.close();
++            } catch ( IOException e )
++            {
++                throw new RuntimeException( e );
++            }
++        }
++    }
++
++    public static int getCorrectedData(int id, int data)
++    {
++        if ( id > 197 ) return data;
++        if ( id == 175 && data > 8 )
++        {
++            data = 8;
++        }
++        if ( validBlocks[ ( id << 4 ) | data ] )
++        {
++            return data;
++        } else
++        {
++            return correctedValues[ id ] & 0xF;
++        }
++    }
++
++    private static TIntIntHashMap invalidItems = new TIntIntHashMap();
++    static {
++        replace( Blocks.WATER, Items.WATER_BUCKET );
++        replace( Blocks.STATIONARY_WATER, Items.WATER_BUCKET );
++        replace( Blocks.LAVA, Items.LAVA_BUCKET );
++        replace( Blocks.STATIONARY_LAVA, Items.LAVA_BUCKET );
++        replace( Blocks.PORTAL, Items.NETHER_BRICK );
++        replace( Blocks.DOUBLE_STEP, Blocks.STEP );
++        replace( Blocks.FIRE, Items.FLINT_AND_STEEL );
++        replace( Blocks.ENDER_PORTAL, Blocks.ENDER_PORTAL_FRAME );
++        replace( Blocks.WOOD_DOUBLE_STEP, Blocks.WOOD_STEP );
++        replace( Blocks.COCOA, Items.SEEDS );
++        replace( Blocks.CARROTS, Items.CARROT );
++        replace( Blocks.POTATOES, Items.POTATO );
++    }
++
++    public static int getItemId(int id)
++    {
++        return invalidItems.containsKey( id ) ? invalidItems.get( id ) : id;
++    }
++
++    private static void replace(Block block, Block other) {
++        replace( Block.getId( block ), Block.getId( other ) );
++    }
++
++    private static void replace(Block block, Item other) {
++        replace( Block.getId( block ), Item.getId( other ) );
++    }
++
++    private static void replace(int block, int other) {
++        invalidItems.put( block, other );
 +    }
 +}
 diff --git a/src/main/java/org/spigotmc/SpigotDecompressor.java b/src/main/java/org/spigotmc/SpigotDecompressor.java
