@@ -1,4 +1,4 @@
-From 735f80a7b89fa8f4ba096cfe555cee7f55ceb56e Mon Sep 17 00:00:00 2001
+From 9974f935f8f2ccbc7f264791ef96fe4bd39ebdad Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -416,7 +416,7 @@ index 2a1e69d..0710fcc 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 413af68..bf70d65 100644
+index 413af68..6e80242 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -26,6 +26,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
@@ -472,7 +472,30 @@ index 413af68..bf70d65 100644
  
              try {
                  packetdataserializer.writeInt(this.containerCounter);
-@@ -1004,7 +1005,16 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -821,6 +822,22 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     }
+ 
+     public void setContainerData(Container container, int i, int j) {
++        // Spigot start - protocol patch
++        if ( container instanceof ContainerFurnace && playerConnection.networkManager.getVersion() >= 47 )
++        {
++            switch ( i ) {
++                case 0:
++                    i = 2;
++                    this.playerConnection.sendPacket(new PacketPlayOutWindowData(container.windowId, 3, 200));
++                    break;
++                case 1:
++                    i = 0;
++                    break;
++                case 2:
++                    i = 1;
++            }
++        }
++        // Spigot end
+         this.playerConnection.sendPacket(new PacketPlayOutWindowData(container.windowId, i, j));
+     }
+ 
+@@ -1004,7 +1021,16 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
              this.server.a(packetplayinsettings.g());
          }
  
@@ -490,7 +513,7 @@ index 413af68..bf70d65 100644
      }
  
      public EnumChatVisibility getChatFlags() {
-@@ -1013,6 +1023,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1013,6 +1039,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      public void setResourcePack(String s) {
          this.playerConnection.sendPacket(new PacketPlayOutCustomPayload("MC|RPack", s.getBytes(Charsets.UTF_8)));
