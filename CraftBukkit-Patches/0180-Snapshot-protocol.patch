@@ -1,4 +1,4 @@
-From 9974f935f8f2ccbc7f264791ef96fe4bd39ebdad Mon Sep 17 00:00:00 2001
+From 00daa8bf9cc7cb311c229fca7efe21b1e00f7a00 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -2700,7 +2700,7 @@ index 9041f82..f2c38c5 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutScoreboardObjective.java b/src/main/java/net/minecraft/server/PacketPlayOutScoreboardObjective.java
-index 7403dbd..a976436 100644
+index 7403dbd..700e94e 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutScoreboardObjective.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutScoreboardObjective.java
 @@ -23,9 +23,22 @@ public class PacketPlayOutScoreboardObjective extends Packet {
@@ -2722,7 +2722,7 @@ index 7403dbd..a976436 100644
 +            packetdataserializer.writeByte( c );
 +            if ( c == 0 || c == 2 ) {
 +                packetdataserializer.a( b );
-+                packetdataserializer.a( "hearts" );
++                packetdataserializer.a( "integer" );
 +            }
 +        }
 +        // Spigot end
