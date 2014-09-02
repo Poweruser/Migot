@@ -1,13 +1,35 @@
-From 55c36003f35e8abf41760a5a342240e3c4aec131 Mon Sep 17 00:00:00 2001
+From 110f5d33e96a30369268008fc4efc907c29af087 Mon Sep 17 00:00:00 2001
 From: Minecrell <dev@minecrell.net>
 Date: Mon, 1 Sep 2014 18:27:49 +0200
 Subject: [PATCH] Fix ProtocolLib compatibility.
 
 
+diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/main/java/net/minecraft/server/HandshakeListener.java
+index 3d659ea..e0a1708 100644
+--- a/src/main/java/net/minecraft/server/HandshakeListener.java
++++ b/src/main/java/net/minecraft/server/HandshakeListener.java
+@@ -72,7 +72,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
+             }
+             // CraftBukkit end
+ 
+-            if (packethandshakinginsetprotocol.d() > 5 && packethandshakinginsetprotocol.d() != 46) { // Spigot
++            if (packethandshakinginsetprotocol.d() > 5 && packethandshakinginsetprotocol.d() != 47) { // Spigot
+                 chatcomponenttext = new ChatComponentText( org.spigotmc.SpigotConfig.outdatedServerMessage ); // Spigot
+                 this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
+                 this.b.close(chatcomponenttext);
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index 6d579e3..3bea0ec 100644
+index 6d579e3..0cae021 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -55,7 +55,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+     private boolean r;
+     // Spigot Start
+     public static final AttributeKey<Integer> protocolVersion = new AttributeKey<Integer>("protocol_version");
+-    public static final ImmutableSet<Integer> SUPPORTED_VERSIONS = ImmutableSet.of(4, 5, 46);
++    public static final ImmutableSet<Integer> SUPPORTED_VERSIONS = ImmutableSet.of(4, 5, 47);
+     public static final int CURRENT_VERSION = 5;
+     public static int getVersion(Channel attr)
+     {
 @@ -250,7 +250,13 @@ public class NetworkManager extends SimpleChannelInboundHandler {
  
      // Spigot start - protocol patch
