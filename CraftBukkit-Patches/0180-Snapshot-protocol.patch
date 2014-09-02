@@ -1,4 +1,4 @@
-From ce9423dd27e15c68e9082bdc725c98fd6448e0be Mon Sep 17 00:00:00 2001
+From 391c7e6712848963e2ef45773e6ba6f4cd5efb1f Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -1467,10 +1467,10 @@ index 0870ac9..8eff9e5 100644
  
      public void a(PacketPlayOutListener packetplayoutlistener) {
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutCustomPayload.java b/src/main/java/net/minecraft/server/PacketPlayOutCustomPayload.java
-index f2a032e..fda616c 100644
+index f2a032e..e6d9165 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutCustomPayload.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutCustomPayload.java
-@@ -31,8 +31,17 @@ public class PacketPlayOutCustomPayload extends Packet {
+@@ -31,8 +31,22 @@ public class PacketPlayOutCustomPayload extends Packet {
  
      public void b(PacketDataSerializer packetdataserializer) throws IOException {
          packetdataserializer.a(this.tag);
@@ -1479,6 +1479,11 @@ index f2a032e..fda616c 100644
 +        if ( packetdataserializer.version < 29 )
 +        {
 +            packetdataserializer.writeShort( this.data.length );
++        }
++        if ( packetdataserializer.version >= 47 && tag.equals( "MC|Brand" ) )
++        {
++            packetdataserializer.a( new String( data, "UTF-8" ) );
++            return;
 +        }
          packetdataserializer.writeBytes(this.data);
 +        if ( packetdataserializer.version >= 29 && tag.equals( "MC|AdvCdm" ) )
