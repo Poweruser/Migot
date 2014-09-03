@@ -1,4 +1,4 @@
-From 00daa8bf9cc7cb311c229fca7efe21b1e00f7a00 Mon Sep 17 00:00:00 2001
+From 258cd12cbf9f260eeeebab4c4e0b9320560346c3 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -3882,13 +3882,15 @@ index 0000000..ff93cbe
 +}
 diff --git a/src/main/java/org/spigotmc/ProtocolInjector.java b/src/main/java/org/spigotmc/ProtocolInjector.java
 new file mode 100644
-index 0000000..0e30463
+index 0000000..d8ac388
 --- /dev/null
 +++ b/src/main/java/org/spigotmc/ProtocolInjector.java
-@@ -0,0 +1,129 @@
+@@ -0,0 +1,168 @@
 +package org.spigotmc;
 +
++import net.minecraft.server.ChatSerializer;
 +import net.minecraft.server.EnumProtocol;
++import net.minecraft.server.IChatBaseComponent;
 +import net.minecraft.server.Packet;
 +import net.minecraft.server.PacketDataSerializer;
 +import net.minecraft.server.PacketListener;
@@ -3906,6 +3908,7 @@ index 0000000..0e30463
 +        {
 +            addPacket( EnumProtocol.LOGIN, true, 0x3, PacketLoginCompression.class );
 +
++            addPacket( EnumProtocol.PLAY, true, 0x47, PacketTabHeader.class );
 +            addPacket( EnumProtocol.PLAY, true, 0x48, PacketPlayResourcePackSend.class );
 +            addPacket( EnumProtocol.PLAY, false, 0x19, PacketPlayResourcePackStatus.class );
 +        } catch ( NoSuchFieldException e )
@@ -4012,6 +4015,42 @@ index 0000000..0e30463
 +        public void handle(PacketListener packetlistener)
 +        {
 +
++        }
++    }
++
++    public static class PacketTabHeader extends Packet
++    {
++
++        private IChatBaseComponent header;
++        private IChatBaseComponent footer;
++
++        public PacketTabHeader()
++        {
++        }
++
++        public PacketTabHeader(IChatBaseComponent header, IChatBaseComponent footer)
++        {
++            this.header = header;
++            this.footer = footer;
++        }
++
++        @Override
++        public void a(PacketDataSerializer packetdataserializer) throws IOException
++        {
++            this.header = ChatSerializer.a( packetdataserializer.c( 32767 ) );
++            this.footer = ChatSerializer.a( packetdataserializer.c( 32767 ) );
++        }
++
++        @Override
++        public void b(PacketDataSerializer packetdataserializer) throws IOException
++        {
++            packetdataserializer.a( ChatSerializer.a( this.header ) );
++            packetdataserializer.a( ChatSerializer.a( this.footer ) );
++        }
++
++        @Override
++        public void handle(PacketListener packetlistener)
++        {
 +        }
 +    }
 +}
