@@ -1,4 +1,4 @@
-From 258cd12cbf9f260eeeebab4c4e0b9320560346c3 Mon Sep 17 00:00:00 2001
+From 7295e228c6222c945c566c76c1985d4b4fbd7554 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -3110,7 +3110,7 @@ index f1001c6..a9577b8 100644
          packetdataserializer.writeBoolean(this.f);
      }
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutWorldParticles.java b/src/main/java/net/minecraft/server/PacketPlayOutWorldParticles.java
-index 29f0c99..d708000 100644
+index 29f0c99..07b564f 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutWorldParticles.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutWorldParticles.java
 @@ -1,6 +1,7 @@
@@ -3174,7 +3174,7 @@ index 29f0c99..d708000 100644
  
      public void a(PacketPlayOutListener packetplayoutlistener) {
          packetplayoutlistener.a(this);
-@@ -59,4 +95,79 @@ public class PacketPlayOutWorldParticles extends Packet {
+@@ -59,4 +95,80 @@ public class PacketPlayOutWorldParticles extends Packet {
      public void handle(PacketListener packetlistener) {
          this.a((PacketPlayOutListener) packetlistener);
      }
@@ -3218,11 +3218,12 @@ index 29f0c99..d708000 100644
 +        SLIME( "slime" ),
 +        HEART( "heart" ),
 +        BARRIER( "barrier" ),
-+        ICON_CRACK( "iconcrack", 1 ),
++        ICON_CRACK( "iconcrack", 2 ),
 +        BLOCK_CRACK( "blockcrack", 1 ),
-+        BLOCK_DUST( "blockdust", 2 ),
++        BLOCK_DUST( "blockdust", 1 ),
 +        WATER_DROP( "droplet" ),
-+        ITEM_TAKE( "take" );
++        ITEM_TAKE( "take" ),
++        MOB_APPEARANCE( "mobappearance" );
 +
 +        public final String name;
 +        public final int extra;
