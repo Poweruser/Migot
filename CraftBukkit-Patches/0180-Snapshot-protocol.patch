@@ -1,4 +1,4 @@
-From 7295e228c6222c945c566c76c1985d4b4fbd7554 Mon Sep 17 00:00:00 2001
+From 7a82d01c51bcd2f9d36da3e5db271dc6ef80db64 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -1857,7 +1857,7 @@ index 49e0ff5..9ebf9b5 100644
  
      public void a(PacketPlayOutListener packetplayoutlistener) {
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMap.java b/src/main/java/net/minecraft/server/PacketPlayOutMap.java
-index 5980c2d..1c69026 100644
+index 5980c2d..b45a9ce 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMap.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMap.java
 @@ -1,13 +1,19 @@
@@ -1911,7 +1911,7 @@ index 5980c2d..1c69026 100644
 +                packetdataserializer.writeByte( rows );
 +                packetdataserializer.writeByte( b[1] );
 +                packetdataserializer.writeByte( b[2] );
-+                a( packetdataserializer, Arrays.copyOfRange(b, 3, rows) );
++                a( packetdataserializer, Arrays.copyOfRange(b, 3, b.length) );
 +            } else {
 +                packetdataserializer.writeByte( 0 );
 +            }
