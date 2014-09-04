@@ -1,11 +1,11 @@
-From 5831308359be4561f282629032c081d3fee9187d Mon Sep 17 00:00:00 2001
+From 47d90f7351f706e2d7ab2705bc7eda427ce6b857 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Fri, 21 Jun 2013 19:21:58 +1000
 Subject: [PATCH] Configurable Messages
 
 
 diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/main/java/net/minecraft/server/HandshakeListener.java
-index 52bc69b..b98079c 100644
+index 52bc69b..2b398d7 100644
 --- a/src/main/java/net/minecraft/server/HandshakeListener.java
 +++ b/src/main/java/net/minecraft/server/HandshakeListener.java
 @@ -64,11 +64,11 @@ public class HandshakeListener implements PacketHandshakingInListener {
@@ -13,12 +13,12 @@ index 52bc69b..b98079c 100644
  
              if (packethandshakinginsetprotocol.d() > 5) {
 -                chatcomponenttext = new ChatComponentText("Outdated server! I\'m still on 1.7.10");
-+                chatcomponenttext = new ChatComponentText( org.spigotmc.SpigotConfig.outdatedServerMessage ); // Spigot
++                chatcomponenttext = new ChatComponentText( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedServerMessage, "1.7.10" ) ); // Spigot
                  this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
                  this.b.close(chatcomponenttext);
              } else if (packethandshakinginsetprotocol.d() < 5) {
 -                chatcomponenttext = new ChatComponentText("Outdated client! Please use 1.7.10");
-+                chatcomponenttext = new ChatComponentText( org.spigotmc.SpigotConfig.outdatedClientMessage ); // Spigot
++                chatcomponenttext = new ChatComponentText( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedClientMessage, "1.7.10" ) ); // Spigot
                  this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
                  this.b.close(chatcomponenttext);
              } else {
@@ -45,7 +45,7 @@ index 9eb25df..110b7e0 100644
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index fdac2f6..f8e2f0f 100644
+index 79b9459..09277e9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -745,11 +745,7 @@ public final class CraftServer implements Server {
@@ -62,7 +62,7 @@ index fdac2f6..f8e2f0f 100644
          return false;
      }
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
-index f611334..4a89e70 100644
+index 0a6ab75..95bb141 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotConfig.java
 @@ -12,6 +12,7 @@ import java.util.Map;
@@ -81,7 +81,7 @@ index f611334..4a89e70 100644
 +    public static String whitelistMessage;
 +    public static String unknownCommandMessage;
 +    public static String serverFullMessage;
-+    public static String outdatedClientMessage = "Outdated client! Please use {}";
++    public static String outdatedClientMessage = "Outdated client! Please use {0}";
 +    public static String outdatedServerMessage = "Outdated server! I\'m still on {0}";
 +    private static String transform(String s)
 +    {
@@ -89,7 +89,7 @@ index f611334..4a89e70 100644
 +    }
 +    private static void messages()
 +    {
-+        if (version < 4)
++        if (version < 8)
 +        {
 +            set( "messages.outdated-client", outdatedClientMessage );
 +            set( "messages.outdated-server", outdatedServerMessage );
