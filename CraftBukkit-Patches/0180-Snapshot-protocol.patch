@@ -1,4 +1,4 @@
-From 9c66dfb14a3824b06707afff337f81484ca53ecf Mon Sep 17 00:00:00 2001
+From 4edf21de4b36c5f6b2756679bfd025ec3b096fc3 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -578,7 +578,7 @@ index f654d58..46c4fb8 100644
                      if (!this.tracker.getDataWatcher().d()) {
                          entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityMetadata(this.tracker.getId(), this.tracker.getDataWatcher(), true));
 diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/main/java/net/minecraft/server/HandshakeListener.java
-index 09fdb88..e0a1708 100644
+index 5a0ade5..7566110 100644
 --- a/src/main/java/net/minecraft/server/HandshakeListener.java
 +++ b/src/main/java/net/minecraft/server/HandshakeListener.java
 @@ -72,7 +72,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
@@ -587,7 +587,7 @@ index 09fdb88..e0a1708 100644
  
 -            if (packethandshakinginsetprotocol.d() > 5) {
 +            if (packethandshakinginsetprotocol.d() > 5 && packethandshakinginsetprotocol.d() != 47) { // Spigot
-                 chatcomponenttext = new ChatComponentText( org.spigotmc.SpigotConfig.outdatedServerMessage ); // Spigot
+                 chatcomponenttext = new ChatComponentText( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedServerMessage, "1.7.10" ) ); // Spigot
                  this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
                  this.b.close(chatcomponenttext);
 diff --git a/src/main/java/net/minecraft/server/ItemWorldMap.java b/src/main/java/net/minecraft/server/ItemWorldMap.java
