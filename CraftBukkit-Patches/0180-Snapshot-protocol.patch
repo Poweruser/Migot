@@ -1,4 +1,4 @@
-From 4edf21de4b36c5f6b2756679bfd025ec3b096fc3 Mon Sep 17 00:00:00 2001
+From 9e87401b14f079780193996fd5238e4f8ce93b9f Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -3460,7 +3460,7 @@ index 75ea5c9..0359cb3 100644
                      {
                          if ( splayer.getBukkitEntity().canSee( player.getBukkitEntity() ) )
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index e5f73fc..0c4976d 100644
+index e5f73fc..e97f237 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -1,13 +1,16 @@
@@ -3491,7 +3491,7 @@ index e5f73fc..0c4976d 100644
          // Spigot Start
          File lock = new File( ".update-lock" );
          if ( !new File( "update-lock" ).exists() && !lock.exists()  && System.getProperty( "IReallyKnowWhatIAmDoingThisUpdate" ) == null )
-@@ -39,6 +42,32 @@ public class Main {
+@@ -39,6 +42,35 @@ public class Main {
              {
              }
          }
@@ -3517,7 +3517,10 @@ index e5f73fc..0c4976d 100644
 +                    System.err.println( "WARNING: This build is more than 2 days old and there are likely updates available!" );
 +                    System.err.println( "You will get no support with this build unless you update from http://ci.md-5.net/job/Spigot/" );
 +                    System.err.println( "The server will start in 10 seconds!" );
-+                    Thread.sleep( TimeUnit.SECONDS.toMillis( 10 ) );
++                    if ( System.getProperty( "IKnowWhatImDoing" ) == null )
++                    {
++                        Thread.sleep( TimeUnit.SECONDS.toMillis( 10 ) );
++                    }
 +                }
 +            }
 +        }
