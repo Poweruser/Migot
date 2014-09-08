@@ -1,5 +1,7 @@
 package org.spigotmc.patcher;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import java.io.File;
 import net.md_5.jbeat.Patcher;
 
@@ -40,6 +42,8 @@ public class Main
         }
 
         System.out.println( "***** Starting patching process, please wait." );
+        System.out.println( "\tInput md5 Checksum: " + Files.hash( originalFile, Hashing.md5() ) );
+        System.out.println( "\tPatch md5 Checksum: " + Files.hash( patchFile, Hashing.md5() ) );
 
         try
         {
@@ -53,5 +57,6 @@ public class Main
         }
 
         System.out.println( "***** Your file has been patched and verified! We hope you enjoy using Spigot!" );
+        System.out.println( "\tOutput md5 Checksum: " + Files.hash( outputFile, Hashing.md5() ) );
     }
 }
