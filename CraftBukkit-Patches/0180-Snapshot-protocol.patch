@@ -1,4 +1,4 @@
-From 9e87401b14f079780193996fd5238e4f8ce93b9f Mon Sep 17 00:00:00 2001
+From 534549b366ff5124be19e6422cd8c901a999bed0 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -3460,7 +3460,7 @@ index 75ea5c9..0359cb3 100644
                      {
                          if ( splayer.getBukkitEntity().canSee( player.getBukkitEntity() ) )
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index e5f73fc..e97f237 100644
+index e5f73fc..fc41b6d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -1,13 +1,16 @@
@@ -3491,7 +3491,7 @@ index e5f73fc..e97f237 100644
          // Spigot Start
          File lock = new File( ".update-lock" );
          if ( !new File( "update-lock" ).exists() && !lock.exists()  && System.getProperty( "IReallyKnowWhatIAmDoingThisUpdate" ) == null )
-@@ -39,6 +42,35 @@ public class Main {
+@@ -39,6 +42,11 @@ public class Main {
              {
              }
          }
@@ -3500,30 +3500,6 @@ index e5f73fc..e97f237 100644
 +                + "*** It is imperative that backups be taken before running this build on your server! ***\n"
 +                + "Please report any such issues to http://www.spigotmc.org/, stating your client, server, and if applicable BungeeCord versions.\n"
 +                + "*** Any bug reports not running the very latest versions of these softwares will be ignored ***\n\n" );
-+
-+        Enumeration<URL> resources = Main.class.getClassLoader().getResources( "META-INF/MANIFEST.MF" );
-+        while ( resources.hasMoreElements() )
-+        {
-+            Manifest manifest = new Manifest( resources.nextElement().openStream() );
-+            String ts = manifest.getMainAttributes().getValue( "Timestamp" );
-+            if ( ts != null )
-+            {
-+                Date buildDate = new SimpleDateFormat( "yyyyMMdd-hhmm" ).parse( ts );
-+
-+                Calendar cal = Calendar.getInstance();
-+                cal.add( Calendar.DAY_OF_YEAR, -2 );
-+                if ( buildDate.before(cal.getTime() ) )
-+                {
-+                    System.err.println( "WARNING: This build is more than 2 days old and there are likely updates available!" );
-+                    System.err.println( "You will get no support with this build unless you update from http://ci.md-5.net/job/Spigot/" );
-+                    System.err.println( "The server will start in 10 seconds!" );
-+                    if ( System.getProperty( "IKnowWhatImDoing" ) == null )
-+                    {
-+                        Thread.sleep( TimeUnit.SECONDS.toMillis( 10 ) );
-+                    }
-+                }
-+            }
-+        }
          // Spigot End
          // Todo: Installation script
          OptionParser parser = new OptionParser() {
