@@ -1,4 +1,4 @@
-From 534549b366ff5124be19e6422cd8c901a999bed0 Mon Sep 17 00:00:00 2001
+From 63f9f21655f64f989e638f123002365ea7ea3e91 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -3460,49 +3460,20 @@ index 75ea5c9..0359cb3 100644
                      {
                          if ( splayer.getBukkitEntity().canSee( player.getBukkitEntity() ) )
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index e5f73fc..fc41b6d 100644
+index 3d12175..83411db 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -1,13 +1,16 @@
- package org.bukkit.craftbukkit;
- 
--import java.io.BufferedReader;
- import java.io.File;
- import java.io.IOException;
--import java.io.InputStreamReader;
-+import java.net.URL;
- import java.text.SimpleDateFormat;
- import java.util.Arrays;
-+import java.util.Calendar;
-+import java.util.Date;
-+import java.util.Enumeration;
- import java.util.List;
- import java.util.concurrent.TimeUnit;
-+import java.util.jar.Manifest;
- import java.util.logging.Level;
- import java.util.logging.Logger;
- import joptsimple.OptionParser;
-@@ -18,7 +21,7 @@ public class Main {
-     public static boolean useJline = true;
-     public static boolean useConsole = true;
- 
--    public static void main(String[] args) throws IOException {
-+    public static void main(String[] args) throws Exception {
-         // Spigot Start
-         File lock = new File( ".update-lock" );
-         if ( !new File( "update-lock" ).exists() && !lock.exists()  && System.getProperty( "IReallyKnowWhatIAmDoingThisUpdate" ) == null )
-@@ -39,6 +42,11 @@ public class Main {
-             {
+@@ -153,6 +153,10 @@ public class Main {
+                 } catch (InterruptedException ex) {
+                 }
              }
-         }
-+
-+        System.err.println( "This Spigot build supports Minecraft clients both of versions 1.7.x and of 1.8.x.\n"
-+                + "*** It is imperative that backups be taken before running this build on your server! ***\n"
-+                + "Please report any such issues to http://www.spigotmc.org/, stating your client, server, and if applicable BungeeCord versions.\n"
-+                + "*** Any bug reports not running the very latest versions of these softwares will be ignored ***\n\n" );
-         // Spigot End
-         // Todo: Installation script
-         OptionParser parser = new OptionParser() {
++            System.err.println("This Spigot build supports Minecraft clients both of versions 1.7.x and of 1.8.x.\n"
++                    + "*** It is imperative that backups be taken before running this build on your server! ***\n"
++                    + "Please report any such issues to http://www.spigotmc.org/, stating your client, server, and if applicable BungeeCord versions.\n"
++                    + "*** Any bug reports not running the very latest versions of these softwares will be ignored ***\n\n");
+             // Spigot End
+             try {
+                 // This trick bypasses Maven Shade's clever rewriting of our getProperty call when using String literals
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 index e7569c6..35f2bfa 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java

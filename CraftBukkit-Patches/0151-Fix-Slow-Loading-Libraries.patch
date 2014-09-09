@@ -1,14 +1,14 @@
-From d3c8c980c0032e1455f3e5eb47f906adbd9e2b66 Mon Sep 17 00:00:00 2001
+From 4e6134df891a02722ff24c5028944286e9754347 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Tue, 8 Jul 2014 20:27:52 +1000
 Subject: [PATCH] Fix Slow "Loading Libraries"
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 1977722..e5f73fc 100644
+index 2fbf762..3d12175 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -195,7 +195,6 @@ public class Main {
+@@ -192,7 +192,6 @@ public class Main {
                      System.out.println( "Please see http://www.spigotmc.org/wiki/changing-permgen-size/ for more details and more in-depth instructions." );
                  }
                  // Spigot End
