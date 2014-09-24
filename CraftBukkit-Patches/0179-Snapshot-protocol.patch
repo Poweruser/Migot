@@ -1,4 +1,4 @@
-From 20accc5cb7336882dcb219412d63a66ad973b71b Mon Sep 17 00:00:00 2001
+From 3c18ac79506f75bf53ec22b00aa05a84fc30c7f8 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -527,7 +527,7 @@ index 413af68..6e80242 100644
  
      public ChunkCoordinates getChunkCoordinates() {
 diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-index f654d58..4ecfc83 100644
+index f654d58..7beec07 100644
 --- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 +++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 @@ -134,11 +134,11 @@ public class EntityTrackerEntry {
@@ -563,7 +563,7 @@ index f654d58..4ecfc83 100644
                      this.yRot = i;
                      this.xRot = j;
                  }
-@@ -320,6 +320,13 @@ public class EntityTrackerEntry {
+@@ -320,6 +320,17 @@ public class EntityTrackerEntry {
                      this.trackedPlayers.add(entityplayer);
                      Packet packet = this.c();
  
@@ -571,6 +571,10 @@ index f654d58..4ecfc83 100644
 +                    if ( tracker instanceof EntityPlayer )
 +                    {
 +                        entityplayer.playerConnection.sendPacket( PacketPlayOutPlayerInfo.addPlayer( (EntityPlayer) tracker ) );
++                        if ( entityplayer.playerConnection.networkManager.getVersion() > 28 )
++                        {
++                            entityplayer.playerConnection.sendPacket( PacketPlayOutPlayerInfo.updateDisplayName( (EntityPlayer) tracker ) );
++                        }
 +                    }
 +                    // Spigot end
 +
@@ -3426,28 +3430,46 @@ index b4461b9..036be30 100644
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
-index 75ea5c9..0359cb3 100644
+index 75ea5c9..bcbb5ef 100644
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -284,7 +284,7 @@ public abstract class PlayerList {
+@@ -284,12 +284,19 @@ public abstract class PlayerList {
          // CraftBukkit end
  
          // CraftBukkit start - sendAll above replaced with this loop
 -        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(entityplayer.listName, true, 1000);
 +        PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.addPlayer( entityplayer ); // Spigot - protocol patch
++        PacketPlayOutPlayerInfo displayPacket = PacketPlayOutPlayerInfo.updateDisplayName( entityplayer ); // Spigot - protocol patch
          for (int i = 0; i < this.players.size(); ++i) {
              EntityPlayer entityplayer1 = (EntityPlayer) this.players.get(i);
  
-@@ -302,7 +302,7 @@ public abstract class PlayerList {
+             if (entityplayer1.getBukkitEntity().canSee(entityplayer.getBukkitEntity())) {
+                 entityplayer1.playerConnection.sendPacket(packet);
++                // Spigot start - protocol patch
++                if ( entityplayer1.playerConnection.networkManager.getVersion() > 28 )
++                {
++                    entityplayer1.playerConnection.sendPacket( displayPacket );
++                }
++                // Spigot end
+             }
+         }
+         // CraftBukkit end
+@@ -302,7 +309,13 @@ public abstract class PlayerList {
                  continue;
              }
              // .name -> .listName
 -            entityplayer.playerConnection.sendPacket(new PacketPlayOutPlayerInfo(entityplayer1.listName, true, entityplayer1.ping));
 +            entityplayer.playerConnection.sendPacket(PacketPlayOutPlayerInfo.addPlayer( entityplayer1 )); // Spigot - protocol patch
++            // Spigot start - protocol patch
++            if ( entityplayer.playerConnection.networkManager.getVersion() > 28 )
++            {
++                entityplayer.playerConnection.sendPacket( PacketPlayOutPlayerInfo.updateDisplayName( entityplayer1 ) );
++            }
++            // Spigot end
              // CraftBukkit end
          }
      }
-@@ -338,7 +338,7 @@ public abstract class PlayerList {
+@@ -338,7 +351,7 @@ public abstract class PlayerList {
  
          // CraftBukkit start - .name -> .listName, replace sendAll with loop
          // this.sendAll(new PacketPlayOutPlayerInfo(entityplayer.getName(), false, 9999));
@@ -3456,7 +3478,7 @@ index 75ea5c9..0359cb3 100644
          for (int i = 0; i < this.players.size(); ++i) {
              EntityPlayer entityplayer1 = (EntityPlayer) this.players.get(i);
  
-@@ -830,7 +830,7 @@ public abstract class PlayerList {
+@@ -830,7 +843,7 @@ public abstract class PlayerList {
                  EntityPlayer player = (EntityPlayer) this.players.get( currentPing );
                  if ( player.lastPing == -1 || Math.abs( player.ping - player.lastPing ) > 20 )
                  {
