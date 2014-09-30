@@ -1,4 +1,4 @@
-From 1c8279a66fd087b9d2eca093d4ca56a534a8f9df Mon Sep 17 00:00:00 2001
+From 17161bbc834e973b272d56878b8c2ffebd158b47 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -2616,10 +2616,35 @@ index 7cae01e..adb8e8f 100644
 +// Spigot end
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPosition.java b/src/main/java/net/minecraft/server/PacketPlayOutPosition.java
-index f2234f0..b3c0ccf 100644
+index f2234f0..0238fe2 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutPosition.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutPosition.java
-@@ -30,12 +30,20 @@ public class PacketPlayOutPosition extends Packet {
+@@ -8,16 +8,24 @@ public class PacketPlayOutPosition extends Packet {
+     private float d;
+     private float e;
+     private boolean f;
++    private byte relativeBitMask; // Spigot
+ 
+     public PacketPlayOutPosition() {}
+ 
++    // Spigot start
+     public PacketPlayOutPosition(double d0, double d1, double d2, float f, float f1, boolean flag) {
++        this(d0, d1, d2, f, f1, flag, (byte) 0);
++    }
++
++    public PacketPlayOutPosition(double d0, double d1, double d2, float f, float f1, boolean flag, byte relativeBitMask) {
+         this.a = d0;
+         this.b = d1;
+         this.c = d2;
+         this.d = f;
+         this.e = f1;
+         this.f = flag;
++        this.relativeBitMask = relativeBitMask;
++        // Spigot end
+     }
+ 
+     public void a(PacketDataSerializer packetdataserializer) {
+@@ -30,12 +38,20 @@ public class PacketPlayOutPosition extends Packet {
      }
  
      public void b(PacketDataSerializer packetdataserializer) {
@@ -2636,7 +2661,7 @@ index f2234f0..b3c0ccf 100644
 +            packetdataserializer.writeBoolean( this.f );
 +        } else
 +        {
-+            packetdataserializer.writeByte( 0 );
++            packetdataserializer.writeByte( relativeBitMask );
 +        }
 +        // Spigot end
      }
