@@ -1,4 +1,4 @@
-From 3c18ac79506f75bf53ec22b00aa05a84fc30c7f8 Mon Sep 17 00:00:00 2001
+From 71a2616763e429118a3d0df962e168af215c2e48 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -527,7 +527,7 @@ index 413af68..6e80242 100644
  
      public ChunkCoordinates getChunkCoordinates() {
 diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-index f654d58..7beec07 100644
+index f654d58..f73955a 100644
 --- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 +++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 @@ -134,11 +134,11 @@ public class EntityTrackerEntry {
@@ -571,7 +571,7 @@ index f654d58..7beec07 100644
 +                    if ( tracker instanceof EntityPlayer )
 +                    {
 +                        entityplayer.playerConnection.sendPacket( PacketPlayOutPlayerInfo.addPlayer( (EntityPlayer) tracker ) );
-+                        if ( entityplayer.playerConnection.networkManager.getVersion() > 28 )
++                        if ( !entityplayer.getName().equals( entityplayer.listName ) && entityplayer.playerConnection.networkManager.getVersion() > 28 )
 +                        {
 +                            entityplayer.playerConnection.sendPacket( PacketPlayOutPlayerInfo.updateDisplayName( (EntityPlayer) tracker ) );
 +                        }
@@ -3430,7 +3430,7 @@ index b4461b9..036be30 100644
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
-index 75ea5c9..bcbb5ef 100644
+index 75ea5c9..c5e4c8a 100644
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
 @@ -284,12 +284,19 @@ public abstract class PlayerList {
@@ -3446,7 +3446,7 @@ index 75ea5c9..bcbb5ef 100644
              if (entityplayer1.getBukkitEntity().canSee(entityplayer.getBukkitEntity())) {
                  entityplayer1.playerConnection.sendPacket(packet);
 +                // Spigot start - protocol patch
-+                if ( entityplayer1.playerConnection.networkManager.getVersion() > 28 )
++                if ( !entityplayer.getName().equals( entityplayer.listName ) && entityplayer1.playerConnection.networkManager.getVersion() > 28 )
 +                {
 +                    entityplayer1.playerConnection.sendPacket( displayPacket );
 +                }
@@ -3461,7 +3461,7 @@ index 75ea5c9..bcbb5ef 100644
 -            entityplayer.playerConnection.sendPacket(new PacketPlayOutPlayerInfo(entityplayer1.listName, true, entityplayer1.ping));
 +            entityplayer.playerConnection.sendPacket(PacketPlayOutPlayerInfo.addPlayer( entityplayer1 )); // Spigot - protocol patch
 +            // Spigot start - protocol patch
-+            if ( entityplayer.playerConnection.networkManager.getVersion() > 28 )
++            if ( !entityplayer.getName().equals( entityplayer.listName ) && entityplayer.playerConnection.networkManager.getVersion() > 28 )
 +            {
 +                entityplayer.playerConnection.sendPacket( PacketPlayOutPlayerInfo.updateDisplayName( entityplayer1 ) );
 +            }
