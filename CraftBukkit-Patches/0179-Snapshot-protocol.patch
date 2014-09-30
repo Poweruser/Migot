@@ -1,4 +1,4 @@
-From 71a2616763e429118a3d0df962e168af215c2e48 Mon Sep 17 00:00:00 2001
+From 1c8279a66fd087b9d2eca093d4ca56a534a8f9df Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Mon, 1 Sep 2014 16:47:48 +1000
 Subject: [PATCH] Snapshot protocol
@@ -1468,17 +1468,48 @@ index 4c622e2..dfa68b0 100644
  
      public void a(PacketPlayOutListener packetplayoutlistener) {
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutChat.java b/src/main/java/net/minecraft/server/PacketPlayOutChat.java
-index f6863bd..fdbdcc6 100644
+index f6863bd..5002bcb 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutChat.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutChat.java
-@@ -27,6 +27,12 @@ public class PacketPlayOutChat extends Packet {
+@@ -6,6 +6,7 @@ public class PacketPlayOutChat extends Packet {
+ 
+     private IChatBaseComponent a;
+     private boolean b;
++    private int pos; // Spigot
+ 
+     public PacketPlayOutChat() {
+         this.b = true;
+@@ -15,11 +16,22 @@ public class PacketPlayOutChat extends Packet {
+         this(ichatbasecomponent, true);
+     }
+ 
++    // Spigot start
++    public PacketPlayOutChat(IChatBaseComponent ichatbasecomponent, int pos) {
++        this(ichatbasecomponent, pos, true);
++    }
++
+     public PacketPlayOutChat(IChatBaseComponent ichatbasecomponent, boolean flag) {
++        this(ichatbasecomponent, 0, flag);
++    }
++
++    public PacketPlayOutChat(IChatBaseComponent ichatbasecomponent, int pos, boolean flag) {
+         this.b = true;
+         this.a = ichatbasecomponent;
+         this.b = flag;
++        this.pos = pos;
+     }
++    // Spigot end
+ 
+     public void a(PacketDataSerializer packetdataserializer) throws IOException {
+         this.a = ChatSerializer.a(packetdataserializer.c(32767));
+@@ -27,6 +39,12 @@ public class PacketPlayOutChat extends Packet {
  
      public void b(PacketDataSerializer packetdataserializer) throws IOException {
          packetdataserializer.a(ChatSerializer.a(this.a));
 +        // Spigot start - protocol patch
 +        if ( packetdataserializer.version >= 16 )
 +        {
-+            packetdataserializer.writeByte(0);
++            packetdataserializer.writeByte(pos);
 +        }
 +        // Spigot end
      }
