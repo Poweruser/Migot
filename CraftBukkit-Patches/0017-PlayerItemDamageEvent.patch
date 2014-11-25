@@ -1,28 +1,26 @@
-From 2e8cc7b637d521ac066f4a8cdf7d4d344d160617 Mon Sep 17 00:00:00 2001
+From cc4f72301e86bf997da5da7adf86ed658aed26c6 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Mon, 4 Mar 2013 18:45:52 +1100
 Subject: [PATCH] PlayerItemDamageEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/ItemStack.java b/src/main/java/net/minecraft/server/ItemStack.java
-index c9d74d3..a2ab06a 100644
+index 0502bcb..204ae01 100644
 --- a/src/main/java/net/minecraft/server/ItemStack.java
 +++ b/src/main/java/net/minecraft/server/ItemStack.java
-@@ -279,7 +279,13 @@ public final class ItemStack {
-         return this.item.getMaxDurability();
+@@ -305,6 +305,11 @@ public final class ItemStack {
      }
  
-+    // Spigot start
      public boolean isDamaged(int i, Random random) {
 +        return isDamaged(i, random, null);
 +    }
 +
 +    public boolean isDamaged(int i, Random random, EntityLiving entityliving) {
 +        // Spigot end
-         if (!this.g()) {
+         if (!this.e()) {
              return false;
          } else {
-@@ -294,7 +300,16 @@ public final class ItemStack {
+@@ -319,7 +324,16 @@ public final class ItemStack {
                  }
  
                  i -= k;
@@ -40,15 +38,15 @@ index c9d74d3..a2ab06a 100644
                      return false;
                  }
              }
-@@ -307,7 +322,7 @@ public final class ItemStack {
+@@ -332,7 +346,7 @@ public final class ItemStack {
      public void damage(int i, EntityLiving entityliving) {
          if (!(entityliving instanceof EntityHuman) || !((EntityHuman) entityliving).abilities.canInstantlyBuild) {
-             if (this.g()) {
--                if (this.isDamaged(i, entityliving.aI())) {
-+                if (this.isDamaged(i, entityliving.aI(), entityliving)) { // Spigot
-                     entityliving.a(this);
+             if (this.e()) {
+-                if (this.isDamaged(i, entityliving.bb())) {
++                if (this.isDamaged(i, entityliving.bb(), entityliving)) { // Spigot
+                     entityliving.b(this);
                      --this.count;
                      if (entityliving instanceof EntityHuman) {
 -- 
-1.9.1
+2.1.0
 

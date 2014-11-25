@@ -1,4 +1,4 @@
-From 7e5e964f6f42a45c9abe3106d55bf2f7b2171a56 Mon Sep 17 00:00:00 2001
+From 73ed5ee29cb1766c1646967dffab9f104a63d1cb Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 23 Feb 2013 08:58:35 +1100
 Subject: [PATCH] Metrics
@@ -688,5 +688,5 @@ index 6837305..fdd4fe1 100644
  
      static void readConfig(Class<?> clazz, Object instance)
 -- 
-1.9.1
+2.1.0
 

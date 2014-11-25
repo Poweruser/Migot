@@ -1,4 +1,4 @@
-From 6952058461531fbd69ae7cf8f20f324466c8731a Mon Sep 17 00:00:00 2001
+From 84fd7cb51f698d601ac8d22e24e9baf6f04953b7 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 23 Mar 2013 09:52:41 +1100
 Subject: [PATCH] View Distance
@@ -6,7 +6,7 @@ Subject: [PATCH] View Distance
 This commit allows the user to select per world view distances, and view distances below 3. Be wary of the issues selecting a view distance of 1 or 2 may cause!
 
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index ae53635..cc1b095 100644
+index 8ac9387..5ca5935 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
 @@ -26,9 +26,9 @@ public class PlayerChunkMap {
@@ -16,24 +16,24 @@ index ae53635..cc1b095 100644
 -    public PlayerChunkMap(WorldServer worldserver) {
 +    public PlayerChunkMap(WorldServer worldserver, int viewDistance /* Spigot */) {
          this.world = worldserver;
--        this.a(worldserver.getMinecraftServer().getPlayerList().s());
+-        this.a(worldserver.getMinecraftServer().getPlayerList().t());
 +        this.a(viewDistance); // Spigot
      }
  
      public WorldServer a() {
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 71626fa..8f25a15 100644
+index 93e5a14..f34b76e 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
-@@ -55,7 +55,7 @@ public class WorldServer extends World {
+@@ -62,7 +62,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
          // CraftBukkit end
          this.server = minecraftserver;
          this.tracker = new EntityTracker(this);
 -        this.manager = new PlayerChunkMap(this);
 +        this.manager = new PlayerChunkMap(this, spigotConfig.viewDistance); // Spigot
-         if (this.entitiesById == null) {
-             this.entitiesById = new IntHashMap();
-         }
+         this.worldProvider.a(this);
+         this.chunkProvider = this.k();
+         this.Q = new org.bukkit.craftbukkit.CraftTravelAgent(this); // CraftBukkit
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 index 1545a61..6cc3a91 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
@@ -51,5 +51,5 @@ index 1545a61..6cc3a91 100644
 +    }
  }
 -- 
-1.9.1
+2.1.0
 

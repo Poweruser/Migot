@@ -8,6 +8,8 @@ function applyPatch {
     what=$1
     target=$2
     cd "$basedir/$what"
+    git fetch
+    git reset --hard origin/patched
     git branch -f upstream >/dev/null
 
     cd "$basedir"
