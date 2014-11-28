@@ -1,4 +1,4 @@
-From 658f576e99c85231365259c9a7fa0a6c8525de18 Mon Sep 17 00:00:00 2001
+From f86f19addeaf624be20e4bae0627444810221fee Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Wed, 18 Dec 2013 13:32:10 +1100
 Subject: [PATCH] Fire PreLogin Events in Offline Mode
@@ -42,7 +42,7 @@ index ba2b912..a59ea80 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java b/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
-index 7759539..c4e0609 100644
+index bbceef0..8b93fd5 100644
 --- a/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
 +++ b/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
 @@ -24,50 +24,19 @@ class ThreadPlayerLookupUUID extends Thread {
@@ -66,7 +66,7 @@ index 7759539..c4e0609 100644
 -                    return;
 -                }
 -
--                String playerName = LoginListener.a(this.a).getName();
+-                String playerName = LoginListener.b(this.a).getName();
 -                java.net.InetAddress address = ((java.net.InetSocketAddress) a.networkManager.getSocketAddress()).getAddress();
 -                java.util.UUID uniqueId = LoginListener.b(this.a).getId();
 -                final org.bukkit.craftbukkit.CraftServer server = LoginListener.a(this.a).server;
@@ -117,7 +117,7 @@ index 7759539..c4e0609 100644
 +            return;
 +        }
 +
-+        String playerName = LoginListener.a(this.a).getName();
++        String playerName = LoginListener.b(this.a).getName();
 +        java.net.InetAddress address = ((java.net.InetSocketAddress) a.networkManager.getSocketAddress()).getAddress();
 +        java.util.UUID uniqueId = LoginListener.b(this.a).getId();
 +        final org.bukkit.craftbukkit.CraftServer server = LoginListener.a(this.a).server;
