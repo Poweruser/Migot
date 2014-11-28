@@ -1,4 +1,4 @@
-From 9e929c64584bef25c14b6f1f165c62f2138bc248 Mon Sep 17 00:00:00 2001
+From a0923006217408d7fb8141f8a6c54838f2c09206 Mon Sep 17 00:00:00 2001
 From: drXor <mcyoungsota@gmail.com>
 Date: Sat, 15 Mar 2014 01:30:05 -0400
 Subject: [PATCH] Descriptive kick reasons instead of Nope!

@@ -1,4 +1,4 @@
-From 20c829340f70c2acc3f7e2604a400c3a87e8bbdb Mon Sep 17 00:00:00 2001
+From e84429abbde66bfd8e9c05963d399d3d324f374e Mon Sep 17 00:00:00 2001
 From: riking <rikingcoding@gmail.com>
 Date: Wed, 14 May 2014 13:46:48 -0700
 Subject: [PATCH] Process conversation input on the main thread. Fixes

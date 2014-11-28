@@ -1,4 +1,4 @@
-From 244bb2d7d5833a7ec4cbccd8aa9589a46d8cf639 Mon Sep 17 00:00:00 2001
+From ea7cdc3104db651903e099f2a012cd2005e6ec90 Mon Sep 17 00:00:00 2001
 From: hcherndon <hcherndon@gmail.com>
 Date: Sat, 15 Feb 2014 01:51:20 -0600
 Subject: [PATCH] Unfinalize the isDisconnected() method by bukkit.
