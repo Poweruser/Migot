@@ -1,4 +1,4 @@
-From 1301e0b26c9af58ddde8dd1a9a1f3b2030d15843 Mon Sep 17 00:00:00 2001
+From cba0ed7de061f5e3becddd0f9db58437454371c7 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 7 Jul 2013 09:32:53 +1000
 Subject: [PATCH] Spigot Configuration
@@ -35,7 +35,7 @@ index 29c0a34..424b71d 100644
              if (!this.getOnlineMode()) {
                  DedicatedServer.LOGGER.warn("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 5074011..869f45c 100644
+index f45bf54..130c54d 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -98,6 +98,7 @@ public abstract class World implements IBlockAccess {

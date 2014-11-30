@@ -1,4 +1,4 @@
-From d68f014be34194fc1a423a36b9f686c0b36ca497 Mon Sep 17 00:00:00 2001
+From f2d2e7209a344324646541fd5fa8c3cee7c02295 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Thu, 7 Aug 2014 15:48:33 +0100
 Subject: [PATCH] Fix LEFT_CLICK_AIR detection when not in creative

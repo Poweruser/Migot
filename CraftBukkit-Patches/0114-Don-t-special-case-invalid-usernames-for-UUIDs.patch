@@ -1,4 +1,4 @@
-From f18fd5e6029d0baa0f9a89e1dbaf7e8e82f3c660 Mon Sep 17 00:00:00 2001
+From b74d329decdd9399ada0706ea1dc572aaaf86c8a Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 20 Apr 2014 18:58:00 +1000
 Subject: [PATCH] Don't special case 'invalid' usernames for UUIDs.

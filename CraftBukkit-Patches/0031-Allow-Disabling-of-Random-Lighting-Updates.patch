@@ -1,4 +1,4 @@
-From 3b7dedb3ab47a028d86f5055304caccd0cdd173b Mon Sep 17 00:00:00 2001
+From db55ab7f90f09b34ed44ccc65d553e62a764433c Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sat, 22 Jun 2013 16:12:02 +1000
 Subject: [PATCH] Allow Disabling of Random Lighting Updates

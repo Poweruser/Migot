@@ -1,4 +1,4 @@
-From 5563b8231dd99a1339ee4033227ec14ce22b7fd0 Mon Sep 17 00:00:00 2001
+From 8166c17bd5628962813018cbd3f08e0e9f00403d Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Tue, 14 Jan 2014 20:11:25 +0000
 Subject: [PATCH] Fix ConcurrentModificationException while being idle kicked
