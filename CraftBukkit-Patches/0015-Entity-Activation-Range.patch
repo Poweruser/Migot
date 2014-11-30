@@ -1,4 +1,4 @@
-From 04c79d31e7d2def38685e120f6836870748b649b Mon Sep 17 00:00:00 2001
+From 9f37a772d6fb0d413974e49f83e8919c85b4aa8d Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 3 Feb 2013 05:10:21 -0500
 Subject: [PATCH] Entity Activation Range
@@ -155,10 +155,10 @@ index 803b5df..86474de 100644
      public void G() {
          this.damageEntity(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index ae4741f..7f7d8e8 100644
+index 9cb7ab8..aa6d407 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -1257,6 +1257,7 @@ public abstract class World implements IBlockAccess {
+@@ -1256,6 +1256,7 @@ public abstract class World implements IBlockAccess {
          this.g.clear();
          this.methodProfiler.c("regular");
  
@@ -166,7 +166,7 @@ index ae4741f..7f7d8e8 100644
          timings.entityTick.startTiming(); // Spigot
          // CraftBukkit start - Use field for loop variable
          for (this.tickPosition = 0; this.tickPosition < this.entityList.size(); ++this.tickPosition) {
-@@ -1432,9 +1433,11 @@ public abstract class World implements IBlockAccess {
+@@ -1431,9 +1432,11 @@ public abstract class World implements IBlockAccess {
          int j = MathHelper.floor(entity.locZ);
          byte b0 = 32;
  

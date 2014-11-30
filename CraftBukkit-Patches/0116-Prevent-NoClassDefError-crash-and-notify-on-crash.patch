@@ -1,11 +1,11 @@
-From 122c20744bedd838f706c7cd92c3f86b35b14048 Mon Sep 17 00:00:00 2001
+From 013b88fd8b24305f051d2ed5406622afb311c75b Mon Sep 17 00:00:00 2001
 From: David <dmck2b@gmail.com>
 Date: Mon, 21 Apr 2014 12:43:08 +0100
 Subject: [PATCH] Prevent NoClassDefError crash and notify on crash
 
 
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index d8c2f13..2005ff8 100644
+index f0cf82d..3d45061 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -131,6 +131,8 @@ public abstract class World implements IBlockAccess {
@@ -17,7 +17,7 @@ index d8c2f13..2005ff8 100644
  
      public static long chunkToKey(int x, int z)
      {
-@@ -532,6 +534,9 @@ public abstract class World implements IBlockAccess {
+@@ -531,6 +533,9 @@ public abstract class World implements IBlockAccess {
                  }
                  // CraftBukkit end
                  iblockdata.getBlock().doPhysics(this, blockposition, iblockdata, block);

@@ -1,4 +1,4 @@
-From 1d687f1026ee2cfd91bbad5a6098bd8880faea96 Mon Sep 17 00:00:00 2001
+From 84d1c185aa35bfc95c84f21b282e43a71baa2c90 Mon Sep 17 00:00:00 2001
 From: "Evan A. Haskell" <eah2119@gmail.com>
 Date: Sat, 19 Apr 2014 16:58:26 -0400
 Subject: [PATCH] Alternative Hopper Ticking
@@ -370,7 +370,7 @@ index 280d64f..5355532 100644
  
      public boolean o() {
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 9c84d49..84d7b30 100644
+index f441c84..eb5b1db 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -133,6 +133,7 @@ public abstract class World implements IBlockAccess {
@@ -425,7 +425,7 @@ index 9c84d49..84d7b30 100644
      // Spigot end
  
      public final org.spigotmc.SpigotWorldConfig spigotConfig; // Spigot
-@@ -386,6 +424,14 @@ public abstract class World implements IBlockAccess {
+@@ -385,6 +423,14 @@ public abstract class World implements IBlockAccess {
                      // Modularize client and physic updates
                      notifyAndUpdatePhysics(blockposition, chunk, block1, block, i);
                  }
@@ -440,7 +440,7 @@ index 9c84d49..84d7b30 100644
                  // CraftBukkit end
  
                  return true;
-@@ -1386,6 +1432,7 @@ public abstract class World implements IBlockAccess {
+@@ -1385,6 +1431,7 @@ public abstract class World implements IBlockAccess {
          }
          // CraftBukkit end
  
