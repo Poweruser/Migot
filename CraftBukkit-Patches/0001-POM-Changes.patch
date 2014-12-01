@@ -1,4 +1,4 @@
-From 34268f62473dec95944b065b2d62e82aab2a2464 Mon Sep 17 00:00:00 2001
+From 34eb7b82a09ea507c273919fdfdfea61af0f6506 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Tue, 2 Jul 2013 13:07:39 +1000
 Subject: [PATCH] POM Changes
@@ -6,7 +6,7 @@ Subject: [PATCH] POM Changes
 Basic changes to the build system which mark the artifact as Spigot, and the necessary code changes to ensure proper functionality. Also disables the auto updater provided by CraftBukkit as it is useless to us.
 
 diff --git a/pom.xml b/pom.xml
-index e2d4c7d..64600fb 100644
+index e2d4c7d..6592ad1 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,12 +1,12 @@
@@ -51,7 +51,7 @@ index e2d4c7d..64600fb 100644
        <version>${project.version}</version>
        <type>jar</type>
        <scope>compile</scope>
-@@ -132,15 +139,15 @@
+@@ -132,15 +139,16 @@
  
    <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
    <build>
@@ -67,10 +67,11 @@ index e2d4c7d..64600fb 100644
 -          <outputPostfix>${buildtag.suffix}</outputPostfix>
 +          <outputPrefix>git-Spigot-</outputPrefix>
 +          <outputPostfix></outputPostfix>
++          <scmDirectory>../</scmDirectory>
          </configuration>
          <executions>
            <execution>
-@@ -193,7 +200,7 @@
+@@ -193,7 +201,7 @@
        <plugin>
          <groupId>org.apache.maven.plugins</groupId>
          <artifactId>maven-shade-plugin</artifactId>
