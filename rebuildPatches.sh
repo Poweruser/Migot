@@ -29,10 +29,12 @@ function savePatches {
     cd "$basedir/$target"
     git format-patch --no-stat -N -o "$basedir/${what}-Patches/" upstream/upstream
     cd "$basedir"
-    git add "$basedir/${what}-Patches"
+    git add -A "$basedir/${what}-Patches"
     cleanupPatches "$basedir/${what}-Patches"
     echo "  Patches saved for $what to $what-Patches/"
 }
-
+if [ "$1" == "clean" ]; then
+	rm -rf *-Patches
+fi
 savePatches Bukkit Spigot-API
 savePatches CraftBukkit Spigot-Server
