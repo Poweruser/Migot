@@ -1,4 +1,4 @@
-From 8128f0a2238038f9ac04c2ecda795fc7fc01740b Mon Sep 17 00:00:00 2001
+From 1726fd02fac28834745b15aac24be4c8f050de5b Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sun, 12 Jan 2014 21:07:18 +1100
 Subject: [PATCH] Improve AutoSave Mechanism
@@ -24,10 +24,10 @@ index e664e55..1412616 100644
          }
  
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 85c3e3f..a81193c 100644
+index 7ce37c0..4a2f084 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -627,7 +627,17 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
+@@ -623,7 +623,17 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
              SpigotTimings.worldSaveTimer.startTiming(); // Spigot
              this.methodProfiler.a("save");
              this.v.savePlayers();
@@ -70,5 +70,5 @@ index 2545b38..d61c1de 100644
              world.savingDisabled = oldSave;
          } catch (ExceptionWorldConflict ex) {
 -- 
-1.9.1
+2.1.0
 
