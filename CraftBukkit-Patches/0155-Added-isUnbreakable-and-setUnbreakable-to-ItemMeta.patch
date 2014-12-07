@@ -1,11 +1,11 @@
-From b9a7a2fd46f027a7bf1c937d7a60882b5ec15aa9 Mon Sep 17 00:00:00 2001
+From c7be1b6669ca36d2bdad7e1197a9a4b4575d09ec Mon Sep 17 00:00:00 2001
 From: libraryaddict <redwarfare@live.com>
 Date: Fri, 22 Aug 2014 05:35:16 -0400
 Subject: [PATCH] Added isUnbreakable and setUnbreakable to ItemMeta
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index da047b7..1de828e 100644
+index 4cf23bb..648382d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -204,6 +204,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
@@ -78,8 +78,8 @@ index da047b7..1de828e 100644
                  && (this.hasLore() ? that.hasLore() && this.lore.equals(that.lore) : !that.hasLore())
                  && (this.hasAttributes() ? that.hasAttributes() && this.attributes.equals(that.attributes) : !that.hasAttributes())
                  && (this.hasRepairCost() ? that.hasRepairCost() && this.repairCost == that.repairCost : !that.hasRepairCost())
--                && (this.blockEntityTag != null ? that.blockEntityTag != null && this.blockEntityTag.equals(this.blockEntityTag) : that.blockEntityTag == null);
-+                && (this.blockEntityTag != null ? that.blockEntityTag != null && this.blockEntityTag.equals(this.blockEntityTag) : that.blockEntityTag == null)
+-                && (this.blockEntityTag != null ? that.blockEntityTag != null && this.blockEntityTag.equals(that.blockEntityTag) : that.blockEntityTag == null);
++                && (this.blockEntityTag != null ? that.blockEntityTag != null && this.blockEntityTag.equals(that.blockEntityTag) : that.blockEntityTag == null)
 +                && (this.hasRepairCost() ? that.hasRepairCost() && this.repairCost == that.repairCost : !that.hasRepairCost()) && this.spigot.isUnbreakable() == that.spigot.isUnbreakable(); // Spigot
      }
  
