@@ -1,4 +1,4 @@
-From 235a01cde59c627f65ec48b7c0036af456e74d2f Mon Sep 17 00:00:00 2001
+From b98d6a30325852e7362c7d74b1ebf300702d662b Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 3 Feb 2013 05:10:21 -0500
 Subject: [PATCH] Entity Activation Range
@@ -205,7 +205,7 @@ index 558574f..41d2d87 100644
      public static final HashMap<String, CustomTimingsHandler> pluginTaskTimingMap = new HashMap<String, CustomTimingsHandler>();
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
 new file mode 100644
-index 0000000..3505475
+index 0000000..cfabc25
 --- /dev/null
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -0,0 +1,283 @@
@@ -433,7 +433,7 @@ index 0000000..3505475
 +            if ( entity instanceof EntityAnimal )
 +            {
 +                EntityAnimal animal = (EntityAnimal) entity;
-+                if ( animal.isBaby() || animal.ce() /*love*/ )
++                if ( animal.isBaby() || animal.cp() /*love*/ )
 +                {
 +                    return true;
 +                }
