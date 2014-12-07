@@ -1,11 +1,11 @@
-From 6a5d4632da4c7ddaafe521aaedefdb8d2509c136 Mon Sep 17 00:00:00 2001
+From b9a7a2fd46f027a7bf1c937d7a60882b5ec15aa9 Mon Sep 17 00:00:00 2001
 From: libraryaddict <redwarfare@live.com>
 Date: Fri, 22 Aug 2014 05:35:16 -0400
 Subject: [PATCH] Added isUnbreakable and setUnbreakable to ItemMeta
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index ff46e56..900ab32 100644
+index da047b7..1de828e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -204,6 +204,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
@@ -19,7 +19,7 @@ index ff46e56..900ab32 100644
 @@ -232,6 +233,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
          this.repairCost = meta.repairCost;
          this.attributes = meta.attributes;
-         blockEntityTag = meta.blockEntityTag;
+         this.blockEntityTag = meta.blockEntityTag;
 +        spigot.setUnbreakable( meta.spigot.isUnbreakable() ); // Spigot
      }
  
@@ -69,8 +69,8 @@ index ff46e56..900ab32 100644
  
      @Overridden
      boolean isEmpty() {
--        return !(hasDisplayName() || hasEnchants() || hasLore() || hasAttributes() || hasRepairCost());
-+        return !(hasDisplayName() || hasEnchants() || hasLore() || hasAttributes() || hasRepairCost() || spigot.isUnbreakable()); // Spigot
+-        return !(hasDisplayName() || hasEnchants() || hasLore() || hasAttributes() || hasRepairCost() || blockEntityTag != null);
++        return !(hasDisplayName() || hasEnchants() || hasLore() || hasAttributes() || hasRepairCost() || blockEntityTag != null || spigot.isUnbreakable()); // Spigot
      }
  
      public String getDisplayName() {
@@ -84,15 +84,15 @@ index ff46e56..900ab32 100644
      }
  
      /**
-@@ -716,6 +739,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
-         hash = 61 * hash + (hasEnchants() ? this.enchantments.hashCode() : 0);
+@@ -717,6 +740,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
          hash = 61 * hash + (hasAttributes() ? this.attributes.hashCode() : 0);
          hash = 61 * hash + (hasRepairCost() ? this.repairCost : 0);
+         hash = 61 * hash + (blockEntityTag != null ? this.blockEntityTag.hashCode() : 0);
 +        hash = 61 * hash + (spigot.isUnbreakable() ? 1231 : 1237); // Spigot
          return hash;
      }
  
-@@ -759,6 +783,13 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -760,6 +784,13 @@ class CraftMetaItem implements ItemMeta, Repairable {
              builder.put(REPAIR.BUKKIT, repairCost);
          }
  
@@ -106,7 +106,7 @@ index ff46e56..900ab32 100644
          return builder;
      }
  
-@@ -821,6 +852,19 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -822,6 +853,19 @@ class CraftMetaItem implements ItemMeta, Repairable {
      // Spigot start
      private final Spigot spigot = new Spigot()
      {
