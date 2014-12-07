@@ -1,14 +1,14 @@
-From b6c2d85b8c366533ce443a03b5adb9d003801e3e Mon Sep 17 00:00:00 2001
+From 142f4098cd2b3118351593dfe155cdfa771a0749 Mon Sep 17 00:00:00 2001
 From: drXor <mcyoung@mit.edu>
 Date: Fri, 15 Aug 2014 18:11:09 -0400
 Subject: [PATCH] Remove uneeded validation
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 2c9af1f..dcf9ce6 100644
+index 7638832..e134ace 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-@@ -526,7 +526,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -511,7 +511,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
      }
  
      static void applyEnchantments(Map<Enchantment, Integer> enchantments, NBTTagCompound tag, ItemMetaKey key) {
@@ -17,7 +17,7 @@ index 2c9af1f..dcf9ce6 100644
              return;
          }
  
-@@ -617,7 +617,14 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -602,7 +602,14 @@ class CraftMetaItem implements ItemMeta, Repairable {
      }
  
      public boolean removeEnchant(Enchantment ench) {
