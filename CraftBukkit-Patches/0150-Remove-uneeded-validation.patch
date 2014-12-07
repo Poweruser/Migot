@@ -1,11 +1,11 @@
-From 57b0eac9f25991ca4dc7112f5b831c2da86614c0 Mon Sep 17 00:00:00 2001
+From 1f3c930fe39ca276b26a92fef58f216d8518825f Mon Sep 17 00:00:00 2001
 From: drXor <mcyoung@mit.edu>
 Date: Fri, 15 Aug 2014 18:11:09 -0400
 Subject: [PATCH] Remove uneeded validation
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index aaf56bf..7f3339c 100644
+index 04ce1ed..7c655b7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -510,7 +510,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
