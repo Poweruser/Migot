@@ -1,4 +1,4 @@
-From 9b37e747a5dde90d8c22fea0242c11554b18594c Mon Sep 17 00:00:00 2001
+From ef07b1f5de9476274a7a491bd59ac0a21948fd24 Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thinkofdeath@spigotmc.org>
 Date: Wed, 2 Jul 2014 23:35:51 +0100
 Subject: [PATCH] Better item validation
@@ -64,7 +64,7 @@ index 8b7dc17..5227007 100644
              }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBook.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBook.java
-index debca31..a385eee 100644
+index 0c69a3e..6843fac 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBook.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBook.java
 @@ -20,6 +20,10 @@ import net.minecraft.server.ChatSerializer;
@@ -92,9 +92,9 @@ index debca31..a385eee 100644
          }
  
          boolean resolved = false;
-@@ -80,7 +84,7 @@ class CraftMetaBook extends CraftMetaItem implements BookMeta {
-                 if (resolved) {
-                     page = CraftChatMessage.fromComponent(ChatSerializer.a(page));
+@@ -84,7 +88,7 @@ class CraftMetaBook extends CraftMetaItem implements BookMeta {
+                         // Ignore and treat as an old book
+                     }
                  }
 -                pageArray[i] = page;
 +                pageArray[i] = limit( page, 2048 ); // Spigot
