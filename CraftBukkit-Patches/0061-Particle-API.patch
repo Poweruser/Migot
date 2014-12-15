@@ -1,4 +1,4 @@
-From 84b6700ebec9df60bb3e466b483fbc813f5d4f31 Mon Sep 17 00:00:00 2001
+From 4f5360f49cf6f608d6c7521bf8e46df6da7e03ca Mon Sep 17 00:00:00 2001
 From: Thinkofdeath <thethinkofdeath@gmail.com>
 Date: Fri, 20 Dec 2013 21:36:06 +0000
 Subject: [PATCH] Particle API
@@ -19,10 +19,10 @@ index 7de0de5..13f9e9d 100644
              datavalue = 0;
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index c2a1963..d8376cc 100644
+index 3b660ff..eeb1ecb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -813,28 +813,18 @@ public class CraftWorld implements World {
+@@ -816,28 +816,18 @@ public class CraftWorld implements World {
              Validate.isTrue(effect.getData() == null, "Wrong kind of data for this effect!");
          }
  
@@ -60,7 +60,7 @@ index c2a1963..d8376cc 100644
      }
  
      public <T extends Entity> T spawn(Location location, Class<T> clazz) throws IllegalArgumentException {
-@@ -1328,6 +1318,70 @@ public class CraftWorld implements World {
+@@ -1355,6 +1345,70 @@ public class CraftWorld implements World {
      // Spigot start
      private final Spigot spigot = new Spigot()
      {

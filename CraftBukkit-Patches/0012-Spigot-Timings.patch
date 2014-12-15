@@ -1,4 +1,4 @@
-From 0bee4958d1a5fc27f53372e248ce0be9ae9959aa Mon Sep 17 00:00:00 2001
+From d068a03aa38d6ce011d7694e297ecd2a09c9a529 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Thu, 10 Jan 2013 00:18:11 -0500
 Subject: [PATCH] Spigot Timings
@@ -600,10 +600,10 @@ index 51e4489..5286c1e 100644
  
      public Spigot spigot()
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 1a26015..c2a1963 100644
+index a9ff641..3b660ff 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -254,9 +254,11 @@ public class CraftWorld implements World {
+@@ -255,9 +255,11 @@ public class CraftWorld implements World {
          net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(LongHash.toLong(x, z));
  
          if (chunk == null) {
