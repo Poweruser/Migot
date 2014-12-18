@@ -1,4 +1,4 @@
-From 6d6600508aa1671f31aba552c12d4aee32488f09 Mon Sep 17 00:00:00 2001
+From 0f2279c57a405dc675881ee5941edd85de9bb30f Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 2 Jun 2013 15:10:56 +1000
 Subject: [PATCH] Skeleton API Implementations
@@ -161,12 +161,12 @@ index 7095f6d..c7d3657 100644
 +    // Spigot end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-index 8a640d3..e38d109 100644
+index e8d1c08..ecbf66b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-@@ -142,4 +142,26 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
-         scoreboard.teams.remove(team.getName());
-         setUnregistered();
+@@ -188,4 +188,26 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
+                 throw new IllegalArgumentException("Unknown visibility level " + visibility);
+         }
      }
 +
 +    // Spigot start
