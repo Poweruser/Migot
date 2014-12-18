@@ -1,4 +1,4 @@
-From f8e416af1d4903c5086910c7325987dfaac2d619 Mon Sep 17 00:00:00 2001
+From ed5331cf5a83cfd03f9508616d966e825727d4df Mon Sep 17 00:00:00 2001
 From: drXor <mcyoung@mit.edu>
 Date: Wed, 23 Jul 2014 15:50:36 -0400
 Subject: [PATCH] Undeprecate Player#updateInventory()V

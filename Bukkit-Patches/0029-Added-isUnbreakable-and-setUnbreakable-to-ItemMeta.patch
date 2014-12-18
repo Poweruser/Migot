@@ -1,4 +1,4 @@
-From 203a3470d214613a5d1f979290dfc71c308f9596 Mon Sep 17 00:00:00 2001
+From e88fc55a74ed297b132e368e303ef7a4f67891e9 Mon Sep 17 00:00:00 2001
 From: libraryaddict <redwarfare@live.com>
 Date: Fri, 22 Aug 2014 05:31:04 -0400
 Subject: [PATCH] Added isUnbreakable and setUnbreakable to ItemMeta

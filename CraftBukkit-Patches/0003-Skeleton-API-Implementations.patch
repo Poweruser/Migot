@@ -1,4 +1,4 @@
-From 6e76a189964cedce034e0b6e9a93f0be832d621c Mon Sep 17 00:00:00 2001
+From 6d6600508aa1671f31aba552c12d4aee32488f09 Mon Sep 17 00:00:00 2001
 From: md_5 <md_5@live.com.au>
 Date: Sun, 2 Jun 2013 15:10:56 +1000
 Subject: [PATCH] Skeleton API Implementations
@@ -104,10 +104,10 @@ index 64e346d..243e8e5 100644
 +    // Spigot end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 3b9bfec..e4d0e41 100644
+index 6361b44..fed7b4d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1310,4 +1310,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1313,4 +1313,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          }
          collection.add(new AttributeModifiable(getHandle().getAttributeMap(), (new AttributeRanged(null, "generic.maxHealth", scaledHealth ? healthScale : getMaxHealth(), 0.0D, Float.MAX_VALUE)).a("Max Health").a(true)));
      }

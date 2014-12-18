@@ -1,4 +1,4 @@
-From 382384ef968b8eaef01afb523caa0d2c054f8e36 Mon Sep 17 00:00:00 2001
+From 1e0d08aee669a635259637dab0c9c080826339c0 Mon Sep 17 00:00:00 2001
 From: Smove <jan@lavasurvival.net>
 Date: Sat, 1 Feb 2014 18:10:49 +1100
 Subject: [PATCH] Implement Locale Getter for Players
