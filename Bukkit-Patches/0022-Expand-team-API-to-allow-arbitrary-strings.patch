@@ -1,4 +1,4 @@
-From 54ca68ed91f767e629038deacd7cdd44a43ff9ec Mon Sep 17 00:00:00 2001
+From b23657a0a81d18e8c99c670229fbd32012f0629d Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Thu, 17 Apr 2014 19:22:26 +1000
 Subject: [PATCH] Expand team API to allow arbitrary strings.
