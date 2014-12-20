@@ -1,4 +1,4 @@
-From e764861e0b55d94001503b19c492b3be6ea8b777 Mon Sep 17 00:00:00 2001
+From 65adc99054ba4baa0c77b63e75de3b2698eecf90 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 3 Feb 2013 05:10:21 -0500
 Subject: [PATCH] Entity Activation Range
@@ -9,7 +9,7 @@ This will drastically cut down on tick timings for entities that are not in rang
 This change can have dramatic impact on gameplay if configured too low. Balance according to your servers desired gameplay.
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 5441e8b..56f71f3 100644
+index 5441e8b..c4cf603 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -89,14 +89,14 @@ public abstract class Entity implements ICommandListener {
@@ -37,7 +37,7 @@ index 5441e8b..56f71f3 100644
      public CustomTimingsHandler tickTimer = org.bukkit.craftbukkit.SpigotTimings.getEntityTimings(this); // Spigot
 +    public final byte activationType = org.spigotmc.ActivationRange.initializeEntityActivationType(this);
 +    public final boolean defaultActivationState;
-+    public long activatedTick = 0;
++    public long activatedTick = Integer.MIN_VALUE;
 +    public void inactiveTick() { }
 +    // Spigot end
  

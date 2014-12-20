@@ -1,11 +1,11 @@
-From 0601b0b9c48a7ad850f4ba3d8358279a0ef50326 Mon Sep 17 00:00:00 2001
+From 7e4f07030baf52de72d53afa3efc52d997fa00e6 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Wed, 12 Feb 2014 20:02:58 +1100
 Subject: [PATCH] Cap Channel Registrations
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index e303f56..cd77f13 100644
+index db52ecf..4afe362 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -1061,6 +1061,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
@@ -17,5 +17,5 @@ index e303f56..cd77f13 100644
              server.getPluginManager().callEvent(new PlayerRegisterChannelEvent(this, channel));
          }
 -- 
-1.9.4.msysgit.2
+2.1.0
 
