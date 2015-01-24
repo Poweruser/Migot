@@ -37,4 +37,8 @@ function applyPatch {
     fi
 }
 
-applyPatch Bukkit Spigot-API origin/master && applyPatch CraftBukkit Spigot-Server origin/patched
+cd ../Bukkit
+hash=$(git rev-parse HEAD)
+git branch -f spigot "$hash"
+
+applyPatch Bukkit Spigot-API origin/spigot && applyPatch CraftBukkit Spigot-Server origin/patched
