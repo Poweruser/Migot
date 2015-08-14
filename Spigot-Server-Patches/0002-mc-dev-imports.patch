@@ -1,0 +1,3928 @@
+From 7b51966baa6a9110fbf4f0b55a4e3a8c8f9fdbe9 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Fri, 14 Aug 2015 22:11:39 +0200
+Subject: [PATCH] mc dev imports
+
+
+diff --git a/src/main/java/net/minecraft/server/BiomeDecorator.java b/src/main/java/net/minecraft/server/BiomeDecorator.java
+new file mode 100644
+index 0000000..97f2f50
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/BiomeDecorator.java
+@@ -0,0 +1,357 @@
++package net.minecraft.server;
++
++import java.util.Random;
++
++public class BiomeDecorator {
++
++    protected World a;
++    protected Random b;
++    protected BlockPosition c;
++    protected CustomWorldSettingsFinal d;
++    protected WorldGenerator e = new WorldGenClay(4);
++    protected WorldGenerator f;
++    protected WorldGenerator g;
++    protected WorldGenerator h;
++    protected WorldGenerator i;
++    protected WorldGenerator j;
++    protected WorldGenerator k;
++    protected WorldGenerator l;
++    protected WorldGenerator m;
++    protected WorldGenerator n;
++    protected WorldGenerator o;
++    protected WorldGenerator p;
++    protected WorldGenerator q;
++    protected WorldGenerator r;
++    protected WorldGenFlowers s;
++    protected WorldGenerator t;
++    protected WorldGenerator u;
++    protected WorldGenerator v;
++    protected WorldGenerator w;
++    protected WorldGenerator x;
++    protected WorldGenerator y;
++    protected int z;
++    protected int A;
++    protected int B;
++    protected int C;
++    protected int D;
++    protected int E;
++    protected int F;
++    protected int G;
++    protected int H;
++    protected int I;
++    protected int J;
++    protected int K;
++    public boolean L;
++
++    public BiomeDecorator() {
++        this.f = new WorldGenSand(Blocks.SAND, 7);
++        this.g = new WorldGenSand(Blocks.GRAVEL, 6);
++        this.s = new WorldGenFlowers(Blocks.YELLOW_FLOWER, BlockFlowers.EnumFlowerVarient.DANDELION);
++        this.t = new WorldGenMushrooms(Blocks.BROWN_MUSHROOM);
++        this.u = new WorldGenMushrooms(Blocks.RED_MUSHROOM);
++        this.v = new WorldGenHugeMushroom();
++        this.w = new WorldGenReed();
++        this.x = new WorldGenCactus();
++        this.y = new WorldGenWaterLily();
++        this.B = 2;
++        this.C = 1;
++        this.H = 1;
++        this.I = 3;
++        this.J = 1;
++        this.L = true;
++    }
++
++    public void a(World world, Random random, BiomeBase biomebase, BlockPosition blockposition) {
++        if (this.a != null) {
++            throw new RuntimeException("Already decorating");
++        } else {
++            this.a = world;
++            String s = world.getWorldData().getGeneratorOptions();
++
++            if (s != null) {
++                this.d = CustomWorldSettingsFinal.CustomWorldSettings.a(s).b();
++            } else {
++                this.d = CustomWorldSettingsFinal.CustomWorldSettings.a("").b();
++            }
++
++            this.b = random;
++            this.c = blockposition;
++            this.h = new WorldGenMinable(Blocks.DIRT.getBlockData(), this.d.I);
++            this.i = new WorldGenMinable(Blocks.GRAVEL.getBlockData(), this.d.M);
++            this.j = new WorldGenMinable(Blocks.STONE.getBlockData().set(BlockStone.VARIANT, BlockStone.EnumStoneVariant.GRANITE), this.d.Q);
++            this.k = new WorldGenMinable(Blocks.STONE.getBlockData().set(BlockStone.VARIANT, BlockStone.EnumStoneVariant.DIORITE), this.d.U);
++            this.l = new WorldGenMinable(Blocks.STONE.getBlockData().set(BlockStone.VARIANT, BlockStone.EnumStoneVariant.ANDESITE), this.d.Y);
++            this.m = new WorldGenMinable(Blocks.COAL_ORE.getBlockData(), this.d.ac);
++            this.n = new WorldGenMinable(Blocks.IRON_ORE.getBlockData(), this.d.ag);
++            this.o = new WorldGenMinable(Blocks.GOLD_ORE.getBlockData(), this.d.ak);
++            this.p = new WorldGenMinable(Blocks.REDSTONE_ORE.getBlockData(), this.d.ao);
++            this.q = new WorldGenMinable(Blocks.DIAMOND_ORE.getBlockData(), this.d.as);
++            this.r = new WorldGenMinable(Blocks.LAPIS_ORE.getBlockData(), this.d.aw);
++            this.a(biomebase);
++            this.a = null;
++            this.b = null;
++        }
++    }
++
++    protected void a(BiomeBase biomebase) {
++        this.a();
++
++        int i;
++        int j;
++        int k;
++
++        for (i = 0; i < this.I; ++i) {
++            j = this.b.nextInt(16) + 8;
++            k = this.b.nextInt(16) + 8;
++            this.f.generate(this.a, this.b, this.a.r(this.c.a(j, 0, k)));
++        }
++
++        for (i = 0; i < this.J; ++i) {
++            j = this.b.nextInt(16) + 8;
++            k = this.b.nextInt(16) + 8;
++            this.e.generate(this.a, this.b, this.a.r(this.c.a(j, 0, k)));
++        }
++
++        for (i = 0; i < this.H; ++i) {
++            j = this.b.nextInt(16) + 8;
++            k = this.b.nextInt(16) + 8;
++            this.g.generate(this.a, this.b, this.a.r(this.c.a(j, 0, k)));
++        }
++
++        i = this.A;
++        if (this.b.nextInt(10) == 0) {
++            ++i;
++        }
++
++        int l;
++        BlockPosition blockposition;
++
++        for (j = 0; j < i; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            WorldGenTreeAbstract worldgentreeabstract = biomebase.a(this.b);
++
++            worldgentreeabstract.e();
++            blockposition = this.a.getHighestBlockYAt(this.c.a(k, 0, l));
++            if (worldgentreeabstract.generate(this.a, this.b, blockposition)) {
++                worldgentreeabstract.a(this.a, this.b, blockposition);
++            }
++        }
++
++        for (j = 0; j < this.K; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            this.v.generate(this.a, this.b, this.a.getHighestBlockYAt(this.c.a(k, 0, l)));
++        }
++
++        BlockPosition blockposition1;
++        int i1;
++        int j1;
++
++        for (j = 0; j < this.B; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            i1 = this.a.getHighestBlockYAt(this.c.a(k, 0, l)).getY() + 32;
++            if (i1 > 0) {
++                j1 = this.b.nextInt(i1);
++                blockposition1 = this.c.a(k, j1, l);
++                BlockFlowers.EnumFlowerVarient blockflowers_enumflowervarient = biomebase.a(this.b, blockposition1);
++                BlockFlowers blockflowers = blockflowers_enumflowervarient.a().a();
++
++                if (blockflowers.getMaterial() != Material.AIR) {
++                    this.s.a(blockflowers, blockflowers_enumflowervarient);
++                    this.s.generate(this.a, this.b, blockposition1);
++                }
++            }
++        }
++
++        for (j = 0; j < this.C; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            i1 = this.a.getHighestBlockYAt(this.c.a(k, 0, l)).getY() * 2;
++            if (i1 > 0) {
++                j1 = this.b.nextInt(i1);
++                biomebase.b(this.b).generate(this.a, this.b, this.c.a(k, j1, l));
++            }
++        }
++
++        for (j = 0; j < this.D; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            i1 = this.a.getHighestBlockYAt(this.c.a(k, 0, l)).getY() * 2;
++            if (i1 > 0) {
++                j1 = this.b.nextInt(i1);
++                (new WorldGenDeadBush()).generate(this.a, this.b, this.c.a(k, j1, l));
++            }
++        }
++
++        for (j = 0; j < this.z; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            i1 = this.a.getHighestBlockYAt(this.c.a(k, 0, l)).getY() * 2;
++            if (i1 > 0) {
++                j1 = this.b.nextInt(i1);
++
++                BlockPosition blockposition2;
++
++                for (blockposition1 = this.c.a(k, j1, l); blockposition1.getY() > 0; blockposition1 = blockposition2) {
++                    blockposition2 = blockposition1.down();
++                    if (!this.a.isEmpty(blockposition2)) {
++                        break;
++                    }
++                }
++
++                this.y.generate(this.a, this.b, blockposition1);
++            }
++        }
++
++        for (j = 0; j < this.E; ++j) {
++            if (this.b.nextInt(4) == 0) {
++                k = this.b.nextInt(16) + 8;
++                l = this.b.nextInt(16) + 8;
++                BlockPosition blockposition3 = this.a.getHighestBlockYAt(this.c.a(k, 0, l));
++
++                this.t.generate(this.a, this.b, blockposition3);
++            }
++
++            if (this.b.nextInt(8) == 0) {
++                k = this.b.nextInt(16) + 8;
++                l = this.b.nextInt(16) + 8;
++                i1 = this.a.getHighestBlockYAt(this.c.a(k, 0, l)).getY() * 2;
++                if (i1 > 0) {
++                    j1 = this.b.nextInt(i1);
++                    blockposition1 = this.c.a(k, j1, l);
++                    this.u.generate(this.a, this.b, blockposition1);
++                }
++            }
++        }
++
++        if (this.b.nextInt(4) == 0) {
++            j = this.b.nextInt(16) + 8;
++            k = this.b.nextInt(16) + 8;
++            l = this.a.getHighestBlockYAt(this.c.a(j, 0, k)).getY() * 2;
++            if (l > 0) {
++                i1 = this.b.nextInt(l);
++                this.t.generate(this.a, this.b, this.c.a(j, i1, k));
++            }
++        }
++
++        if (this.b.nextInt(8) == 0) {
++            j = this.b.nextInt(16) + 8;
++            k = this.b.nextInt(16) + 8;
++            l = this.a.getHighestBlockYAt(this.c.a(j, 0, k)).getY() * 2;
++            if (l > 0) {
++                i1 = this.b.nextInt(l);
++                this.u.generate(this.a, this.b, this.c.a(j, i1, k));
++            }
++        }
++
++        for (j = 0; j < this.F; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            i1 = this.a.getHighestBlockYAt(this.c.a(k, 0, l)).getY() * 2;
++            if (i1 > 0) {
++                j1 = this.b.nextInt(i1);
++                this.w.generate(this.a, this.b, this.c.a(k, j1, l));
++            }
++        }
++
++        for (j = 0; j < 10; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            i1 = this.a.getHighestBlockYAt(this.c.a(k, 0, l)).getY() * 2;
++            if (i1 > 0) {
++                j1 = this.b.nextInt(i1);
++                this.w.generate(this.a, this.b, this.c.a(k, j1, l));
++            }
++        }
++
++        if (this.b.nextInt(32) == 0) {
++            j = this.b.nextInt(16) + 8;
++            k = this.b.nextInt(16) + 8;
++            l = this.a.getHighestBlockYAt(this.c.a(j, 0, k)).getY() * 2;
++            if (l > 0) {
++                i1 = this.b.nextInt(l);
++                (new WorldGenPumpkin()).generate(this.a, this.b, this.c.a(j, i1, k));
++            }
++        }
++
++        for (j = 0; j < this.G; ++j) {
++            k = this.b.nextInt(16) + 8;
++            l = this.b.nextInt(16) + 8;
++            i1 = this.a.getHighestBlockYAt(this.c.a(k, 0, l)).getY() * 2;
++            if (i1 > 0) {
++                j1 = this.b.nextInt(i1);
++                this.x.generate(this.a, this.b, this.c.a(k, j1, l));
++            }
++        }
++
++        if (this.L) {
++            for (j = 0; j < 50; ++j) {
++                k = this.b.nextInt(16) + 8;
++                l = this.b.nextInt(16) + 8;
++                i1 = this.b.nextInt(248) + 8;
++                if (i1 > 0) {
++                    j1 = this.b.nextInt(i1);
++                    blockposition1 = this.c.a(k, j1, l);
++                    (new WorldGenLiquids(Blocks.FLOWING_WATER)).generate(this.a, this.b, blockposition1);
++                }
++            }
++
++            for (j = 0; j < 20; ++j) {
++                k = this.b.nextInt(16) + 8;
++                l = this.b.nextInt(16) + 8;
++                i1 = this.b.nextInt(this.b.nextInt(this.b.nextInt(240) + 8) + 8);
++                blockposition = this.c.a(k, i1, l);
++                (new WorldGenLiquids(Blocks.FLOWING_LAVA)).generate(this.a, this.b, blockposition);
++            }
++        }
++
++    }
++
++    protected void a(int i, WorldGenerator worldgenerator, int j, int k) {
++        int l;
++
++        if (k < j) {
++            l = j;
++            j = k;
++            k = l;
++        } else if (k == j) {
++            if (j < 255) {
++                ++k;
++            } else {
++                --j;
++            }
++        }
++
++        for (l = 0; l < i; ++l) {
++            BlockPosition blockposition = this.c.a(this.b.nextInt(16), this.b.nextInt(k - j) + j, this.b.nextInt(16));
++
++            worldgenerator.generate(this.a, this.b, blockposition);
++        }
++
++    }
++
++    protected void b(int i, WorldGenerator worldgenerator, int j, int k) {
++        for (int l = 0; l < i; ++l) {
++            BlockPosition blockposition = this.c.a(this.b.nextInt(16), this.b.nextInt(k) + this.b.nextInt(k) + j - k, this.b.nextInt(16));
++
++            worldgenerator.generate(this.a, this.b, blockposition);
++        }
++
++    }
++
++    protected void a() {
++        this.a(this.d.J, this.h, this.d.K, this.d.L);
++        this.a(this.d.N, this.i, this.d.O, this.d.P);
++        this.a(this.d.V, this.k, this.d.W, this.d.X);
++        this.a(this.d.R, this.j, this.d.S, this.d.T);
++        this.a(this.d.Z, this.l, this.d.aa, this.d.ab);
++        this.a(this.d.ad, this.m, this.d.ae, this.d.af);
++        this.a(this.d.ah, this.n, this.d.ai, this.d.aj);
++        this.a(this.d.al, this.o, this.d.am, this.d.an);
++        this.a(this.d.ap, this.p, this.d.aq, this.d.ar);
++        this.a(this.d.at, this.q, this.d.au, this.d.av);
++        this.b(this.d.ax, this.r, this.d.ay, this.d.az);
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/BlockFalling.java b/src/main/java/net/minecraft/server/BlockFalling.java
+new file mode 100644
+index 0000000..29f8554
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/BlockFalling.java
+@@ -0,0 +1,75 @@
++package net.minecraft.server;
++
++import java.util.Random;
++
++public class BlockFalling extends Block {
++
++    public static boolean instaFall;
++
++    public BlockFalling() {
++        super(Material.SAND);
++        this.a(CreativeModeTab.b);
++    }
++
++    public BlockFalling(Material material) {
++        super(material);
++    }
++
++    public void onPlace(World world, BlockPosition blockposition, IBlockData iblockdata) {
++        world.a(blockposition, (Block) this, this.a(world));
++    }
++
++    public void doPhysics(World world, BlockPosition blockposition, IBlockData iblockdata, Block block) {
++        world.a(blockposition, (Block) this, this.a(world));
++    }
++
++    public void b(World world, BlockPosition blockposition, IBlockData iblockdata, Random random) {
++        if (!world.isClientSide) {
++            this.f(world, blockposition);
++        }
++
++    }
++
++    private void f(World world, BlockPosition blockposition) {
++        if (canFall(world, blockposition.down()) && blockposition.getY() >= 0) {
++            byte b0 = 32;
++
++            if (!BlockFalling.instaFall && world.areChunksLoadedBetween(blockposition.a(-b0, -b0, -b0), blockposition.a(b0, b0, b0))) {
++                if (!world.isClientSide) {
++                    EntityFallingBlock entityfallingblock = new EntityFallingBlock(world, (double) blockposition.getX() + 0.5D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.5D, world.getType(blockposition));
++
++                    this.a(entityfallingblock);
++                    world.addEntity(entityfallingblock);
++                }
++            } else {
++                world.setAir(blockposition);
++
++                BlockPosition blockposition1;
++
++                for (blockposition1 = blockposition.down(); canFall(world, blockposition1) && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
++                    ;
++                }
++
++                if (blockposition1.getY() > 0) {
++                    world.setTypeUpdate(blockposition1.up(), this.getBlockData());
++                }
++            }
++
++        }
++    }
++
++    protected void a(EntityFallingBlock entityfallingblock) {}
++
++    public int a(World world) {
++        return 2;
++    }
++
++    public static boolean canFall(World world, BlockPosition blockposition) {
++        Block block = world.getType(blockposition).getBlock();
++        Material material = block.material;
++
++        return block == Blocks.FIRE || material == Material.AIR || material == Material.WATER || material == Material.LAVA;
++    }
++
++    public void a_(World world, BlockPosition blockposition) {}
++}
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderGenerate.java b/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
+new file mode 100644
+index 0000000..e0be3c1
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
+@@ -0,0 +1,472 @@
++package net.minecraft.server;
++
++import java.util.List;
++import java.util.Random;
++
++public class ChunkProviderGenerate implements IChunkProvider {
++
++    private Random h;
++    private NoiseGeneratorOctaves i;
++    private NoiseGeneratorOctaves j;
++    private NoiseGeneratorOctaves k;
++    private NoiseGenerator3 l;
++    public NoiseGeneratorOctaves a;
++    public NoiseGeneratorOctaves b;
++    public NoiseGeneratorOctaves c;
++    private World m;
++    private final boolean n;
++    private WorldType o;
++    private final double[] p;
++    private final float[] q;
++    private CustomWorldSettingsFinal r;
++    private Block s;
++    private double[] t;
++    private WorldGenBase u;
++    private WorldGenStronghold v;
++    private WorldGenVillage w;
++    private WorldGenMineshaft x;
++    private WorldGenLargeFeature y;
++    private WorldGenBase z;
++    private WorldGenMonument A;
++    private BiomeBase[] B;
++    double[] d;
++    double[] e;
++    double[] f;
++    double[] g;
++
++    public ChunkProviderGenerate(World world, long i, boolean flag, String s) {
++        this.s = Blocks.WATER;
++        this.t = new double[256];
++        this.u = new WorldGenCaves();
++        this.v = new WorldGenStronghold();
++        this.w = new WorldGenVillage();
++        this.x = new WorldGenMineshaft();
++        this.y = new WorldGenLargeFeature();
++        this.z = new WorldGenCanyon();
++        this.A = new WorldGenMonument();
++        this.m = world;
++        this.n = flag;
++        this.o = world.getWorldData().getType();
++        this.h = new Random(i);
++        this.i = new NoiseGeneratorOctaves(this.h, 16);
++        this.j = new NoiseGeneratorOctaves(this.h, 16);
++        this.k = new NoiseGeneratorOctaves(this.h, 8);
++        this.l = new NoiseGenerator3(this.h, 4);
++        this.a = new NoiseGeneratorOctaves(this.h, 10);
++        this.b = new NoiseGeneratorOctaves(this.h, 16);
++        this.c = new NoiseGeneratorOctaves(this.h, 8);
++        this.p = new double[825];
++        this.q = new float[25];
++
++        for (int j = -2; j <= 2; ++j) {
++            for (int k = -2; k <= 2; ++k) {
++                float f = 10.0F / MathHelper.c((float) (j * j + k * k) + 0.2F);
++
++                this.q[j + 2 + (k + 2) * 5] = f;
++            }
++        }
++
++        if (s != null) {
++            this.r = CustomWorldSettingsFinal.CustomWorldSettings.a(s).b();
++            this.s = this.r.E ? Blocks.LAVA : Blocks.WATER;
++            world.b(this.r.q);
++        }
++
++    }
++
++    public void a(int i, int j, ChunkSnapshot chunksnapshot) {
++        this.B = this.m.getWorldChunkManager().getBiomes(this.B, i * 4 - 2, j * 4 - 2, 10, 10);
++        this.a(i * 4, 0, j * 4);
++
++        for (int k = 0; k < 4; ++k) {
++            int l = k * 5;
++            int i1 = (k + 1) * 5;
++
++            for (int j1 = 0; j1 < 4; ++j1) {
++                int k1 = (l + j1) * 33;
++                int l1 = (l + j1 + 1) * 33;
++                int i2 = (i1 + j1) * 33;
++                int j2 = (i1 + j1 + 1) * 33;
++
++                for (int k2 = 0; k2 < 32; ++k2) {
++                    double d0 = 0.125D;
++                    double d1 = this.p[k1 + k2];
++                    double d2 = this.p[l1 + k2];
++                    double d3 = this.p[i2 + k2];
++                    double d4 = this.p[j2 + k2];
++                    double d5 = (this.p[k1 + k2 + 1] - d1) * d0;
++                    double d6 = (this.p[l1 + k2 + 1] - d2) * d0;
++                    double d7 = (this.p[i2 + k2 + 1] - d3) * d0;
++                    double d8 = (this.p[j2 + k2 + 1] - d4) * d0;
++
++                    for (int l2 = 0; l2 < 8; ++l2) {
++                        double d9 = 0.25D;
++                        double d10 = d1;
++                        double d11 = d2;
++                        double d12 = (d3 - d1) * d9;
++                        double d13 = (d4 - d2) * d9;
++
++                        for (int i3 = 0; i3 < 4; ++i3) {
++                            double d14 = 0.25D;
++                            double d15 = (d11 - d10) * d14;
++                            double d16 = d10 - d15;
++
++                            for (int j3 = 0; j3 < 4; ++j3) {
++                                if ((d16 += d15) > 0.0D) {
++                                    chunksnapshot.a(k * 4 + i3, k2 * 8 + l2, j1 * 4 + j3, Blocks.STONE.getBlockData());
++                                } else if (k2 * 8 + l2 < this.r.q) {
++                                    chunksnapshot.a(k * 4 + i3, k2 * 8 + l2, j1 * 4 + j3, this.s.getBlockData());
++                                }
++                            }
++
++                            d10 += d12;
++                            d11 += d13;
++                        }
++
++                        d1 += d5;
++                        d2 += d6;
++                        d3 += d7;
++                        d4 += d8;
++                    }
++                }
++            }
++        }
++
++    }
++
++    public void a(int i, int j, ChunkSnapshot chunksnapshot, BiomeBase[] abiomebase) {
++        double d0 = 0.03125D;
++
++        this.t = this.l.a(this.t, (double) (i * 16), (double) (j * 16), 16, 16, d0 * 2.0D, d0 * 2.0D, 1.0D);
++
++        for (int k = 0; k < 16; ++k) {
++            for (int l = 0; l < 16; ++l) {
++                BiomeBase biomebase = abiomebase[l + k * 16];
++
++                biomebase.a(this.m, this.h, chunksnapshot, i * 16 + k, j * 16 + l, this.t[l + k * 16]);
++            }
++        }
++
++    }
++
++    public Chunk getOrCreateChunk(int i, int j) {
++        this.h.setSeed((long) i * 341873128712L + (long) j * 132897987541L);
++        ChunkSnapshot chunksnapshot = new ChunkSnapshot();
++
++        this.a(i, j, chunksnapshot);
++        this.B = this.m.getWorldChunkManager().getBiomeBlock(this.B, i * 16, j * 16, 16, 16);
++        this.a(i, j, chunksnapshot, this.B);
++        if (this.r.r) {
++            this.u.a(this, this.m, i, j, chunksnapshot);
++        }
++
++        if (this.r.z) {
++            this.z.a(this, this.m, i, j, chunksnapshot);
++        }
++
++        if (this.r.w && this.n) {
++            this.x.a(this, this.m, i, j, chunksnapshot);
++        }
++
++        if (this.r.v && this.n) {
++            this.w.a(this, this.m, i, j, chunksnapshot);
++        }
++
++        if (this.r.u && this.n) {
++            this.v.a(this, this.m, i, j, chunksnapshot);
++        }
++
++        if (this.r.x && this.n) {
++            this.y.a(this, this.m, i, j, chunksnapshot);
++        }
++
++        if (this.r.y && this.n) {
++            this.A.a(this, this.m, i, j, chunksnapshot);
++        }
++
++        Chunk chunk = new Chunk(this.m, chunksnapshot, i, j);
++        byte[] abyte = chunk.getBiomeIndex();
++
++        for (int k = 0; k < abyte.length; ++k) {
++            abyte[k] = (byte) this.B[k].id;
++        }
++
++        chunk.initLighting();
++        return chunk;
++    }
++
++    private void a(int i, int j, int k) {
++        this.g = this.b.a(this.g, i, k, 5, 5, (double) this.r.e, (double) this.r.f, (double) this.r.g);
++        float f = this.r.a;
++        float f1 = this.r.b;
++
++        this.d = this.k.a(this.d, i, j, k, 5, 33, 5, (double) (f / this.r.h), (double) (f1 / this.r.i), (double) (f / this.r.j));
++        this.e = this.i.a(this.e, i, j, k, 5, 33, 5, (double) f, (double) f1, (double) f);
++        this.f = this.j.a(this.f, i, j, k, 5, 33, 5, (double) f, (double) f1, (double) f);
++        boolean flag = false;
++        boolean flag1 = false;
++        int l = 0;
++        int i1 = 0;
++
++        for (int j1 = 0; j1 < 5; ++j1) {
++            for (int k1 = 0; k1 < 5; ++k1) {
++                float f2 = 0.0F;
++                float f3 = 0.0F;
++                float f4 = 0.0F;
++                byte b0 = 2;
++                BiomeBase biomebase = this.B[j1 + 2 + (k1 + 2) * 10];
++
++                for (int l1 = -b0; l1 <= b0; ++l1) {
++                    for (int i2 = -b0; i2 <= b0; ++i2) {
++                        BiomeBase biomebase1 = this.B[j1 + l1 + 2 + (k1 + i2 + 2) * 10];
++                        float f5 = this.r.n + biomebase1.an * this.r.m;
++                        float f6 = this.r.p + biomebase1.ao * this.r.o;
++
++                        if (this.o == WorldType.AMPLIFIED && f5 > 0.0F) {
++                            f5 = 1.0F + f5 * 2.0F;
++                            f6 = 1.0F + f6 * 4.0F;
++                        }
++
++                        float f7 = this.q[l1 + 2 + (i2 + 2) * 5] / (f5 + 2.0F);
++
++                        if (biomebase1.an > biomebase.an) {
++                            f7 /= 2.0F;
++                        }
++
++                        f2 += f6 * f7;
++                        f3 += f5 * f7;
++                        f4 += f7;
++                    }
++                }
++
++                f2 /= f4;
++                f3 /= f4;
++                f2 = f2 * 0.9F + 0.1F;
++                f3 = (f3 * 4.0F - 1.0F) / 8.0F;
++                double d0 = this.g[i1] / 8000.0D;
++
++                if (d0 < 0.0D) {
++                    d0 = -d0 * 0.3D;
++                }
++
++                d0 = d0 * 3.0D - 2.0D;
++                if (d0 < 0.0D) {
++                    d0 /= 2.0D;
++                    if (d0 < -1.0D) {
++                        d0 = -1.0D;
++                    }
++
++                    d0 /= 1.4D;
++                    d0 /= 2.0D;
++                } else {
++                    if (d0 > 1.0D) {
++                        d0 = 1.0D;
++                    }
++
++                    d0 /= 8.0D;
++                }
++
++                ++i1;
++                double d1 = (double) f3;
++                double d2 = (double) f2;
++
++                d1 += d0 * 0.2D;
++                d1 = d1 * (double) this.r.k / 8.0D;
++                double d3 = (double) this.r.k + d1 * 4.0D;
++
++                for (int j2 = 0; j2 < 33; ++j2) {
++                    double d4 = ((double) j2 - d3) * (double) this.r.l * 128.0D / 256.0D / d2;
++
++                    if (d4 < 0.0D) {
++                        d4 *= 4.0D;
++                    }
++
++                    double d5 = this.e[l] / (double) this.r.d;
++                    double d6 = this.f[l] / (double) this.r.c;
++                    double d7 = (this.d[l] / 10.0D + 1.0D) / 2.0D;
++                    double d8 = MathHelper.b(d5, d6, d7) - d4;
++
++                    if (j2 > 29) {
++                        double d9 = (double) ((float) (j2 - 29) / 3.0F);
++
++                        d8 = d8 * (1.0D - d9) + -10.0D * d9;
++                    }
++
++                    this.p[l] = d8;
++                    ++l;
++                }
++            }
++        }
++
++    }
++
++    public boolean isChunkLoaded(int i, int j) {
++        return true;
++    }
++
++    public void getChunkAt(IChunkProvider ichunkprovider, int i, int j) {
++        BlockFalling.instaFall = true;
++        int k = i * 16;
++        int l = j * 16;
++        BlockPosition blockposition = new BlockPosition(k, 0, l);
++        BiomeBase biomebase = this.m.getBiome(blockposition.a(16, 0, 16));
++
++        this.h.setSeed(this.m.getSeed());
++        long i1 = this.h.nextLong() / 2L * 2L + 1L;
++        long j1 = this.h.nextLong() / 2L * 2L + 1L;
++
++        this.h.setSeed((long) i * i1 + (long) j * j1 ^ this.m.getSeed());
++        boolean flag = false;
++        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
++
++        if (this.r.w && this.n) {
++            this.x.a(this.m, this.h, chunkcoordintpair);
++        }
++
++        if (this.r.v && this.n) {
++            flag = this.w.a(this.m, this.h, chunkcoordintpair);
++        }
++
++        if (this.r.u && this.n) {
++            this.v.a(this.m, this.h, chunkcoordintpair);
++        }
++
++        if (this.r.x && this.n) {
++            this.y.a(this.m, this.h, chunkcoordintpair);
++        }
++
++        if (this.r.y && this.n) {
++            this.A.a(this.m, this.h, chunkcoordintpair);
++        }
++
++        int k1;
++        int l1;
++        int i2;
++
++        if (biomebase != BiomeBase.DESERT && biomebase != BiomeBase.DESERT_HILLS && this.r.A && !flag && this.h.nextInt(this.r.B) == 0) {
++            k1 = this.h.nextInt(16) + 8;
++            l1 = this.h.nextInt(256);
++            i2 = this.h.nextInt(16) + 8;
++            (new WorldGenLakes(Blocks.WATER)).generate(this.m, this.h, blockposition.a(k1, l1, i2));
++        }
++
++        if (!flag && this.h.nextInt(this.r.D / 10) == 0 && this.r.C) {
++            k1 = this.h.nextInt(16) + 8;
++            l1 = this.h.nextInt(this.h.nextInt(248) + 8);
++            i2 = this.h.nextInt(16) + 8;
++            if (l1 < this.m.F() || this.h.nextInt(this.r.D / 8) == 0) {
++                (new WorldGenLakes(Blocks.LAVA)).generate(this.m, this.h, blockposition.a(k1, l1, i2));
++            }
++        }
++
++        if (this.r.s) {
++            for (k1 = 0; k1 < this.r.t; ++k1) {
++                l1 = this.h.nextInt(16) + 8;
++                i2 = this.h.nextInt(256);
++                int j2 = this.h.nextInt(16) + 8;
++
++                (new WorldGenDungeons()).generate(this.m, this.h, blockposition.a(l1, i2, j2));
++            }
++        }
++
++        biomebase.a(this.m, this.h, new BlockPosition(k, 0, l));
++        SpawnerCreature.a(this.m, biomebase, k + 8, l + 8, 16, 16, this.h);
++        blockposition = blockposition.a(8, 0, 8);
++
++        for (k1 = 0; k1 < 16; ++k1) {
++            for (l1 = 0; l1 < 16; ++l1) {
++                BlockPosition blockposition1 = this.m.q(blockposition.a(k1, 0, l1));
++                BlockPosition blockposition2 = blockposition1.down();
++
++                if (this.m.v(blockposition2)) {
++                    this.m.setTypeAndData(blockposition2, Blocks.ICE.getBlockData(), 2);
++                }
++
++                if (this.m.f(blockposition1, true)) {
++                    this.m.setTypeAndData(blockposition1, Blocks.SNOW_LAYER.getBlockData(), 2);
++                }
++            }
++        }
++
++        BlockFalling.instaFall = false;
++    }
++
++    public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
++        boolean flag = false;
++
++        if (this.r.y && this.n && chunk.w() < 3600L) {
++            flag |= this.A.a(this.m, this.h, new ChunkCoordIntPair(i, j));
++        }
++
++        return flag;
++    }
++
++    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate) {
++        return true;
++    }
++
++    public void c() {}
++
++    public boolean unloadChunks() {
++        return false;
++    }
++
++    public boolean canSave() {
++        return true;
++    }
++
++    public String getName() {
++        return "RandomLevelSource";
++    }
++
++    public List<BiomeBase.BiomeMeta> getMobsFor(EnumCreatureType enumcreaturetype, BlockPosition blockposition) {
++        BiomeBase biomebase = this.m.getBiome(blockposition);
++
++        if (this.n) {
++            if (enumcreaturetype == EnumCreatureType.MONSTER && this.y.a(blockposition)) {
++                return this.y.b();
++            }
++
++            if (enumcreaturetype == EnumCreatureType.MONSTER && this.r.y && this.A.a(this.m, blockposition)) {
++                return this.A.b();
++            }
++        }
++
++        return biomebase.getMobs(enumcreaturetype);
++    }
++
++    public BlockPosition findNearestMapFeature(World world, String s, BlockPosition blockposition) {
++        return "Stronghold".equals(s) && this.v != null ? this.v.getNearestGeneratedFeature(world, blockposition) : null;
++    }
++
++    public int getLoadedChunks() {
++        return 0;
++    }
++
++    public void recreateStructures(Chunk chunk, int i, int j) {
++        if (this.r.w && this.n) {
++            this.x.a(this, this.m, i, j, (ChunkSnapshot) null);
++        }
++
++        if (this.r.v && this.n) {
++            this.w.a(this, this.m, i, j, (ChunkSnapshot) null);
++        }
++
++        if (this.r.u && this.n) {
++            this.v.a(this, this.m, i, j, (ChunkSnapshot) null);
++        }
++
++        if (this.r.x && this.n) {
++            this.y.a(this, this.m, i, j, (ChunkSnapshot) null);
++        }
++
++        if (this.r.y && this.n) {
++            this.A.a(this, this.m, i, j, (ChunkSnapshot) null);
++        }
++
++    }
++
++    public Chunk getChunkAt(BlockPosition blockposition) {
++        return this.getOrCreateChunk(blockposition.getX() >> 4, blockposition.getZ() >> 4);
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderHell.java b/src/main/java/net/minecraft/server/ChunkProviderHell.java
+new file mode 100644
+index 0000000..2f01bbf
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/ChunkProviderHell.java
+@@ -0,0 +1,393 @@
++package net.minecraft.server;
++
++import java.util.List;
++import java.util.Random;
++
++public class ChunkProviderHell implements IChunkProvider {
++
++    private final World h;
++    private final boolean i;
++    private final Random j;
++    private double[] k = new double[256];
++    private double[] l = new double[256];
++    private double[] m = new double[256];
++    private double[] n;
++    private final NoiseGeneratorOctaves o;
++    private final NoiseGeneratorOctaves p;
++    private final NoiseGeneratorOctaves q;
++    private final NoiseGeneratorOctaves r;
++    private final NoiseGeneratorOctaves s;
++    public final NoiseGeneratorOctaves a;
++    public final NoiseGeneratorOctaves b;
++    private final WorldGenFire t = new WorldGenFire();
++    private final WorldGenLightStone1 u = new WorldGenLightStone1();
++    private final WorldGenLightStone2 v = new WorldGenLightStone2();
++    private final WorldGenerator w;
++    private final WorldGenHellLava x;
++    private final WorldGenHellLava y;
++    private final WorldGenMushrooms z;
++    private final WorldGenMushrooms A;
++    private final WorldGenNether B;
++    private final WorldGenBase C;
++    double[] c;
++    double[] d;
++    double[] e;
++    double[] f;
++    double[] g;
++
++    public ChunkProviderHell(World world, boolean flag, long i) {
++        this.w = new WorldGenMinable(Blocks.QUARTZ_ORE.getBlockData(), 14, BlockPredicate.a(Blocks.NETHERRACK));
++        this.x = new WorldGenHellLava(Blocks.FLOWING_LAVA, true);
++        this.y = new WorldGenHellLava(Blocks.FLOWING_LAVA, false);
++        this.z = new WorldGenMushrooms(Blocks.BROWN_MUSHROOM);
++        this.A = new WorldGenMushrooms(Blocks.RED_MUSHROOM);
++        this.B = new WorldGenNether();
++        this.C = new WorldGenCavesHell();
++        this.h = world;
++        this.i = flag;
++        this.j = new Random(i);
++        this.o = new NoiseGeneratorOctaves(this.j, 16);
++        this.p = new NoiseGeneratorOctaves(this.j, 16);
++        this.q = new NoiseGeneratorOctaves(this.j, 8);
++        this.r = new NoiseGeneratorOctaves(this.j, 4);
++        this.s = new NoiseGeneratorOctaves(this.j, 4);
++        this.a = new NoiseGeneratorOctaves(this.j, 10);
++        this.b = new NoiseGeneratorOctaves(this.j, 16);
++        world.b(63);
++    }
++
++    public void a(int i, int j, ChunkSnapshot chunksnapshot) {
++        byte b0 = 4;
++        int k = this.h.F() / 2 + 1;
++        int l = b0 + 1;
++        byte b1 = 17;
++        int i1 = b0 + 1;
++
++        this.n = this.a(this.n, i * b0, 0, j * b0, l, b1, i1);
++
++        for (int j1 = 0; j1 < b0; ++j1) {
++            for (int k1 = 0; k1 < b0; ++k1) {
++                for (int l1 = 0; l1 < 16; ++l1) {
++                    double d0 = 0.125D;
++                    double d1 = this.n[((j1 + 0) * i1 + k1 + 0) * b1 + l1 + 0];
++                    double d2 = this.n[((j1 + 0) * i1 + k1 + 1) * b1 + l1 + 0];
++                    double d3 = this.n[((j1 + 1) * i1 + k1 + 0) * b1 + l1 + 0];
++                    double d4 = this.n[((j1 + 1) * i1 + k1 + 1) * b1 + l1 + 0];
++                    double d5 = (this.n[((j1 + 0) * i1 + k1 + 0) * b1 + l1 + 1] - d1) * d0;
++                    double d6 = (this.n[((j1 + 0) * i1 + k1 + 1) * b1 + l1 + 1] - d2) * d0;
++                    double d7 = (this.n[((j1 + 1) * i1 + k1 + 0) * b1 + l1 + 1] - d3) * d0;
++                    double d8 = (this.n[((j1 + 1) * i1 + k1 + 1) * b1 + l1 + 1] - d4) * d0;
++
++                    for (int i2 = 0; i2 < 8; ++i2) {
++                        double d9 = 0.25D;
++                        double d10 = d1;
++                        double d11 = d2;
++                        double d12 = (d3 - d1) * d9;
++                        double d13 = (d4 - d2) * d9;
++
++                        for (int j2 = 0; j2 < 4; ++j2) {
++                            double d14 = 0.25D;
++                            double d15 = d10;
++                            double d16 = (d11 - d10) * d14;
++
++                            for (int k2 = 0; k2 < 4; ++k2) {
++                                IBlockData iblockdata = null;
++
++                                if (l1 * 8 + i2 < k) {
++                                    iblockdata = Blocks.LAVA.getBlockData();
++                                }
++
++                                if (d15 > 0.0D) {
++                                    iblockdata = Blocks.NETHERRACK.getBlockData();
++                                }
++
++                                int l2 = j2 + j1 * 4;
++                                int i3 = i2 + l1 * 8;
++                                int j3 = k2 + k1 * 4;
++
++                                chunksnapshot.a(l2, i3, j3, iblockdata);
++                                d15 += d16;
++                            }
++
++                            d10 += d12;
++                            d11 += d13;
++                        }
++
++                        d1 += d5;
++                        d2 += d6;
++                        d3 += d7;
++                        d4 += d8;
++                    }
++                }
++            }
++        }
++
++    }
++
++    public void b(int i, int j, ChunkSnapshot chunksnapshot) {
++        int k = this.h.F() + 1;
++        double d0 = 0.03125D;
++
++        this.k = this.r.a(this.k, i * 16, j * 16, 0, 16, 16, 1, d0, d0, 1.0D);
++        this.l = this.r.a(this.l, i * 16, 109, j * 16, 16, 1, 16, d0, 1.0D, d0);
++        this.m = this.s.a(this.m, i * 16, j * 16, 0, 16, 16, 1, d0 * 2.0D, d0 * 2.0D, d0 * 2.0D);
++
++        for (int l = 0; l < 16; ++l) {
++            for (int i1 = 0; i1 < 16; ++i1) {
++                boolean flag = this.k[l + i1 * 16] + this.j.nextDouble() * 0.2D > 0.0D;
++                boolean flag1 = this.l[l + i1 * 16] + this.j.nextDouble() * 0.2D > 0.0D;
++                int j1 = (int) (this.m[l + i1 * 16] / 3.0D + 3.0D + this.j.nextDouble() * 0.25D);
++                int k1 = -1;
++                IBlockData iblockdata = Blocks.NETHERRACK.getBlockData();
++                IBlockData iblockdata1 = Blocks.NETHERRACK.getBlockData();
++
++                for (int l1 = 127; l1 >= 0; --l1) {
++                    if (l1 < 127 - this.j.nextInt(5) && l1 > this.j.nextInt(5)) {
++                        IBlockData iblockdata2 = chunksnapshot.a(i1, l1, l);
++
++                        if (iblockdata2.getBlock() != null && iblockdata2.getBlock().getMaterial() != Material.AIR) {
++                            if (iblockdata2.getBlock() == Blocks.NETHERRACK) {
++                                if (k1 == -1) {
++                                    if (j1 <= 0) {
++                                        iblockdata = null;
++                                        iblockdata1 = Blocks.NETHERRACK.getBlockData();
++                                    } else if (l1 >= k - 4 && l1 <= k + 1) {
++                                        iblockdata = Blocks.NETHERRACK.getBlockData();
++                                        iblockdata1 = Blocks.NETHERRACK.getBlockData();
++                                        if (flag1) {
++                                            iblockdata = Blocks.GRAVEL.getBlockData();
++                                            iblockdata1 = Blocks.NETHERRACK.getBlockData();
++                                        }
++
++                                        if (flag) {
++                                            iblockdata = Blocks.SOUL_SAND.getBlockData();
++                                            iblockdata1 = Blocks.SOUL_SAND.getBlockData();
++                                        }
++                                    }
++
++                                    if (l1 < k && (iblockdata == null || iblockdata.getBlock().getMaterial() == Material.AIR)) {
++                                        iblockdata = Blocks.LAVA.getBlockData();
++                                    }
++
++                                    k1 = j1;
++                                    if (l1 >= k - 1) {
++                                        chunksnapshot.a(i1, l1, l, iblockdata);
++                                    } else {
++                                        chunksnapshot.a(i1, l1, l, iblockdata1);
++                                    }
++                                } else if (k1 > 0) {
++                                    --k1;
++                                    chunksnapshot.a(i1, l1, l, iblockdata1);
++                                }
++                            }
++                        } else {
++                            k1 = -1;
++                        }
++                    } else {
++                        chunksnapshot.a(i1, l1, l, Blocks.BEDROCK.getBlockData());
++                    }
++                }
++            }
++        }
++
++    }
++
++    public Chunk getOrCreateChunk(int i, int j) {
++        this.j.setSeed((long) i * 341873128712L + (long) j * 132897987541L);
++        ChunkSnapshot chunksnapshot = new ChunkSnapshot();
++
++        this.a(i, j, chunksnapshot);
++        this.b(i, j, chunksnapshot);
++        this.C.a(this, this.h, i, j, chunksnapshot);
++        if (this.i) {
++            this.B.a(this, this.h, i, j, chunksnapshot);
++        }
++
++        Chunk chunk = new Chunk(this.h, chunksnapshot, i, j);
++        BiomeBase[] abiomebase = this.h.getWorldChunkManager().getBiomeBlock((BiomeBase[]) null, i * 16, j * 16, 16, 16);
++        byte[] abyte = chunk.getBiomeIndex();
++
++        for (int k = 0; k < abyte.length; ++k) {
++            abyte[k] = (byte) abiomebase[k].id;
++        }
++
++        chunk.l();
++        return chunk;
++    }
++
++    private double[] a(double[] adouble, int i, int j, int k, int l, int i1, int j1) {
++        if (adouble == null) {
++            adouble = new double[l * i1 * j1];
++        }
++
++        double d0 = 684.412D;
++        double d1 = 2053.236D;
++
++        this.f = this.a.a(this.f, i, j, k, l, 1, j1, 1.0D, 0.0D, 1.0D);
++        this.g = this.b.a(this.g, i, j, k, l, 1, j1, 100.0D, 0.0D, 100.0D);
++        this.c = this.q.a(this.c, i, j, k, l, i1, j1, d0 / 80.0D, d1 / 60.0D, d0 / 80.0D);
++        this.d = this.o.a(this.d, i, j, k, l, i1, j1, d0, d1, d0);
++        this.e = this.p.a(this.e, i, j, k, l, i1, j1, d0, d1, d0);
++        int k1 = 0;
++        double[] adouble1 = new double[i1];
++
++        int l1;
++
++        for (l1 = 0; l1 < i1; ++l1) {
++            adouble1[l1] = Math.cos((double) l1 * 3.141592653589793D * 6.0D / (double) i1) * 2.0D;
++            double d2 = (double) l1;
++
++            if (l1 > i1 / 2) {
++                d2 = (double) (i1 - 1 - l1);
++            }
++
++            if (d2 < 4.0D) {
++                d2 = 4.0D - d2;
++                adouble1[l1] -= d2 * d2 * d2 * 10.0D;
++            }
++        }
++
++        for (l1 = 0; l1 < l; ++l1) {
++            for (int i2 = 0; i2 < j1; ++i2) {
++                double d3 = 0.0D;
++
++                for (int j2 = 0; j2 < i1; ++j2) {
++                    double d4 = 0.0D;
++                    double d5 = adouble1[j2];
++                    double d6 = this.d[k1] / 512.0D;
++                    double d7 = this.e[k1] / 512.0D;
++                    double d8 = (this.c[k1] / 10.0D + 1.0D) / 2.0D;
++
++                    if (d8 < 0.0D) {
++                        d4 = d6;
++                    } else if (d8 > 1.0D) {
++                        d4 = d7;
++                    } else {
++                        d4 = d6 + (d7 - d6) * d8;
++                    }
++
++                    d4 -= d5;
++                    double d9;
++
++                    if (j2 > i1 - 4) {
++                        d9 = (double) ((float) (j2 - (i1 - 4)) / 3.0F);
++                        d4 = d4 * (1.0D - d9) + -10.0D * d9;
++                    }
++
++                    if ((double) j2 < d3) {
++                        d9 = (d3 - (double) j2) / 4.0D;
++                        d9 = MathHelper.a(d9, 0.0D, 1.0D);
++                        d4 = d4 * (1.0D - d9) + -10.0D * d9;
++                    }
++
++                    adouble[k1] = d4;
++                    ++k1;
++                }
++            }
++        }
++
++        return adouble;
++    }
++
++    public boolean isChunkLoaded(int i, int j) {
++        return true;
++    }
++
++    public void getChunkAt(IChunkProvider ichunkprovider, int i, int j) {
++        BlockFalling.instaFall = true;
++        BlockPosition blockposition = new BlockPosition(i * 16, 0, j * 16);
++        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
++
++        this.B.a(this.h, this.j, chunkcoordintpair);
++
++        int k;
++
++        for (k = 0; k < 8; ++k) {
++            this.y.generate(this.h, this.j, blockposition.a(this.j.nextInt(16) + 8, this.j.nextInt(120) + 4, this.j.nextInt(16) + 8));
++        }
++
++        for (k = 0; k < this.j.nextInt(this.j.nextInt(10) + 1) + 1; ++k) {
++            this.t.generate(this.h, this.j, blockposition.a(this.j.nextInt(16) + 8, this.j.nextInt(120) + 4, this.j.nextInt(16) + 8));
++        }
++
++        for (k = 0; k < this.j.nextInt(this.j.nextInt(10) + 1); ++k) {
++            this.u.generate(this.h, this.j, blockposition.a(this.j.nextInt(16) + 8, this.j.nextInt(120) + 4, this.j.nextInt(16) + 8));
++        }
++
++        for (k = 0; k < 10; ++k) {
++            this.v.generate(this.h, this.j, blockposition.a(this.j.nextInt(16) + 8, this.j.nextInt(128), this.j.nextInt(16) + 8));
++        }
++
++        if (this.j.nextBoolean()) {
++            this.z.generate(this.h, this.j, blockposition.a(this.j.nextInt(16) + 8, this.j.nextInt(128), this.j.nextInt(16) + 8));
++        }
++
++        if (this.j.nextBoolean()) {
++            this.A.generate(this.h, this.j, blockposition.a(this.j.nextInt(16) + 8, this.j.nextInt(128), this.j.nextInt(16) + 8));
++        }
++
++        for (k = 0; k < 16; ++k) {
++            this.w.generate(this.h, this.j, blockposition.a(this.j.nextInt(16), this.j.nextInt(108) + 10, this.j.nextInt(16)));
++        }
++
++        for (k = 0; k < 16; ++k) {
++            this.x.generate(this.h, this.j, blockposition.a(this.j.nextInt(16), this.j.nextInt(108) + 10, this.j.nextInt(16)));
++        }
++
++        BlockFalling.instaFall = false;
++    }
++
++    public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
++        return false;
++    }
++
++    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate) {
++        return true;
++    }
++
++    public void c() {}
++
++    public boolean unloadChunks() {
++        return false;
++    }
++
++    public boolean canSave() {
++        return true;
++    }
++
++    public String getName() {
++        return "HellRandomLevelSource";
++    }
++
++    public List<BiomeBase.BiomeMeta> getMobsFor(EnumCreatureType enumcreaturetype, BlockPosition blockposition) {
++        if (enumcreaturetype == EnumCreatureType.MONSTER) {
++            if (this.B.b(blockposition)) {
++                return this.B.b();
++            }
++
++            if (this.B.a(this.h, blockposition) && this.h.getType(blockposition.down()).getBlock() == Blocks.NETHER_BRICK) {
++                return this.B.b();
++            }
++        }
++
++        BiomeBase biomebase = this.h.getBiome(blockposition);
++
++        return biomebase.getMobs(enumcreaturetype);
++    }
++
++    public BlockPosition findNearestMapFeature(World world, String s, BlockPosition blockposition) {
++        return null;
++    }
++
++    public int getLoadedChunks() {
++        return 0;
++    }
++
++    public void recreateStructures(Chunk chunk, int i, int j) {
++        this.B.a(this, this.h, i, j, (ChunkSnapshot) null);
++    }
++
++    public Chunk getChunkAt(BlockPosition blockposition) {
++        return this.getOrCreateChunk(blockposition.getX() >> 4, blockposition.getZ() >> 4);
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderTheEnd.java b/src/main/java/net/minecraft/server/ChunkProviderTheEnd.java
+new file mode 100644
+index 0000000..4f2c865
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/ChunkProviderTheEnd.java
+@@ -0,0 +1,272 @@
++package net.minecraft.server;
++
++import java.util.List;
++import java.util.Random;
++
++public class ChunkProviderTheEnd implements IChunkProvider {
++
++    private Random h;
++    private NoiseGeneratorOctaves i;
++    private NoiseGeneratorOctaves j;
++    private NoiseGeneratorOctaves k;
++    public NoiseGeneratorOctaves a;
++    public NoiseGeneratorOctaves b;
++    private World l;
++    private double[] m;
++    private BiomeBase[] n;
++    double[] c;
++    double[] d;
++    double[] e;
++    double[] f;
++    double[] g;
++
++    public ChunkProviderTheEnd(World world, long i) {
++        this.l = world;
++        this.h = new Random(i);
++        this.i = new NoiseGeneratorOctaves(this.h, 16);
++        this.j = new NoiseGeneratorOctaves(this.h, 16);
++        this.k = new NoiseGeneratorOctaves(this.h, 8);
++        this.a = new NoiseGeneratorOctaves(this.h, 10);
++        this.b = new NoiseGeneratorOctaves(this.h, 16);
++    }
++
++    public void a(int i, int j, ChunkSnapshot chunksnapshot) {
++        byte b0 = 2;
++        int k = b0 + 1;
++        byte b1 = 33;
++        int l = b0 + 1;
++
++        this.m = this.a(this.m, i * b0, 0, j * b0, k, b1, l);
++
++        for (int i1 = 0; i1 < b0; ++i1) {
++            for (int j1 = 0; j1 < b0; ++j1) {
++                for (int k1 = 0; k1 < 32; ++k1) {
++                    double d0 = 0.25D;
++                    double d1 = this.m[((i1 + 0) * l + j1 + 0) * b1 + k1 + 0];
++                    double d2 = this.m[((i1 + 0) * l + j1 + 1) * b1 + k1 + 0];
++                    double d3 = this.m[((i1 + 1) * l + j1 + 0) * b1 + k1 + 0];
++                    double d4 = this.m[((i1 + 1) * l + j1 + 1) * b1 + k1 + 0];
++                    double d5 = (this.m[((i1 + 0) * l + j1 + 0) * b1 + k1 + 1] - d1) * d0;
++                    double d6 = (this.m[((i1 + 0) * l + j1 + 1) * b1 + k1 + 1] - d2) * d0;
++                    double d7 = (this.m[((i1 + 1) * l + j1 + 0) * b1 + k1 + 1] - d3) * d0;
++                    double d8 = (this.m[((i1 + 1) * l + j1 + 1) * b1 + k1 + 1] - d4) * d0;
++
++                    for (int l1 = 0; l1 < 4; ++l1) {
++                        double d9 = 0.125D;
++                        double d10 = d1;
++                        double d11 = d2;
++                        double d12 = (d3 - d1) * d9;
++                        double d13 = (d4 - d2) * d9;
++
++                        for (int i2 = 0; i2 < 8; ++i2) {
++                            double d14 = 0.125D;
++                            double d15 = d10;
++                            double d16 = (d11 - d10) * d14;
++
++                            for (int j2 = 0; j2 < 8; ++j2) {
++                                IBlockData iblockdata = null;
++
++                                if (d15 > 0.0D) {
++                                    iblockdata = Blocks.END_STONE.getBlockData();
++                                }
++
++                                int k2 = i2 + i1 * 8;
++                                int l2 = l1 + k1 * 4;
++                                int i3 = j2 + j1 * 8;
++
++                                chunksnapshot.a(k2, l2, i3, iblockdata);
++                                d15 += d16;
++                            }
++
++                            d10 += d12;
++                            d11 += d13;
++                        }
++
++                        d1 += d5;
++                        d2 += d6;
++                        d3 += d7;
++                        d4 += d8;
++                    }
++                }
++            }
++        }
++
++    }
++
++    public void a(ChunkSnapshot chunksnapshot) {
++        for (int i = 0; i < 16; ++i) {
++            for (int j = 0; j < 16; ++j) {
++                byte b0 = 1;
++                int k = -1;
++                IBlockData iblockdata = Blocks.END_STONE.getBlockData();
++                IBlockData iblockdata1 = Blocks.END_STONE.getBlockData();
++
++                for (int l = 127; l >= 0; --l) {
++                    IBlockData iblockdata2 = chunksnapshot.a(i, l, j);
++
++                    if (iblockdata2.getBlock().getMaterial() == Material.AIR) {
++                        k = -1;
++                    } else if (iblockdata2.getBlock() == Blocks.STONE) {
++                        if (k == -1) {
++                            if (b0 <= 0) {
++                                iblockdata = Blocks.AIR.getBlockData();
++                                iblockdata1 = Blocks.END_STONE.getBlockData();
++                            }
++
++                            k = b0;
++                            if (l >= 0) {
++                                chunksnapshot.a(i, l, j, iblockdata);
++                            } else {
++                                chunksnapshot.a(i, l, j, iblockdata1);
++                            }
++                        } else if (k > 0) {
++                            --k;
++                            chunksnapshot.a(i, l, j, iblockdata1);
++                        }
++                    }
++                }
++            }
++        }
++
++    }
++
++    public Chunk getOrCreateChunk(int i, int j) {
++        this.h.setSeed((long) i * 341873128712L + (long) j * 132897987541L);
++        ChunkSnapshot chunksnapshot = new ChunkSnapshot();
++
++        this.n = this.l.getWorldChunkManager().getBiomeBlock(this.n, i * 16, j * 16, 16, 16);
++        this.a(i, j, chunksnapshot);
++        this.a(chunksnapshot);
++        Chunk chunk = new Chunk(this.l, chunksnapshot, i, j);
++        byte[] abyte = chunk.getBiomeIndex();
++
++        for (int k = 0; k < abyte.length; ++k) {
++            abyte[k] = (byte) this.n[k].id;
++        }
++
++        chunk.initLighting();
++        return chunk;
++    }
++
++    private double[] a(double[] adouble, int i, int j, int k, int l, int i1, int j1) {
++        if (adouble == null) {
++            adouble = new double[l * i1 * j1];
++        }
++
++        double d0 = 684.412D;
++        double d1 = 684.412D;
++
++        this.f = this.a.a(this.f, i, k, l, j1, 1.121D, 1.121D, 0.5D);
++        this.g = this.b.a(this.g, i, k, l, j1, 200.0D, 200.0D, 0.5D);
++        d0 *= 2.0D;
++        this.c = this.k.a(this.c, i, j, k, l, i1, j1, d0 / 80.0D, d1 / 160.0D, d0 / 80.0D);
++        this.d = this.i.a(this.d, i, j, k, l, i1, j1, d0, d1, d0);
++        this.e = this.j.a(this.e, i, j, k, l, i1, j1, d0, d1, d0);
++        int k1 = 0;
++
++        for (int l1 = 0; l1 < l; ++l1) {
++            for (int i2 = 0; i2 < j1; ++i2) {
++                float f = (float) (l1 + i) / 1.0F;
++                float f1 = (float) (i2 + k) / 1.0F;
++                float f2 = 100.0F - MathHelper.c(f * f + f1 * f1) * 8.0F;
++
++                if (f2 > 80.0F) {
++                    f2 = 80.0F;
++                }
++
++                if (f2 < -100.0F) {
++                    f2 = -100.0F;
++                }
++
++                for (int j2 = 0; j2 < i1; ++j2) {
++                    double d2 = 0.0D;
++                    double d3 = this.d[k1] / 512.0D;
++                    double d4 = this.e[k1] / 512.0D;
++                    double d5 = (this.c[k1] / 10.0D + 1.0D) / 2.0D;
++
++                    if (d5 < 0.0D) {
++                        d2 = d3;
++                    } else if (d5 > 1.0D) {
++                        d2 = d4;
++                    } else {
++                        d2 = d3 + (d4 - d3) * d5;
++                    }
++
++                    d2 -= 8.0D;
++                    d2 += (double) f2;
++                    byte b0 = 2;
++                    double d6;
++
++                    if (j2 > i1 / 2 - b0) {
++                        d6 = (double) ((float) (j2 - (i1 / 2 - b0)) / 64.0F);
++                        d6 = MathHelper.a(d6, 0.0D, 1.0D);
++                        d2 = d2 * (1.0D - d6) + -3000.0D * d6;
++                    }
++
++                    b0 = 8;
++                    if (j2 < b0) {
++                        d6 = (double) ((float) (b0 - j2) / ((float) b0 - 1.0F));
++                        d2 = d2 * (1.0D - d6) + -30.0D * d6;
++                    }
++
++                    adouble[k1] = d2;
++                    ++k1;
++                }
++            }
++        }
++
++        return adouble;
++    }
++
++    public boolean isChunkLoaded(int i, int j) {
++        return true;
++    }
++
++    public void getChunkAt(IChunkProvider ichunkprovider, int i, int j) {
++        BlockFalling.instaFall = true;
++        BlockPosition blockposition = new BlockPosition(i * 16, 0, j * 16);
++
++        this.l.getBiome(blockposition.a(16, 0, 16)).a(this.l, this.l.random, blockposition);
++        BlockFalling.instaFall = false;
++    }
++
++    public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
++        return false;
++    }
++
++    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate) {
++        return true;
++    }
++
++    public void c() {}
++
++    public boolean unloadChunks() {
++        return false;
++    }
++
++    public boolean canSave() {
++        return true;
++    }
++
++    public String getName() {
++        return "RandomLevelSource";
++    }
++
++    public List<BiomeBase.BiomeMeta> getMobsFor(EnumCreatureType enumcreaturetype, BlockPosition blockposition) {
++        return this.l.getBiome(blockposition).getMobs(enumcreaturetype);
++    }
++
++    public BlockPosition findNearestMapFeature(World world, String s, BlockPosition blockposition) {
++        return null;
++    }
++
++    public int getLoadedChunks() {
++        return 0;
++    }
++
++    public void recreateStructures(Chunk chunk, int i, int j) {}
++
++    public Chunk getChunkAt(BlockPosition blockposition) {
++        return this.getOrCreateChunk(blockposition.getX() >> 4, blockposition.getZ() >> 4);
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/FileIOThread.java b/src/main/java/net/minecraft/server/FileIOThread.java
+new file mode 100644
+index 0000000..f7802ec
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/FileIOThread.java
+@@ -0,0 +1,75 @@
++package net.minecraft.server;
++
++import com.google.common.collect.Lists;
++import java.util.Collections;
++import java.util.List;
++
++public class FileIOThread implements Runnable {
++
++    private static final FileIOThread a = new FileIOThread();
++    private List<IAsyncChunkSaver> b = Collections.synchronizedList(new java.util.ArrayList<IAsyncChunkSaver>()); // Migot - fix compiler error
++    private volatile long c;
++    private volatile long d;
++    private volatile boolean e;
++
++    private FileIOThread() {
++        Thread thread = new Thread(this, "File IO Thread");
++
++        thread.setPriority(1);
++        thread.start();
++    }
++
++    public static FileIOThread a() {
++        return FileIOThread.a;
++    }
++
++    public void run() {
++        while (true) {
++            this.c();
++        }
++    }
++
++    private void c() {
++        for (int i = 0; i < this.b.size(); ++i) {
++            IAsyncChunkSaver iasyncchunksaver = (IAsyncChunkSaver) this.b.get(i);
++            boolean flag = iasyncchunksaver.c();
++
++            if (!flag) {
++                this.b.remove(i--);
++                ++this.d;
++            }
++
++            try {
++                Thread.sleep(this.e ? 0L : 10L);
++            } catch (InterruptedException interruptedexception) {
++                interruptedexception.printStackTrace();
++            }
++        }
++
++        if (this.b.isEmpty()) {
++            try {
++                Thread.sleep(25L);
++            } catch (InterruptedException interruptedexception1) {
++                interruptedexception1.printStackTrace();
++            }
++        }
++
++    }
++
++    public void a(IAsyncChunkSaver iasyncchunksaver) {
++        if (!this.b.contains(iasyncchunksaver)) {
++            ++this.c;
++            this.b.add(iasyncchunksaver);
++        }
++    }
++
++    public void b() throws InterruptedException {
++        this.e = true;
++
++        while (this.c != this.d) {
++            Thread.sleep(10L);
++        }
++
++        this.e = false;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/NBTTagCompound.java b/src/main/java/net/minecraft/server/NBTTagCompound.java
+new file mode 100644
+index 0000000..22d7c2a
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/NBTTagCompound.java
+@@ -0,0 +1,364 @@
++package net.minecraft.server;
++
++import com.google.common.collect.Maps;
++import java.io.DataInput;
++import java.io.DataOutput;
++import java.io.IOException;
++import java.util.Iterator;
++import java.util.Map;
++import java.util.Set;
++import java.util.Map.Entry;
++import java.util.concurrent.Callable;
++
++public class NBTTagCompound extends NBTBase {
++
++    private Map<String, NBTBase> map = Maps.newHashMap();
++
++    public NBTTagCompound() {}
++
++    void write(DataOutput dataoutput) throws IOException {
++        Iterator iterator = this.map.keySet().iterator();
++
++        while (iterator.hasNext()) {
++            String s = (String) iterator.next();
++            NBTBase nbtbase = (NBTBase) this.map.get(s);
++
++            a(s, nbtbase, dataoutput);
++        }
++
++        dataoutput.writeByte(0);
++    }
++
++    void load(DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) throws IOException {
++        nbtreadlimiter.a(384L);
++        if (i > 512) {
++            throw new RuntimeException("Tried to read NBT tag with too high complexity, depth > 512");
++        } else {
++            this.map.clear();
++
++            byte b0;
++
++            while ((b0 = a(datainput, nbtreadlimiter)) != 0) {
++                String s = b(datainput, nbtreadlimiter);
++
++                nbtreadlimiter.a((long) (224 + 16 * s.length()));
++                NBTBase nbtbase = a(b0, s, datainput, i + 1, nbtreadlimiter);
++
++                if (this.map.put(s, nbtbase) != null) {
++                    nbtreadlimiter.a(288L);
++                }
++            }
++
++        }
++    }
++
++    public Set<String> c() {
++        return this.map.keySet();
++    }
++
++    public byte getTypeId() {
++        return (byte) 10;
++    }
++
++    public void set(String s, NBTBase nbtbase) {
++        this.map.put(s, nbtbase);
++    }
++
++    public void setByte(String s, byte b0) {
++        this.map.put(s, new NBTTagByte(b0));
++    }
++
++    public void setShort(String s, short short0) {
++        this.map.put(s, new NBTTagShort(short0));
++    }
++
++    public void setInt(String s, int i) {
++        this.map.put(s, new NBTTagInt(i));
++    }
++
++    public void setLong(String s, long i) {
++        this.map.put(s, new NBTTagLong(i));
++    }
++
++    public void setFloat(String s, float f) {
++        this.map.put(s, new NBTTagFloat(f));
++    }
++
++    public void setDouble(String s, double d0) {
++        this.map.put(s, new NBTTagDouble(d0));
++    }
++
++    public void setString(String s, String s1) {
++        this.map.put(s, new NBTTagString(s1));
++    }
++
++    public void setByteArray(String s, byte[] abyte) {
++        this.map.put(s, new NBTTagByteArray(abyte));
++    }
++
++    public void setIntArray(String s, int[] aint) {
++        this.map.put(s, new NBTTagIntArray(aint));
++    }
++
++    public void setBoolean(String s, boolean flag) {
++        this.setByte(s, (byte) (flag ? 1 : 0));
++    }
++
++    public NBTBase get(String s) {
++        return (NBTBase) this.map.get(s);
++    }
++
++    public byte b(String s) {
++        NBTBase nbtbase = (NBTBase) this.map.get(s);
++
++        return nbtbase != null ? nbtbase.getTypeId() : 0;
++    }
++
++    public boolean hasKey(String s) {
++        return this.map.containsKey(s);
++    }
++
++    public boolean hasKeyOfType(String s, int i) {
++        byte b0 = this.b(s);
++
++        if (b0 == i) {
++            return true;
++        } else if (i != 99) {
++            if (b0 > 0) {
++                ;
++            }
++
++            return false;
++        } else {
++            return b0 == 1 || b0 == 2 || b0 == 3 || b0 == 4 || b0 == 5 || b0 == 6;
++        }
++    }
++
++    public byte getByte(String s) {
++        try {
++            return !this.hasKeyOfType(s, 99) ? 0 : ((NBTBase.NBTNumber) this.map.get(s)).f();
++        } catch (ClassCastException classcastexception) {
++            return (byte) 0;
++        }
++    }
++
++    public short getShort(String s) {
++        try {
++            return !this.hasKeyOfType(s, 99) ? 0 : ((NBTBase.NBTNumber) this.map.get(s)).e();
++        } catch (ClassCastException classcastexception) {
++            return (short) 0;
++        }
++    }
++
++    public int getInt(String s) {
++        try {
++            return !this.hasKeyOfType(s, 99) ? 0 : ((NBTBase.NBTNumber) this.map.get(s)).d();
++        } catch (ClassCastException classcastexception) {
++            return 0;
++        }
++    }
++
++    public long getLong(String s) {
++        try {
++            return !this.hasKeyOfType(s, 99) ? 0L : ((NBTBase.NBTNumber) this.map.get(s)).c();
++        } catch (ClassCastException classcastexception) {
++            return 0L;
++        }
++    }
++
++    public float getFloat(String s) {
++        try {
++            return !this.hasKeyOfType(s, 99) ? 0.0F : ((NBTBase.NBTNumber) this.map.get(s)).h();
++        } catch (ClassCastException classcastexception) {
++            return 0.0F;
++        }
++    }
++
++    public double getDouble(String s) {
++        try {
++            return !this.hasKeyOfType(s, 99) ? 0.0D : ((NBTBase.NBTNumber) this.map.get(s)).g();
++        } catch (ClassCastException classcastexception) {
++            return 0.0D;
++        }
++    }
++
++    public String getString(String s) {
++        try {
++            return !this.hasKeyOfType(s, 8) ? "" : ((NBTBase) this.map.get(s)).a_();
++        } catch (ClassCastException classcastexception) {
++            return "";
++        }
++    }
++
++    public byte[] getByteArray(String s) {
++        try {
++            return !this.hasKeyOfType(s, 7) ? new byte[0] : ((NBTTagByteArray) this.map.get(s)).c();
++        } catch (ClassCastException classcastexception) {
++            throw new ReportedException(this.a(s, 7, classcastexception));
++        }
++    }
++
++    public int[] getIntArray(String s) {
++        try {
++            return !this.hasKeyOfType(s, 11) ? new int[0] : ((NBTTagIntArray) this.map.get(s)).c();
++        } catch (ClassCastException classcastexception) {
++            throw new ReportedException(this.a(s, 11, classcastexception));
++        }
++    }
++
++    public NBTTagCompound getCompound(String s) {
++        try {
++            return !this.hasKeyOfType(s, 10) ? new NBTTagCompound() : (NBTTagCompound) this.map.get(s);
++        } catch (ClassCastException classcastexception) {
++            throw new ReportedException(this.a(s, 10, classcastexception));
++        }
++    }
++
++    public NBTTagList getList(String s, int i) {
++        try {
++            if (this.b(s) != 9) {
++                return new NBTTagList();
++            } else {
++                NBTTagList nbttaglist = (NBTTagList) this.map.get(s);
++
++                return nbttaglist.size() > 0 && nbttaglist.f() != i ? new NBTTagList() : nbttaglist;
++            }
++        } catch (ClassCastException classcastexception) {
++            throw new ReportedException(this.a(s, 9, classcastexception));
++        }
++    }
++
++    public boolean getBoolean(String s) {
++        return this.getByte(s) != 0;
++    }
++
++    public void remove(String s) {
++        this.map.remove(s);
++    }
++
++    public String toString() {
++        StringBuilder stringbuilder = new StringBuilder("{");
++
++        Entry entry;
++
++        for (Iterator iterator = this.map.entrySet().iterator(); iterator.hasNext(); stringbuilder.append((String) entry.getKey()).append(':').append(entry.getValue())) {
++            entry = (Entry) iterator.next();
++            if (stringbuilder.length() != 1) {
++                stringbuilder.append(',');
++            }
++        }
++
++        return stringbuilder.append('}').toString();
++    }
++
++    public boolean isEmpty() {
++        return this.map.isEmpty();
++    }
++
++    private CrashReport a(final String s, final int i, ClassCastException classcastexception) {
++        CrashReport crashreport = CrashReport.a(classcastexception, "Reading NBT data");
++        CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Corrupt NBT tag", 1);
++
++        crashreportsystemdetails.a("Tag type found", new Callable() {
++            public String a() throws Exception {
++                return NBTBase.a[((NBTBase) NBTTagCompound.this.map.get(s)).getTypeId()];
++            }
++
++            public Object call() throws Exception {
++                return this.a();
++            }
++        });
++        crashreportsystemdetails.a("Tag type expected", new Callable() {
++            public String a() throws Exception {
++                return NBTBase.a[i];
++            }
++
++            public Object call() throws Exception {
++                return this.a();
++            }
++        });
++        crashreportsystemdetails.a("Tag name", (Object) s);
++        return crashreport;
++    }
++
++    public NBTBase clone() {
++        NBTTagCompound nbttagcompound = new NBTTagCompound();
++        Iterator iterator = this.map.keySet().iterator();
++
++        while (iterator.hasNext()) {
++            String s = (String) iterator.next();
++
++            nbttagcompound.set(s, ((NBTBase) this.map.get(s)).clone());
++        }
++
++        return nbttagcompound;
++    }
++
++    public boolean equals(Object object) {
++        if (super.equals(object)) {
++            NBTTagCompound nbttagcompound = (NBTTagCompound) object;
++
++            return this.map.entrySet().equals(nbttagcompound.map.entrySet());
++        } else {
++            return false;
++        }
++    }
++
++    public int hashCode() {
++        return super.hashCode() ^ this.map.hashCode();
++    }
++
++    private static void a(String s, NBTBase nbtbase, DataOutput dataoutput) throws IOException {
++        dataoutput.writeByte(nbtbase.getTypeId());
++        if (nbtbase.getTypeId() != 0) {
++            dataoutput.writeUTF(s);
++            nbtbase.write(dataoutput);
++        }
++    }
++
++    private static byte a(DataInput datainput, NBTReadLimiter nbtreadlimiter) throws IOException {
++        return datainput.readByte();
++    }
++
++    private static String b(DataInput datainput, NBTReadLimiter nbtreadlimiter) throws IOException {
++        return datainput.readUTF();
++    }
++
++    static NBTBase a(byte b0, String s, DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) throws IOException {
++        NBTBase nbtbase = NBTBase.createTag(b0);
++
++        try {
++            nbtbase.load(datainput, i, nbtreadlimiter);
++            return nbtbase;
++        } catch (IOException ioexception) {
++            CrashReport crashreport = CrashReport.a(ioexception, "Loading NBT data");
++            CrashReportSystemDetails crashreportsystemdetails = crashreport.a("NBT Tag");
++
++            crashreportsystemdetails.a("Tag name", (Object) s);
++            crashreportsystemdetails.a("Tag type", (Object) Byte.valueOf(b0));
++            throw new ReportedException(crashreport);
++        }
++    }
++
++    public void a(NBTTagCompound nbttagcompound) {
++        Iterator iterator = nbttagcompound.map.keySet().iterator();
++
++        while (iterator.hasNext()) {
++            String s = (String) iterator.next();
++            NBTBase nbtbase = (NBTBase) nbttagcompound.map.get(s);
++
++            if (nbtbase.getTypeId() == 10) {
++                if (this.hasKeyOfType(s, 10)) {
++                    NBTTagCompound nbttagcompound1 = this.getCompound(s);
++
++                    nbttagcompound1.a((NBTTagCompound) nbtbase);
++                } else {
++                    this.set(s, nbtbase.clone());
++                }
++            } else {
++                this.set(s, nbtbase.clone());
++            }
++        }
++
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/NBTTagString.java b/src/main/java/net/minecraft/server/NBTTagString.java
+new file mode 100644
+index 0000000..d1967dc
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/NBTTagString.java
+@@ -0,0 +1,65 @@
++package net.minecraft.server;
++
++import java.io.DataInput;
++import java.io.DataOutput;
++import java.io.IOException;
++
++public class NBTTagString extends NBTBase {
++
++    private String data;
++
++    public NBTTagString() {
++        this.data = "";
++    }
++
++    public NBTTagString(String s) {
++        this.data = s;
++        if (s == null) {
++            throw new IllegalArgumentException("Empty string not allowed");
++        }
++    }
++
++    void write(DataOutput dataoutput) throws IOException {
++        dataoutput.writeUTF(this.data);
++    }
++
++    void load(DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) throws IOException {
++        nbtreadlimiter.a(288L);
++        this.data = datainput.readUTF();
++        nbtreadlimiter.a((long) (16 * this.data.length()));
++    }
++
++    public byte getTypeId() {
++        return (byte) 8;
++    }
++
++    public String toString() {
++        return "\"" + this.data.replace("\"", "\\\"") + "\"";
++    }
++
++    public NBTBase clone() {
++        return new NBTTagString(this.data);
++    }
++
++    public boolean isEmpty() {
++        return this.data.isEmpty();
++    }
++
++    public boolean equals(Object object) {
++        if (!super.equals(object)) {
++            return false;
++        } else {
++            NBTTagString nbttagstring = (NBTTagString) object;
++
++            return this.data == null && nbttagstring.data == null || this.data != null && this.data.equals(nbttagstring.data);
++        }
++    }
++
++    public int hashCode() {
++        return super.hashCode() ^ this.data.hashCode();
++    }
++
++    public String a_() {
++        return this.data;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/Navigation.java b/src/main/java/net/minecraft/server/Navigation.java
+new file mode 100644
+index 0000000..ece47d6
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/Navigation.java
+@@ -0,0 +1,219 @@
++package net.minecraft.server;
++
++import java.util.Iterator;
++
++public class Navigation extends NavigationAbstract {
++
++    protected PathfinderNormal a;
++    private boolean f;
++
++    public Navigation(EntityInsentient entityinsentient, World world) {
++        super(entityinsentient, world);
++    }
++
++    protected Pathfinder a() {
++        this.a = new PathfinderNormal();
++        this.a.a(true);
++        return new Pathfinder(this.a);
++    }
++
++    protected boolean b() {
++        return this.b.onGround || this.h() && this.o() || this.b.au() && this.b instanceof EntityZombie && this.b.vehicle instanceof EntityChicken;
++    }
++
++    protected Vec3D c() {
++        return new Vec3D(this.b.locX, (double) this.p(), this.b.locZ);
++    }
++
++    private int p() {
++        if (this.b.V() && this.h()) {
++            int i = (int) this.b.getBoundingBox().b;
++            Block block = this.c.getType(new BlockPosition(MathHelper.floor(this.b.locX), i, MathHelper.floor(this.b.locZ))).getBlock();
++            int j = 0;
++
++            do {
++                if (block != Blocks.FLOWING_WATER && block != Blocks.WATER) {
++                    return i;
++                }
++
++                ++i;
++                block = this.c.getType(new BlockPosition(MathHelper.floor(this.b.locX), i, MathHelper.floor(this.b.locZ))).getBlock();
++                ++j;
++            } while (j <= 16);
++
++            return (int) this.b.getBoundingBox().b;
++        } else {
++            return (int) (this.b.getBoundingBox().b + 0.5D);
++        }
++    }
++
++    protected void d() {
++        super.d();
++        if (this.f) {
++            if (this.c.i(new BlockPosition(MathHelper.floor(this.b.locX), (int) (this.b.getBoundingBox().b + 0.5D), MathHelper.floor(this.b.locZ)))) {
++                return;
++            }
++
++            for (int i = 0; i < this.d.d(); ++i) {
++                PathPoint pathpoint = this.d.a(i);
++
++                if (this.c.i(new BlockPosition(pathpoint.a, pathpoint.b, pathpoint.c))) {
++                    this.d.b(i - 1);
++                    return;
++                }
++            }
++        }
++
++    }
++
++    protected boolean a(Vec3D vec3d, Vec3D vec3d1, int i, int j, int k) {
++        int l = MathHelper.floor(vec3d.a);
++        int i1 = MathHelper.floor(vec3d.c);
++        double d0 = vec3d1.a - vec3d.a;
++        double d1 = vec3d1.c - vec3d.c;
++        double d2 = d0 * d0 + d1 * d1;
++
++        if (d2 < 1.0E-8D) {
++            return false;
++        } else {
++            double d3 = 1.0D / Math.sqrt(d2);
++
++            d0 *= d3;
++            d1 *= d3;
++            i += 2;
++            k += 2;
++            if (!this.a(l, (int) vec3d.b, i1, i, j, k, vec3d, d0, d1)) {
++                return false;
++            } else {
++                i -= 2;
++                k -= 2;
++                double d4 = 1.0D / Math.abs(d0);
++                double d5 = 1.0D / Math.abs(d1);
++                double d6 = (double) (l * 1) - vec3d.a;
++                double d7 = (double) (i1 * 1) - vec3d.c;
++
++                if (d0 >= 0.0D) {
++                    ++d6;
++                }
++
++                if (d1 >= 0.0D) {
++                    ++d7;
++                }
++
++                d6 /= d0;
++                d7 /= d1;
++                int j1 = d0 < 0.0D ? -1 : 1;
++                int k1 = d1 < 0.0D ? -1 : 1;
++                int l1 = MathHelper.floor(vec3d1.a);
++                int i2 = MathHelper.floor(vec3d1.c);
++                int j2 = l1 - l;
++                int k2 = i2 - i1;
++
++                do {
++                    if (j2 * j1 <= 0 && k2 * k1 <= 0) {
++                        return true;
++                    }
++
++                    if (d6 < d7) {
++                        d6 += d4;
++                        l += j1;
++                        j2 = l1 - l;
++                    } else {
++                        d7 += d5;
++                        i1 += k1;
++                        k2 = i2 - i1;
++                    }
++                } while (this.a(l, (int) vec3d.b, i1, i, j, k, vec3d, d0, d1));
++
++                return false;
++            }
++        }
++    }
++
++    private boolean a(int i, int j, int k, int l, int i1, int j1, Vec3D vec3d, double d0, double d1) {
++        int k1 = i - l / 2;
++        int l1 = k - j1 / 2;
++
++        if (!this.b(k1, j, l1, l, i1, j1, vec3d, d0, d1)) {
++            return false;
++        } else {
++            for (int i2 = k1; i2 < k1 + l; ++i2) {
++                for (int j2 = l1; j2 < l1 + j1; ++j2) {
++                    double d2 = (double) i2 + 0.5D - vec3d.a;
++                    double d3 = (double) j2 + 0.5D - vec3d.c;
++
++                    if (d2 * d0 + d3 * d1 >= 0.0D) {
++                        Block block = this.c.getType(new BlockPosition(i2, j - 1, j2)).getBlock();
++                        Material material = block.getMaterial();
++
++                        if (material == Material.AIR) {
++                            return false;
++                        }
++
++                        if (material == Material.WATER && !this.b.V()) {
++                            return false;
++                        }
++
++                        if (material == Material.LAVA) {
++                            return false;
++                        }
++                    }
++                }
++            }
++
++            return true;
++        }
++    }
++
++    private boolean b(int i, int j, int k, int l, int i1, int j1, Vec3D vec3d, double d0, double d1) {
++        Iterator iterator = BlockPosition.a(new BlockPosition(i, j, k), new BlockPosition(i + l - 1, j + i1 - 1, k + j1 - 1)).iterator();
++
++        while (iterator.hasNext()) {
++            BlockPosition blockposition = (BlockPosition) iterator.next();
++            double d2 = (double) blockposition.getX() + 0.5D - vec3d.a;
++            double d3 = (double) blockposition.getZ() + 0.5D - vec3d.c;
++
++            if (d2 * d0 + d3 * d1 >= 0.0D) {
++                Block block = this.c.getType(blockposition).getBlock();
++
++                if (!block.b(this.c, blockposition)) {
++                    return false;
++                }
++            }
++        }
++
++        return true;
++    }
++
++    public void a(boolean flag) {
++        this.a.c(flag);
++    }
++
++    public boolean e() {
++        return this.a.e();
++    }
++
++    public void b(boolean flag) {
++        this.a.b(flag);
++    }
++
++    public void c(boolean flag) {
++        this.a.a(flag);
++    }
++
++    public boolean g() {
++        return this.a.b();
++    }
++
++    public void d(boolean flag) {
++        this.a.d(flag);
++    }
++
++    public boolean h() {
++        return this.a.d();
++    }
++
++    public void e(boolean flag) {
++        this.f = flag;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/NavigationAbstract.java b/src/main/java/net/minecraft/server/NavigationAbstract.java
+new file mode 100644
+index 0000000..d5eaa24
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/NavigationAbstract.java
+@@ -0,0 +1,222 @@
++package net.minecraft.server;
++
++import java.util.Iterator;
++import java.util.List;
++
++public abstract class NavigationAbstract {
++
++    protected EntityInsentient b;
++    protected World c;
++    protected PathEntity d;
++    protected double e;
++    private final AttributeInstance a;
++    private int f;
++    private int g;
++    private Vec3D h = new Vec3D(0.0D, 0.0D, 0.0D);
++    private float i = 1.0F;
++    private final Pathfinder j;
++
++    public NavigationAbstract(EntityInsentient entityinsentient, World world) {
++        this.b = entityinsentient;
++        this.c = world;
++        this.a = entityinsentient.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
++        this.j = this.a();
++    }
++
++    protected abstract Pathfinder a();
++
++    public void a(double d0) {
++        this.e = d0;
++    }
++
++    public float i() {
++        return (float) this.a.getValue();
++    }
++
++    public final PathEntity a(double d0, double d1, double d2) {
++        return this.a(new BlockPosition(MathHelper.floor(d0), (int) d1, MathHelper.floor(d2)));
++    }
++
++    public PathEntity a(BlockPosition blockposition) {
++        if (!this.b()) {
++            return null;
++        } else {
++            float f = this.i();
++
++            this.c.methodProfiler.a("pathfind");
++            BlockPosition blockposition1 = new BlockPosition(this.b);
++            int i = (int) (f + 8.0F);
++            ChunkCache chunkcache = new ChunkCache(this.c, blockposition1.a(-i, -i, -i), blockposition1.a(i, i, i), 0);
++            PathEntity pathentity = this.j.a((IBlockAccess) chunkcache, (Entity) this.b, blockposition, f);
++
++            this.c.methodProfiler.b();
++            return pathentity;
++        }
++    }
++
++    public boolean a(double d0, double d1, double d2, double d3) {
++        PathEntity pathentity = this.a((double) MathHelper.floor(d0), (double) ((int) d1), (double) MathHelper.floor(d2));
++
++        return this.a(pathentity, d3);
++    }
++
++    public void a(float f) {
++        this.i = f;
++    }
++
++    public PathEntity a(Entity entity) {
++        if (!this.b()) {
++            return null;
++        } else {
++            float f = this.i();
++
++            this.c.methodProfiler.a("pathfind");
++            BlockPosition blockposition = (new BlockPosition(this.b)).up();
++            int i = (int) (f + 16.0F);
++            ChunkCache chunkcache = new ChunkCache(this.c, blockposition.a(-i, -i, -i), blockposition.a(i, i, i), 0);
++            PathEntity pathentity = this.j.a((IBlockAccess) chunkcache, (Entity) this.b, entity, f);
++
++            this.c.methodProfiler.b();
++            return pathentity;
++        }
++    }
++
++    public boolean a(Entity entity, double d0) {
++        PathEntity pathentity = this.a(entity);
++
++        return pathentity != null ? this.a(pathentity, d0) : false;
++    }
++
++    public boolean a(PathEntity pathentity, double d0) {
++        if (pathentity == null) {
++            this.d = null;
++            return false;
++        } else {
++            if (!pathentity.a(this.d)) {
++                this.d = pathentity;
++            }
++
++            this.d();
++            if (this.d.d() == 0) {
++                return false;
++            } else {
++                this.e = d0;
++                Vec3D vec3d = this.c();
++
++                this.g = this.f;
++                this.h = vec3d;
++                return true;
++            }
++        }
++    }
++
++    public PathEntity j() {
++        return this.d;
++    }
++
++    public void k() {
++        ++this.f;
++        if (!this.m()) {
++            Vec3D vec3d;
++
++            if (this.b()) {
++                this.l();
++            } else if (this.d != null && this.d.e() < this.d.d()) {
++                vec3d = this.c();
++                Vec3D vec3d1 = this.d.a(this.b, this.d.e());
++
++                if (vec3d.b > vec3d1.b && !this.b.onGround && MathHelper.floor(vec3d.a) == MathHelper.floor(vec3d1.a) && MathHelper.floor(vec3d.c) == MathHelper.floor(vec3d1.c)) {
++                    this.d.c(this.d.e() + 1);
++                }
++            }
++
++            if (!this.m()) {
++                vec3d = this.d.a((Entity) this.b);
++                if (vec3d != null) {
++                    AxisAlignedBB axisalignedbb = (new AxisAlignedBB(vec3d.a, vec3d.b, vec3d.c, vec3d.a, vec3d.b, vec3d.c)).grow(0.5D, 0.5D, 0.5D);
++                    List list = this.c.getCubes(this.b, axisalignedbb.a(0.0D, -1.0D, 0.0D));
++                    double d0 = -1.0D;
++
++                    axisalignedbb = axisalignedbb.c(0.0D, 1.0D, 0.0D);
++
++                    AxisAlignedBB axisalignedbb1;
++
++                    for (Iterator iterator = list.iterator(); iterator.hasNext(); d0 = axisalignedbb1.b(axisalignedbb, d0)) {
++                        axisalignedbb1 = (AxisAlignedBB) iterator.next();
++                    }
++
++                    this.b.getControllerMove().a(vec3d.a, vec3d.b + d0, vec3d.c, this.e);
++                }
++            }
++        }
++    }
++
++    protected void l() {
++        Vec3D vec3d = this.c();
++        int i = this.d.d();
++
++        for (int j = this.d.e(); j < this.d.d(); ++j) {
++            if (this.d.a(j).b != (int) vec3d.b) {
++                i = j;
++                break;
++            }
++        }
++
++        float f = this.b.width * this.b.width * this.i;
++
++        int k;
++
++        for (k = this.d.e(); k < i; ++k) {
++            Vec3D vec3d1 = this.d.a(this.b, k);
++
++            if (vec3d.distanceSquared(vec3d1) < (double) f) {
++                this.d.c(k + 1);
++            }
++        }
++
++        k = MathHelper.f(this.b.width);
++        int l = (int) this.b.length + 1;
++        int i1 = k;
++
++        for (int j1 = i - 1; j1 >= this.d.e(); --j1) {
++            if (this.a(vec3d, this.d.a(this.b, j1), k, l, i1)) {
++                this.d.c(j1);
++                break;
++            }
++        }
++
++        this.a(vec3d);
++    }
++
++    protected void a(Vec3D vec3d) {
++        if (this.f - this.g > 100) {
++            if (vec3d.distanceSquared(this.h) < 2.25D) {
++                this.n();
++            }
++
++            this.g = this.f;
++            this.h = vec3d;
++        }
++
++    }
++
++    public boolean m() {
++        return this.d == null || this.d.b();
++    }
++
++    public void n() {
++        this.d = null;
++    }
++
++    protected abstract Vec3D c();
++
++    protected abstract boolean b();
++
++    protected boolean o() {
++        return this.b.V() || this.b.ab();
++    }
++
++    protected void d() {}
++
++    protected abstract boolean a(Vec3D vec3d, Vec3D vec3d1, int i, int j, int k);
++}
+diff --git a/src/main/java/net/minecraft/server/NavigationGuardian.java b/src/main/java/net/minecraft/server/NavigationGuardian.java
+new file mode 100644
+index 0000000..b7e8867
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/NavigationGuardian.java
+@@ -0,0 +1,51 @@
++package net.minecraft.server;
++
++public class NavigationGuardian extends NavigationAbstract {
++
++    public NavigationGuardian(EntityInsentient entityinsentient, World world) {
++        super(entityinsentient, world);
++    }
++
++    protected Pathfinder a() {
++        return new Pathfinder(new PathfinderWater());
++    }
++
++    protected boolean b() {
++        return this.o();
++    }
++
++    protected Vec3D c() {
++        return new Vec3D(this.b.locX, this.b.locY + (double) this.b.length * 0.5D, this.b.locZ);
++    }
++
++    protected void l() {
++        Vec3D vec3d = this.c();
++        float f = this.b.width * this.b.width;
++        byte b0 = 6;
++
++        if (vec3d.distanceSquared(this.d.a(this.b, this.d.e())) < (double) f) {
++            this.d.a();
++        }
++
++        for (int i = Math.min(this.d.e() + b0, this.d.d() - 1); i > this.d.e(); --i) {
++            Vec3D vec3d1 = this.d.a(this.b, i);
++
++            if (vec3d1.distanceSquared(vec3d) <= 36.0D && this.a(vec3d, vec3d1, 0, 0, 0)) {
++                this.d.c(i);
++                break;
++            }
++        }
++
++        this.a(vec3d);
++    }
++
++    protected void d() {
++        super.d();
++    }
++
++    protected boolean a(Vec3D vec3d, Vec3D vec3d1, int i, int j, int k) {
++        MovingObjectPosition movingobjectposition = this.c.rayTrace(vec3d, new Vec3D(vec3d1.a, vec3d1.b + (double) this.b.length * 0.5D, vec3d1.c), false, true, false);
++
++        return movingobjectposition == null || movingobjectposition.type == MovingObjectPosition.EnumMovingObjectType.MISS;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/NavigationSpider.java b/src/main/java/net/minecraft/server/NavigationSpider.java
+new file mode 100644
+index 0000000..c061f58
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/NavigationSpider.java
+@@ -0,0 +1,49 @@
++package net.minecraft.server;
++
++public class NavigationSpider extends Navigation {
++
++    private BlockPosition f;
++
++    public NavigationSpider(EntityInsentient entityinsentient, World world) {
++        super(entityinsentient, world);
++    }
++
++    public PathEntity a(BlockPosition blockposition) {
++        this.f = blockposition;
++        return super.a(blockposition);
++    }
++
++    public PathEntity a(Entity entity) {
++        this.f = new BlockPosition(entity);
++        return super.a(entity);
++    }
++
++    public boolean a(Entity entity, double d0) {
++        PathEntity pathentity = this.a(entity);
++
++        if (pathentity != null) {
++            return this.a(pathentity, d0);
++        } else {
++            this.f = new BlockPosition(entity);
++            this.e = d0;
++            return true;
++        }
++    }
++
++    public void k() {
++        if (!this.m()) {
++            super.k();
++        } else {
++            if (this.f != null) {
++                double d0 = (double) (this.b.width * this.b.width);
++
++                if (this.b.c(this.f) >= d0 && (this.b.locY <= (double) this.f.getY() || this.b.c(new BlockPosition(this.f.getX(), MathHelper.floor(this.b.locY), this.f.getZ())) >= d0)) {
++                    this.b.getControllerMove().a((double) this.f.getX(), (double) this.f.getY(), (double) this.f.getZ(), this.e);
++                } else {
++                    this.f = null;
++                }
++            }
++
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PacketPlayInSettings.java b/src/main/java/net/minecraft/server/PacketPlayInSettings.java
+new file mode 100644
+index 0000000..8b79cd0
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PacketPlayInSettings.java
+@@ -0,0 +1,56 @@
++package net.minecraft.server;
++
++import java.io.IOException;
++
++public class PacketPlayInSettings implements Packet<PacketListenerPlayIn> {
++
++    private String a;
++    private int b;
++    private EntityHuman.EnumChatVisibility c;
++    private boolean d;
++    private int e;
++
++    public PacketPlayInSettings() {}
++
++    public void a(PacketDataSerializer packetdataserializer) throws IOException {
++        this.a = packetdataserializer.c(7);
++        this.b = packetdataserializer.readByte();
++        this.c = EntityHuman.EnumChatVisibility.a(packetdataserializer.readByte());
++        this.d = packetdataserializer.readBoolean();
++        this.e = packetdataserializer.readUnsignedByte();
++    }
++
++    public void b(PacketDataSerializer packetdataserializer) throws IOException {
++        packetdataserializer.a(this.a);
++        packetdataserializer.writeByte(this.b);
++        packetdataserializer.writeByte(this.c.a());
++        packetdataserializer.writeBoolean(this.d);
++        packetdataserializer.writeByte(this.e);
++    }
++
++    public void a(PacketListenerPlayIn packetlistenerplayin) {
++        packetlistenerplayin.a(this);
++    }
++
++    public String a() {
++        return this.a;
++    }
++
++    public EntityHuman.EnumChatVisibility c() {
++        return this.c;
++    }
++
++    public boolean d() {
++        return this.d;
++    }
++
++    public int e() {
++        return this.e;
++    }
++
++    /* Migot - fix compiler error
++    public void a(PacketListener packetlistener) {
++        this.a((PacketListenerPlayIn) packetlistener);
++    }
++    */
++}
+diff --git a/src/main/java/net/minecraft/server/Pathfinder.java b/src/main/java/net/minecraft/server/Pathfinder.java
+new file mode 100644
+index 0000000..450df83
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/Pathfinder.java
+@@ -0,0 +1,100 @@
++package net.minecraft.server;
++
++public class Pathfinder {
++
++    private Path a = new Path();
++    private PathPoint[] b = new PathPoint[32];
++    private PathfinderAbstract c;
++
++    public Pathfinder(PathfinderAbstract pathfinderabstract) {
++        this.c = pathfinderabstract;
++    }
++
++    public PathEntity a(IBlockAccess iblockaccess, Entity entity, Entity entity1, float f) {
++        return this.a(iblockaccess, entity, entity1.locX, entity1.getBoundingBox().b, entity1.locZ, f);
++    }
++
++    public PathEntity a(IBlockAccess iblockaccess, Entity entity, BlockPosition blockposition, float f) {
++        return this.a(iblockaccess, entity, (double) ((float) blockposition.getX() + 0.5F), (double) ((float) blockposition.getY() + 0.5F), (double) ((float) blockposition.getZ() + 0.5F), f);
++    }
++
++    private PathEntity a(IBlockAccess iblockaccess, Entity entity, double d0, double d1, double d2, float f) {
++        this.a.a();
++        this.c.a(iblockaccess, entity);
++        PathPoint pathpoint = this.c.a(entity);
++        PathPoint pathpoint1 = this.c.a(entity, d0, d1, d2);
++        PathEntity pathentity = this.a(entity, pathpoint, pathpoint1, f);
++
++        this.c.a();
++        return pathentity;
++    }
++
++    private PathEntity a(Entity entity, PathPoint pathpoint, PathPoint pathpoint1, float f) {
++        pathpoint.e = 0.0F;
++        pathpoint.f = pathpoint.b(pathpoint1);
++        pathpoint.g = pathpoint.f;
++        this.a.a();
++        this.a.a(pathpoint);
++        PathPoint pathpoint2 = pathpoint;
++
++        while (!this.a.e()) {
++            PathPoint pathpoint3 = this.a.c();
++
++            if (pathpoint3.equals(pathpoint1)) {
++                return this.a(pathpoint, pathpoint1);
++            }
++
++            if (pathpoint3.b(pathpoint1) < pathpoint2.b(pathpoint1)) {
++                pathpoint2 = pathpoint3;
++            }
++
++            pathpoint3.i = true;
++            int i = this.c.a(this.b, entity, pathpoint3, pathpoint1, f);
++
++            for (int j = 0; j < i; ++j) {
++                PathPoint pathpoint4 = this.b[j];
++                float f1 = pathpoint3.e + pathpoint3.b(pathpoint4);
++
++                if (f1 < f * 2.0F && (!pathpoint4.a() || f1 < pathpoint4.e)) {
++                    pathpoint4.h = pathpoint3;
++                    pathpoint4.e = f1;
++                    pathpoint4.f = pathpoint4.b(pathpoint1);
++                    if (pathpoint4.a()) {
++                        this.a.a(pathpoint4, pathpoint4.e + pathpoint4.f);
++                    } else {
++                        pathpoint4.g = pathpoint4.e + pathpoint4.f;
++                        this.a.a(pathpoint4);
++                    }
++                }
++            }
++        }
++
++        if (pathpoint2 == pathpoint) {
++            return null;
++        } else {
++            return this.a(pathpoint, pathpoint2);
++        }
++    }
++
++    private PathEntity a(PathPoint pathpoint, PathPoint pathpoint1) {
++        int i = 1;
++
++        PathPoint pathpoint2;
++
++        for (pathpoint2 = pathpoint1; pathpoint2.h != null; pathpoint2 = pathpoint2.h) {
++            ++i;
++        }
++
++        PathPoint[] apathpoint = new PathPoint[i];
++
++        pathpoint2 = pathpoint1;
++        --i;
++
++        for (apathpoint[i] = pathpoint1; pathpoint2.h != null; apathpoint[i] = pathpoint2) {
++            pathpoint2 = pathpoint2.h;
++            --i;
++        }
++
++        return new PathEntity(apathpoint);
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderAbstract.java b/src/main/java/net/minecraft/server/PathfinderAbstract.java
+new file mode 100644
+index 0000000..04a80d6
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderAbstract.java
+@@ -0,0 +1,40 @@
++package net.minecraft.server;
++
++public abstract class PathfinderAbstract {
++
++    protected IBlockAccess a;
++    protected IntHashMap<PathPoint> b = new IntHashMap();
++    protected int c;
++    protected int d;
++    protected int e;
++
++    public PathfinderAbstract() {}
++
++    public void a(IBlockAccess iblockaccess, Entity entity) {
++        this.a = iblockaccess;
++        this.b.c();
++        this.c = MathHelper.d(entity.width + 1.0F);
++        this.d = MathHelper.d(entity.length + 1.0F);
++        this.e = MathHelper.d(entity.width + 1.0F);
++    }
++
++    public void a() {}
++
++    protected PathPoint a(int i, int j, int k) {
++        int l = PathPoint.a(i, j, k);
++        PathPoint pathpoint = (PathPoint) this.b.get(l);
++
++        if (pathpoint == null) {
++            pathpoint = new PathPoint(i, j, k);
++            this.b.a(l, pathpoint);
++        }
++
++        return pathpoint;
++    }
++
++    public abstract PathPoint a(Entity entity);
++
++    public abstract PathPoint a(Entity entity, double d0, double d1, double d2);
++
++    public abstract int a(PathPoint[] apathpoint, Entity entity, PathPoint pathpoint, PathPoint pathpoint1, float f);
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalAvoidTarget.java b/src/main/java/net/minecraft/server/PathfinderGoalAvoidTarget.java
+new file mode 100644
+index 0000000..cb32be5
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalAvoidTarget.java
+@@ -0,0 +1,84 @@
++package net.minecraft.server;
++
++import com.google.common.base.Predicate;
++import com.google.common.base.Predicates;
++import java.util.List;
++
++public class PathfinderGoalAvoidTarget<T extends Entity> extends PathfinderGoal {
++
++    private final Predicate<Entity> c;
++    protected EntityCreature a;
++    private double d;
++    private double e;
++    protected T b;
++    private float f;
++    private PathEntity g;
++    private NavigationAbstract h;
++    private Class<T> i;
++    private Predicate<? super T> j;
++
++    public PathfinderGoalAvoidTarget(EntityCreature entitycreature, Class<T> oclass, float f, double d0, double d1) {
++        this(entitycreature, oclass, Predicates.alwaysTrue(), f, d0, d1);
++    }
++
++    public PathfinderGoalAvoidTarget(EntityCreature entitycreature, Class<T> oclass, Predicate<? super T> predicate, float f, double d0, double d1) {
++        this.c = new Predicate() {
++            public boolean a(Entity entity) {
++                return entity.isAlive() && PathfinderGoalAvoidTarget.this.a.getEntitySenses().a(entity);
++            }
++
++            public boolean apply(Object object) {
++                return this.a((Entity) object);
++            }
++        };
++        this.a = entitycreature;
++        this.i = oclass;
++        this.j = predicate;
++        this.f = f;
++        this.d = d0;
++        this.e = d1;
++        this.h = entitycreature.getNavigation();
++        this.a(1);
++    }
++
++    public boolean a() {
++        List list = this.a.world.a(this.i, this.a.getBoundingBox().grow((double) this.f, 3.0D, (double) this.f), Predicates.and(new Predicate[] { IEntitySelector.d, this.c, this.j}));
++
++        if (list.isEmpty()) {
++            return false;
++        } else {
++            this.b = (T) list.get(0); // Migot - fix compiler error
++            Vec3D vec3d = RandomPositionGenerator.b(this.a, 16, 7, new Vec3D(this.b.locX, this.b.locY, this.b.locZ));
++
++            if (vec3d == null) {
++                return false;
++            } else if (this.b.e(vec3d.a, vec3d.b, vec3d.c) < this.b.h(this.a)) {
++                return false;
++            } else {
++                this.g = this.h.a(vec3d.a, vec3d.b, vec3d.c);
++                return this.g == null ? false : this.g.b(vec3d);
++            }
++        }
++    }
++
++    public boolean b() {
++        return !this.h.m();
++    }
++
++    public void c() {
++        this.h.a(this.g, this.d);
++    }
++
++    public void d() {
++        this.b = null;
++    }
++
++    public void e() {
++        if (this.a.h(this.b) < 49.0D) {
++            this.a.getNavigation().a(this.e);
++        } else {
++            this.a.getNavigation().a(this.d);
++        }
++
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalFleeSun.java b/src/main/java/net/minecraft/server/PathfinderGoalFleeSun.java
+new file mode 100644
+index 0000000..3d83cc3
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalFleeSun.java
+@@ -0,0 +1,64 @@
++package net.minecraft.server;
++
++import java.util.Random;
++
++public class PathfinderGoalFleeSun extends PathfinderGoal {
++
++    private EntityCreature a;
++    private double b;
++    private double c;
++    private double d;
++    private double e;
++    private World f;
++
++    public PathfinderGoalFleeSun(EntityCreature entitycreature, double d0) {
++        this.a = entitycreature;
++        this.e = d0;
++        this.f = entitycreature.world;
++        this.a(1);
++    }
++
++    public boolean a() {
++        if (!this.f.w()) {
++            return false;
++        } else if (!this.a.isBurning()) {
++            return false;
++        } else if (!this.f.i(new BlockPosition(this.a.locX, this.a.getBoundingBox().b, this.a.locZ))) {
++            return false;
++        } else {
++            Vec3D vec3d = this.f();
++
++            if (vec3d == null) {
++                return false;
++            } else {
++                this.b = vec3d.a;
++                this.c = vec3d.b;
++                this.d = vec3d.c;
++                return true;
++            }
++        }
++    }
++
++    public boolean b() {
++        return !this.a.getNavigation().m();
++    }
++
++    public void c() {
++        this.a.getNavigation().a(this.b, this.c, this.d, this.e);
++    }
++
++    private Vec3D f() {
++        Random random = this.a.bc();
++        BlockPosition blockposition = new BlockPosition(this.a.locX, this.a.getBoundingBox().b, this.a.locZ);
++
++        for (int i = 0; i < 10; ++i) {
++            BlockPosition blockposition1 = blockposition.a(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
++
++            if (!this.f.i(blockposition1) && this.a.a(blockposition1) < 0.0F) {
++                return new Vec3D((double) blockposition1.getX(), (double) blockposition1.getY(), (double) blockposition1.getZ());
++            }
++        }
++
++        return null;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalGotoTarget.java b/src/main/java/net/minecraft/server/PathfinderGoalGotoTarget.java
+new file mode 100644
+index 0000000..3d19e52
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalGotoTarget.java
+@@ -0,0 +1,86 @@
++package net.minecraft.server;
++
++public abstract class PathfinderGoalGotoTarget extends PathfinderGoal {
++
++    private final EntityCreature c;
++    private final double d;
++    protected int a;
++    private int e;
++    private int f;
++    protected BlockPosition b;
++    private boolean g;
++    private int h;
++
++    public PathfinderGoalGotoTarget(EntityCreature entitycreature, double d0, int i) {
++        this.b = BlockPosition.ZERO;
++        this.c = entitycreature;
++        this.d = d0;
++        this.h = i;
++        this.a(5);
++    }
++
++    public boolean a() {
++        if (this.a > 0) {
++            --this.a;
++            return false;
++        } else {
++            this.a = 200 + this.c.bc().nextInt(200);
++            return this.g();
++        }
++    }
++
++    public boolean b() {
++        return this.e >= -this.f && this.e <= 1200 && this.a(this.c.world, this.b);
++    }
++
++    public void c() {
++        this.c.getNavigation().a((double) ((float) this.b.getX()) + 0.5D, (double) (this.b.getY() + 1), (double) ((float) this.b.getZ()) + 0.5D, this.d);
++        this.e = 0;
++        this.f = this.c.bc().nextInt(this.c.bc().nextInt(1200) + 1200) + 1200;
++    }
++
++    public void d() {}
++
++    public void e() {
++        if (this.c.c(this.b.up()) > 1.0D) {
++            this.g = false;
++            ++this.e;
++            if (this.e % 40 == 0) {
++                this.c.getNavigation().a((double) ((float) this.b.getX()) + 0.5D, (double) (this.b.getY() + 1), (double) ((float) this.b.getZ()) + 0.5D, this.d);
++            }
++        } else {
++            this.g = true;
++            --this.e;
++        }
++
++    }
++
++    protected boolean f() {
++        return this.g;
++    }
++
++    private boolean g() {
++        int i = this.h;
++        boolean flag = true;
++        BlockPosition blockposition = new BlockPosition(this.c);
++
++        for (int j = 0; j <= 1; j = j > 0 ? -j : 1 - j) {
++            for (int k = 0; k < i; ++k) {
++                for (int l = 0; l <= k; l = l > 0 ? -l : 1 - l) {
++                    for (int i1 = l < k && l > -k ? k : 0; i1 <= k; i1 = i1 > 0 ? -i1 : 1 - i1) {
++                        BlockPosition blockposition1 = blockposition.a(l, j - 1, i1);
++
++                        if (this.c.e(blockposition1) && this.a(this.c.world, blockposition1)) {
++                            this.b = blockposition1;
++                            return true;
++                        }
++                    }
++                }
++            }
++        }
++
++        return false;
++    }
++
++    protected abstract boolean a(World world, BlockPosition blockposition);
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalMoveIndoors.java b/src/main/java/net/minecraft/server/PathfinderGoalMoveIndoors.java
+new file mode 100644
+index 0000000..b3402fb
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalMoveIndoors.java
+@@ -0,0 +1,66 @@
++package net.minecraft.server;
++
++public class PathfinderGoalMoveIndoors extends PathfinderGoal {
++
++    private EntityCreature a;
++    private VillageDoor b;
++    private int c = -1;
++    private int d = -1;
++
++    public PathfinderGoalMoveIndoors(EntityCreature entitycreature) {
++        this.a = entitycreature;
++        this.a(1);
++    }
++
++    public boolean a() {
++        BlockPosition blockposition = new BlockPosition(this.a);
++
++        if ((!this.a.world.w() || this.a.world.S() && !this.a.world.getBiome(blockposition).e()) && !this.a.world.worldProvider.o()) {
++            if (this.a.bc().nextInt(50) != 0) {
++                return false;
++            } else if (this.c != -1 && this.a.e((double) this.c, this.a.locY, (double) this.d) < 4.0D) {
++                return false;
++            } else {
++                Village village = this.a.world.ae().getClosestVillage(blockposition, 14);
++
++                if (village == null) {
++                    return false;
++                } else {
++                    this.b = village.c(blockposition);
++                    return this.b != null;
++                }
++            }
++        } else {
++            return false;
++        }
++    }
++
++    public boolean b() {
++        return !this.a.getNavigation().m();
++    }
++
++    public void c() {
++        this.c = -1;
++        BlockPosition blockposition = this.b.e();
++        int i = blockposition.getX();
++        int j = blockposition.getY();
++        int k = blockposition.getZ();
++
++        if (this.a.b(blockposition) > 256.0D) {
++            Vec3D vec3d = RandomPositionGenerator.a(this.a, 14, 3, new Vec3D((double) i + 0.5D, (double) j, (double) k + 0.5D));
++
++            if (vec3d != null) {
++                this.a.getNavigation().a(vec3d.a, vec3d.b, vec3d.c, 1.0D);
++            }
++        } else {
++            this.a.getNavigation().a((double) i + 0.5D, (double) j, (double) k + 0.5D, 1.0D);
++        }
++
++    }
++
++    public void d() {
++        this.c = this.b.e().getX();
++        this.d = this.b.e().getZ();
++        this.b = null;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalMoveThroughVillage.java b/src/main/java/net/minecraft/server/PathfinderGoalMoveThroughVillage.java
+new file mode 100644
+index 0000000..3755944
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalMoveThroughVillage.java
+@@ -0,0 +1,127 @@
++package net.minecraft.server;
++
++import com.google.common.collect.Lists;
++import java.util.Iterator;
++import java.util.List;
++
++public class PathfinderGoalMoveThroughVillage extends PathfinderGoal {
++
++    private EntityCreature a;
++    private double b;
++    private PathEntity c;
++    private VillageDoor d;
++    private boolean e;
++    private List<VillageDoor> f = Lists.newArrayList();
++
++    public PathfinderGoalMoveThroughVillage(EntityCreature entitycreature, double d0, boolean flag) {
++        this.a = entitycreature;
++        this.b = d0;
++        this.e = flag;
++        this.a(1);
++        if (!(entitycreature.getNavigation() instanceof Navigation)) {
++            throw new IllegalArgumentException("Unsupported mob for MoveThroughVillageGoal");
++        }
++    }
++
++    public boolean a() {
++        this.f();
++        if (this.e && this.a.world.w()) {
++            return false;
++        } else {
++            Village village = this.a.world.ae().getClosestVillage(new BlockPosition(this.a), 0);
++
++            if (village == null) {
++                return false;
++            } else {
++                this.d = this.a(village);
++                if (this.d == null) {
++                    return false;
++                } else {
++                    Navigation navigation = (Navigation) this.a.getNavigation();
++                    boolean flag = navigation.g();
++
++                    navigation.b(false);
++                    this.c = navigation.a(this.d.d());
++                    navigation.b(flag);
++                    if (this.c != null) {
++                        return true;
++                    } else {
++                        Vec3D vec3d = RandomPositionGenerator.a(this.a, 10, 7, new Vec3D((double) this.d.d().getX(), (double) this.d.d().getY(), (double) this.d.d().getZ()));
++
++                        if (vec3d == null) {
++                            return false;
++                        } else {
++                            navigation.b(false);
++                            this.c = this.a.getNavigation().a(vec3d.a, vec3d.b, vec3d.c);
++                            navigation.b(flag);
++                            return this.c != null;
++                        }
++                    }
++                }
++            }
++        }
++    }
++
++    public boolean b() {
++        if (this.a.getNavigation().m()) {
++            return false;
++        } else {
++            float f = this.a.width + 4.0F;
++
++            return this.a.b(this.d.d()) > (double) (f * f);
++        }
++    }
++
++    public void c() {
++        this.a.getNavigation().a(this.c, this.b);
++    }
++
++    public void d() {
++        if (this.a.getNavigation().m() || this.a.b(this.d.d()) < 16.0D) {
++            this.f.add(this.d);
++        }
++
++    }
++
++    private VillageDoor a(Village village) {
++        VillageDoor villagedoor = null;
++        int i = Integer.MAX_VALUE;
++        List list = village.f();
++        Iterator iterator = list.iterator();
++
++        while (iterator.hasNext()) {
++            VillageDoor villagedoor1 = (VillageDoor) iterator.next();
++            int j = villagedoor1.b(MathHelper.floor(this.a.locX), MathHelper.floor(this.a.locY), MathHelper.floor(this.a.locZ));
++
++            if (j < i && !this.a(villagedoor1)) {
++                villagedoor = villagedoor1;
++                i = j;
++            }
++        }
++
++        return villagedoor;
++    }
++
++    private boolean a(VillageDoor villagedoor) {
++        Iterator iterator = this.f.iterator();
++
++        VillageDoor villagedoor1;
++
++        do {
++            if (!iterator.hasNext()) {
++                return false;
++            }
++
++            villagedoor1 = (VillageDoor) iterator.next();
++        } while (!villagedoor.d().equals(villagedoor1.d()));
++
++        return true;
++    }
++
++    private void f() {
++        if (this.f.size() > 15) {
++            this.f.remove(0);
++        }
++
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalMoveTowardsRestriction.java b/src/main/java/net/minecraft/server/PathfinderGoalMoveTowardsRestriction.java
+new file mode 100644
+index 0000000..7d2a14b
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalMoveTowardsRestriction.java
+@@ -0,0 +1,42 @@
++package net.minecraft.server;
++
++public class PathfinderGoalMoveTowardsRestriction extends PathfinderGoal {
++
++    private EntityCreature a;
++    private double b;
++    private double c;
++    private double d;
++    private double e;
++
++    public PathfinderGoalMoveTowardsRestriction(EntityCreature entitycreature, double d0) {
++        this.a = entitycreature;
++        this.e = d0;
++        this.a(1);
++    }
++
++    public boolean a() {
++        if (this.a.cg()) {
++            return false;
++        } else {
++            BlockPosition blockposition = this.a.ch();
++            Vec3D vec3d = RandomPositionGenerator.a(this.a, 16, 7, new Vec3D((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ()));
++
++            if (vec3d == null) {
++                return false;
++            } else {
++                this.b = vec3d.a;
++                this.c = vec3d.b;
++                this.d = vec3d.c;
++                return true;
++            }
++        }
++    }
++
++    public boolean b() {
++        return !this.a.getNavigation().m();
++    }
++
++    public void c() {
++        this.a.getNavigation().a(this.b, this.c, this.d, this.e);
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalMoveTowardsTarget.java b/src/main/java/net/minecraft/server/PathfinderGoalMoveTowardsTarget.java
+new file mode 100644
+index 0000000..97bf754
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalMoveTowardsTarget.java
+@@ -0,0 +1,51 @@
++package net.minecraft.server;
++
++public class PathfinderGoalMoveTowardsTarget extends PathfinderGoal {
++
++    private EntityCreature a;
++    private EntityLiving b;
++    private double c;
++    private double d;
++    private double e;
++    private double f;
++    private float g;
++
++    public PathfinderGoalMoveTowardsTarget(EntityCreature entitycreature, double d0, float f) {
++        this.a = entitycreature;
++        this.f = d0;
++        this.g = f;
++        this.a(1);
++    }
++
++    public boolean a() {
++        this.b = this.a.getGoalTarget();
++        if (this.b == null) {
++            return false;
++        } else if (this.b.h(this.a) > (double) (this.g * this.g)) {
++            return false;
++        } else {
++            Vec3D vec3d = RandomPositionGenerator.a(this.a, 16, 7, new Vec3D(this.b.locX, this.b.locY, this.b.locZ));
++
++            if (vec3d == null) {
++                return false;
++            } else {
++                this.c = vec3d.a;
++                this.d = vec3d.b;
++                this.e = vec3d.c;
++                return true;
++            }
++        }
++    }
++
++    public boolean b() {
++        return !this.a.getNavigation().m() && this.b.isAlive() && this.b.h(this.a) < (double) (this.g * this.g);
++    }
++
++    public void d() {
++        this.b = null;
++    }
++
++    public void c() {
++        this.a.getNavigation().a(this.c, this.d, this.e, this.f);
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalPlay.java b/src/main/java/net/minecraft/server/PathfinderGoalPlay.java
+new file mode 100644
+index 0000000..fc2f47b
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalPlay.java
+@@ -0,0 +1,88 @@
++package net.minecraft.server;
++
++import java.util.Iterator;
++import java.util.List;
++
++public class PathfinderGoalPlay extends PathfinderGoal {
++
++    private EntityVillager a;
++    private EntityLiving b;
++    private double c;
++    private int d;
++
++    public PathfinderGoalPlay(EntityVillager entityvillager, double d0) {
++        this.a = entityvillager;
++        this.c = d0;
++        this.a(1);
++    }
++
++    public boolean a() {
++        if (this.a.getAge() >= 0) {
++            return false;
++        } else if (this.a.bc().nextInt(400) != 0) {
++            return false;
++        } else {
++            List list = this.a.world.a(EntityVillager.class, this.a.getBoundingBox().grow(6.0D, 3.0D, 6.0D));
++            double d0 = Double.MAX_VALUE;
++            Iterator iterator = list.iterator();
++
++            while (iterator.hasNext()) {
++                EntityVillager entityvillager = (EntityVillager) iterator.next();
++
++                if (entityvillager != this.a && !entityvillager.cn() && entityvillager.getAge() < 0) {
++                    double d1 = entityvillager.h(this.a);
++
++                    if (d1 <= d0) {
++                        d0 = d1;
++                        this.b = entityvillager;
++                    }
++                }
++            }
++
++            if (this.b == null) {
++                Vec3D vec3d = RandomPositionGenerator.a(this.a, 16, 3);
++
++                if (vec3d == null) {
++                    return false;
++                }
++            }
++
++            return true;
++        }
++    }
++
++    public boolean b() {
++        return this.d > 0;
++    }
++
++    public void c() {
++        if (this.b != null) {
++            this.a.m(true);
++        }
++
++        this.d = 1000;
++    }
++
++    public void d() {
++        this.a.m(false);
++        this.b = null;
++    }
++
++    public void e() {
++        --this.d;
++        if (this.b != null) {
++            if (this.a.h(this.b) > 4.0D) {
++                this.a.getNavigation().a((Entity) this.b, this.c);
++            }
++        } else if (this.a.getNavigation().m()) {
++            Vec3D vec3d = RandomPositionGenerator.a(this.a, 16, 3);
++
++            if (vec3d == null) {
++                return;
++            }
++
++            this.a.getNavigation().a(vec3d.a, vec3d.b, vec3d.c, this.c);
++        }
++
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalRandomStroll.java b/src/main/java/net/minecraft/server/PathfinderGoalRandomStroll.java
+new file mode 100644
+index 0000000..d7a5fb6
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderGoalRandomStroll.java
+@@ -0,0 +1,63 @@
++package net.minecraft.server;
++
++public class PathfinderGoalRandomStroll extends PathfinderGoal {
++
++    private EntityCreature a;
++    private double b;
++    private double c;
++    private double d;
++    private double e;
++    private int f;
++    private boolean g;
++
++    public PathfinderGoalRandomStroll(EntityCreature entitycreature, double d0) {
++        this(entitycreature, d0, 120);
++    }
++
++    public PathfinderGoalRandomStroll(EntityCreature entitycreature, double d0, int i) {
++        this.a = entitycreature;
++        this.e = d0;
++        this.f = i;
++        this.a(1);
++    }
++
++    public boolean a() {
++        if (!this.g) {
++            if (this.a.bh() >= 100) {
++                return false;
++            }
++
++            if (this.a.bc().nextInt(this.f) != 0) {
++                return false;
++            }
++        }
++
++        Vec3D vec3d = RandomPositionGenerator.a(this.a, 10, 7);
++
++        if (vec3d == null) {
++            return false;
++        } else {
++            this.b = vec3d.a;
++            this.c = vec3d.b;
++            this.d = vec3d.c;
++            this.g = false;
++            return true;
++        }
++    }
++
++    public boolean b() {
++        return !this.a.getNavigation().m();
++    }
++
++    public void c() {
++        this.a.getNavigation().a(this.b, this.c, this.d, this.e);
++    }
++
++    public void f() {
++        this.g = true;
++    }
++
++    public void setTimeBetweenMovement(int i) {
++        this.f = i;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderNormal.java b/src/main/java/net/minecraft/server/PathfinderNormal.java
+new file mode 100644
+index 0000000..0a14c9d
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderNormal.java
+@@ -0,0 +1,219 @@
++package net.minecraft.server;
++
++public class PathfinderNormal extends PathfinderAbstract {
++
++    private boolean f;
++    private boolean g;
++    private boolean h;
++    private boolean i;
++    private boolean j;
++
++    public PathfinderNormal() {}
++
++    public void a(IBlockAccess iblockaccess, Entity entity) {
++        super.a(iblockaccess, entity);
++        this.j = this.h;
++    }
++
++    public void a() {
++        super.a();
++        this.h = this.j;
++    }
++
++    public PathPoint a(Entity entity) {
++        int i;
++
++        if (this.i && entity.V()) {
++            i = (int) entity.getBoundingBox().b;
++            BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(MathHelper.floor(entity.locX), i, MathHelper.floor(entity.locZ));
++
++            for (Block block = this.a.getType(blockposition_mutableblockposition).getBlock(); block == Blocks.FLOWING_WATER || block == Blocks.WATER; block = this.a.getType(blockposition_mutableblockposition).getBlock()) {
++                ++i;
++                blockposition_mutableblockposition.c(MathHelper.floor(entity.locX), i, MathHelper.floor(entity.locZ));
++            }
++
++            this.h = false;
++        } else {
++            i = MathHelper.floor(entity.getBoundingBox().b + 0.5D);
++        }
++
++        return this.a(MathHelper.floor(entity.getBoundingBox().a), i, MathHelper.floor(entity.getBoundingBox().c));
++    }
++
++    public PathPoint a(Entity entity, double d0, double d1, double d2) {
++        return this.a(MathHelper.floor(d0 - (double) (entity.width / 2.0F)), MathHelper.floor(d1), MathHelper.floor(d2 - (double) (entity.width / 2.0F)));
++    }
++
++    public int a(PathPoint[] apathpoint, Entity entity, PathPoint pathpoint, PathPoint pathpoint1, float f) {
++        int i = 0;
++        byte b0 = 0;
++
++        if (this.a(entity, pathpoint.a, pathpoint.b + 1, pathpoint.c) == 1) {
++            b0 = 1;
++        }
++
++        PathPoint pathpoint2 = this.a(entity, pathpoint.a, pathpoint.b, pathpoint.c + 1, b0);
++        PathPoint pathpoint3 = this.a(entity, pathpoint.a - 1, pathpoint.b, pathpoint.c, b0);
++        PathPoint pathpoint4 = this.a(entity, pathpoint.a + 1, pathpoint.b, pathpoint.c, b0);
++        PathPoint pathpoint5 = this.a(entity, pathpoint.a, pathpoint.b, pathpoint.c - 1, b0);
++
++        if (pathpoint2 != null && !pathpoint2.i && pathpoint2.a(pathpoint1) < f) {
++            apathpoint[i++] = pathpoint2;
++        }
++
++        if (pathpoint3 != null && !pathpoint3.i && pathpoint3.a(pathpoint1) < f) {
++            apathpoint[i++] = pathpoint3;
++        }
++
++        if (pathpoint4 != null && !pathpoint4.i && pathpoint4.a(pathpoint1) < f) {
++            apathpoint[i++] = pathpoint4;
++        }
++
++        if (pathpoint5 != null && !pathpoint5.i && pathpoint5.a(pathpoint1) < f) {
++            apathpoint[i++] = pathpoint5;
++        }
++
++        return i;
++    }
++
++    private PathPoint a(Entity entity, int i, int j, int k, int l) {
++        PathPoint pathpoint = null;
++        int i1 = this.a(entity, i, j, k);
++
++        if (i1 == 2) {
++            return this.a(i, j, k);
++        } else {
++            if (i1 == 1) {
++                pathpoint = this.a(i, j, k);
++            }
++
++            if (pathpoint == null && l > 0 && i1 != -3 && i1 != -4 && this.a(entity, i, j + l, k) == 1) {
++                pathpoint = this.a(i, j + l, k);
++                j += l;
++            }
++
++            if (pathpoint != null) {
++                int j1 = 0;
++
++                int k1;
++
++                for (k1 = 0; j > 0; pathpoint = this.a(i, j, k)) {
++                    k1 = this.a(entity, i, j - 1, k);
++                    if (this.h && k1 == -1) {
++                        return null;
++                    }
++
++                    if (k1 != 1) {
++                        break;
++                    }
++
++                    if (j1++ >= entity.aE()) {
++                        return null;
++                    }
++
++                    --j;
++                    if (j <= 0) {
++                        return null;
++                    }
++                }
++
++                if (k1 == -2) {
++                    return null;
++                }
++            }
++
++            return pathpoint;
++        }
++    }
++
++    private int a(Entity entity, int i, int j, int k) {
++        return a(this.a, entity, i, j, k, this.c, this.d, this.e, this.h, this.g, this.f);
++    }
++
++    public static int a(IBlockAccess iblockaccess, Entity entity, int i, int j, int k, int l, int i1, int j1, boolean flag, boolean flag1, boolean flag2) {
++        boolean flag3 = false;
++        BlockPosition blockposition = new BlockPosition(entity);
++        BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
++
++        for (int k1 = i; k1 < i + l; ++k1) {
++            for (int l1 = j; l1 < j + i1; ++l1) {
++                for (int i2 = k; i2 < k + j1; ++i2) {
++                    blockposition_mutableblockposition.c(k1, l1, i2);
++                    Block block = iblockaccess.getType(blockposition_mutableblockposition).getBlock();
++
++                    if (block.getMaterial() != Material.AIR) {
++                        if (block != Blocks.TRAPDOOR && block != Blocks.IRON_TRAPDOOR) {
++                            if (block != Blocks.FLOWING_WATER && block != Blocks.WATER) {
++                                if (!flag2 && block instanceof BlockDoor && block.getMaterial() == Material.WOOD) {
++                                    return 0;
++                                }
++                            } else {
++                                if (flag) {
++                                    return -1;
++                                }
++
++                                flag3 = true;
++                            }
++                        } else {
++                            flag3 = true;
++                        }
++
++                        if (entity.world.getType(blockposition_mutableblockposition).getBlock() instanceof BlockMinecartTrackAbstract) {
++                            if (!(entity.world.getType(blockposition).getBlock() instanceof BlockMinecartTrackAbstract) && !(entity.world.getType(blockposition.down()).getBlock() instanceof BlockMinecartTrackAbstract)) {
++                                return -3;
++                            }
++                        } else if (!block.b(iblockaccess, blockposition_mutableblockposition) && (!flag1 || !(block instanceof BlockDoor) || block.getMaterial() != Material.WOOD)) {
++                            if (block instanceof BlockFence || block instanceof BlockFenceGate || block instanceof BlockCobbleWall) {
++                                return -3;
++                            }
++
++                            if (block == Blocks.TRAPDOOR || block == Blocks.IRON_TRAPDOOR) {
++                                return -4;
++                            }
++
++                            Material material = block.getMaterial();
++
++                            if (material != Material.LAVA) {
++                                return 0;
++                            }
++
++                            if (!entity.ab()) {
++                                return -2;
++                            }
++                        }
++                    }
++                }
++            }
++        }
++
++        return flag3 ? 2 : 1;
++    }
++
++    public void a(boolean flag) {
++        this.f = flag;
++    }
++
++    public void b(boolean flag) {
++        this.g = flag;
++    }
++
++    public void c(boolean flag) {
++        this.h = flag;
++    }
++
++    public void d(boolean flag) {
++        this.i = flag;
++    }
++
++    public boolean b() {
++        return this.f;
++    }
++
++    public boolean d() {
++        return this.i;
++    }
++
++    public boolean e() {
++        return this.h;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PathfinderWater.java b/src/main/java/net/minecraft/server/PathfinderWater.java
+new file mode 100644
+index 0000000..2f9a0e4
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/PathfinderWater.java
+@@ -0,0 +1,63 @@
++package net.minecraft.server;
++
++public class PathfinderWater extends PathfinderAbstract {
++
++    public PathfinderWater() {}
++
++    public void a(IBlockAccess iblockaccess, Entity entity) {
++        super.a(iblockaccess, entity);
++    }
++
++    public void a() {
++        super.a();
++    }
++
++    public PathPoint a(Entity entity) {
++        return this.a(MathHelper.floor(entity.getBoundingBox().a), MathHelper.floor(entity.getBoundingBox().b + 0.5D), MathHelper.floor(entity.getBoundingBox().c));
++    }
++
++    public PathPoint a(Entity entity, double d0, double d1, double d2) {
++        return this.a(MathHelper.floor(d0 - (double) (entity.width / 2.0F)), MathHelper.floor(d1 + 0.5D), MathHelper.floor(d2 - (double) (entity.width / 2.0F)));
++    }
++
++    public int a(PathPoint[] apathpoint, Entity entity, PathPoint pathpoint, PathPoint pathpoint1, float f) {
++        int i = 0;
++        EnumDirection[] aenumdirection = EnumDirection.values();
++        int j = aenumdirection.length;
++
++        for (int k = 0; k < j; ++k) {
++            EnumDirection enumdirection = aenumdirection[k];
++            PathPoint pathpoint2 = this.a(entity, pathpoint.a + enumdirection.getAdjacentX(), pathpoint.b + enumdirection.getAdjacentY(), pathpoint.c + enumdirection.getAdjacentZ());
++
++            if (pathpoint2 != null && !pathpoint2.i && pathpoint2.a(pathpoint1) < f) {
++                apathpoint[i++] = pathpoint2;
++            }
++        }
++
++        return i;
++    }
++
++    private PathPoint a(Entity entity, int i, int j, int k) {
++        int l = this.b(entity, i, j, k);
++
++        return l == -1 ? this.a(i, j, k) : null;
++    }
++
++    private int b(Entity entity, int i, int j, int k) {
++        BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
++
++        for (int l = i; l < i + this.c; ++l) {
++            for (int i1 = j; i1 < j + this.d; ++i1) {
++                for (int j1 = k; j1 < k + this.e; ++j1) {
++                    Block block = this.a.getType(blockposition_mutableblockposition.c(l, i1, j1)).getBlock();
++
++                    if (block.getMaterial() != Material.WATER) {
++                        return 0;
++                    }
++                }
++            }
++        }
++
++        return -1;
++    }
++}
+-- 
+1.8.3.msysgit.0
+
