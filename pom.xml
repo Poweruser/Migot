@@ -9,28 +9,21 @@
         <version>7</version>
     </parent>
 
-    <groupId>org.spigotmc</groupId>
-    <artifactId>spigot-parent</artifactId>
+    <groupId>de.minetick</groupId>
+    <artifactId>migot-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Spigot-Parent</name>
-    <description>Parent project for all Spigot modules.</description>
-    <url>https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot</url>
+    <name>Migot-Parent</name>
+    <description>Parent project for all Migot modules.</description>
+    <url>https://github.com/Poweruser/Migot</url>
 
     <modules>
-        <module>Spigot-Server</module>
+        <module>Migot-Server</module>
         <module>Spigot-API</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>md_5-releases</id>
-            <url>http://repo.md-5.net/content/repositories/releases/</url>
-        </repository>
-    </repositories>
 </project>
