@@ -1,41 +1,7 @@
-Spigot [![Build Status](https://travis-ci.org/SpigotMC/Spigot.png)](https://travis-ci.org/SpigotMC/Spigot)
+Migot 
 ===========
 
-High performance Minecraft server implementation
-
-
-How To
------------
-
-Init a Craftbukkit and Bukkit module : `git submodule update --init`
-
-Apply Patches : `./applyPatches.sh`
-
-### Create patch for server ###
-
-`cd Spigot-Server`
-
-Add your file for commit : `git add <file>`
-
-Commit : `git commit -m <msg>`
-
-`cd ..`
-
-Create Patch `./rebuildPatches.sh`
-
-### Create patch for API ###
-
-`cd Spigot-API`
-
-Add your file for commit : `git add <file>`
-
-Commit : `git commit -m <msg>`
-
-`cd ..`
-
-Create Patch `./rebuildPatches.sh`
-
-
+Multithreading and other optimizations (aka. MinetickMod) for the Spigot Minecraft server
 
 
 Compilation
@@ -44,4 +10,4 @@ Compilation
 We use maven to handle our dependencies.
 
 * Install [Maven 3](http://maven.apache.org/download.html)
-* Clone this repo and: `mvn clean install`
+* Clone this repo and: `mvn clean package` or `mvn clean install` to add the compiled server jar to your local maven cache as well.
