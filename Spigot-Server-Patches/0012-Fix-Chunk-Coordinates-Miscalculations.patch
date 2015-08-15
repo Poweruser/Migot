@@ -1,0 +1,44 @@
+From 90b90c218eda7f7c40a182d4e05955cff528c04c Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sat, 15 Aug 2015 03:13:44 +0200
+Subject: [PATCH] Fix Chunk Coordinates Miscalculations
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index c97be17..46c4391 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -1553,7 +1553,7 @@ public abstract class Entity implements ICommandListener {
+             this.vehicle = null;
+         } else {
+             // CraftBukkit start
+-            if ((this.bukkitEntity instanceof LivingEntity) && (entity.getBukkitEntity() instanceof Vehicle) && entity.world.isChunkLoaded((int) entity.locX >> 4, (int) entity.locZ >> 4, true)) {
++            if ((this.bukkitEntity instanceof LivingEntity) && (entity.getBukkitEntity() instanceof Vehicle) && entity.world.isChunkLoaded(MathHelper.floor(entity.locX) >> 4, MathHelper.floor(entity.locZ) >> 4, true)) { // Migot - fix rounding error
+                 // It's possible to move from one vehicle to another.  We need to check if they're already in a vehicle, and fire an exit event if they are.
+                 VehicleExitEvent exitEvent = null;
+                 if (this.vehicle != null && this.vehicle.getBukkitEntity() instanceof Vehicle) {
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index d3d19dd..8b79234 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -254,7 +254,7 @@ public abstract class PlayerList {
+         }
+ 
+         worldserver1.getPlayerChunkMap().addPlayer(entityplayer);
+-        worldserver1.chunkProviderServer.getChunkAt((int) entityplayer.locX >> 4, (int) entityplayer.locZ >> 4);
++        worldserver1.chunkProviderServer.getChunkAt(MathHelper.floor(entityplayer.locX) >> 4, MathHelper.floor(entityplayer.locZ) >> 4); // Migot - fix rounding error
+     }
+ 
+     public int d() {
+@@ -581,7 +581,7 @@ public abstract class PlayerList {
+         entityplayer1.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+         // CraftBukkit end
+ 
+-        worldserver.chunkProviderServer.getChunkAt((int) entityplayer1.locX >> 4, (int) entityplayer1.locZ >> 4);
++        worldserver.chunkProviderServer.getChunkAt(MathHelper.floor(entityplayer1.locX) >> 4, MathHelper.floor(entityplayer1.locZ) >> 4); // Migot - fix rounding error
+ 
+         while (avoidSuffocation && !worldserver.getCubes(entityplayer1, entityplayer1.getBoundingBox()).isEmpty() && entityplayer1.locY < 256.0D) {
+             entityplayer1.setPosition(entityplayer1.locX, entityplayer1.locY + 1.0D, entityplayer1.locZ);
+-- 
+1.8.3.msysgit.0
+

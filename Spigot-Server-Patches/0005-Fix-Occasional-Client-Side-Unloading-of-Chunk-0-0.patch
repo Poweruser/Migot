@@ -1,0 +1,22 @@
+From 83a43ed08f77808eeac1368f854e81ccb9d9ce1c Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sat, 15 Aug 2015 01:36:57 +0200
+Subject: [PATCH] Fix Occasional Client Side Unloading of Chunk 0 0
+
+
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index af77eef..bfa6b42 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -35,7 +35,7 @@ public class ChunkProviderServer implements IChunkProvider {
+     public WorldServer world;
+ 
+     public ChunkProviderServer(WorldServer worldserver, IChunkLoader ichunkloader, IChunkProvider ichunkprovider) {
+-        this.emptyChunk = new EmptyChunk(worldserver, 0, 0);
++        this.emptyChunk = new EmptyChunk(worldserver, Integer.MIN_VALUE, Integer.MIN_VALUE); // Migot
+         this.world = worldserver;
+         this.chunkLoader = ichunkloader;
+         this.chunkProvider = ichunkprovider;
+-- 
+1.8.3.msysgit.0
+
