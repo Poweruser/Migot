@@ -1,0 +1,119 @@
+From ac87ba7ef91e3147ef6837f459c85289cfc2f881 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sun, 16 Aug 2015 08:22:54 +0200
+Subject: [PATCH] Readd Chunk Access Cache in World
+
+
+diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
+index fb0f1cc..95e8d16 100644
+--- a/src/main/java/net/minecraft/server/Chunk.java
++++ b/src/main/java/net/minecraft/server/Chunk.java
+@@ -44,6 +44,18 @@ public class Chunk {
+     private ConcurrentLinkedQueue<BlockPosition> w;
+     protected gnu.trove.map.hash.TObjectIntHashMap<Class> entityCount = new gnu.trove.map.hash.TObjectIntHashMap<Class>(); // Spigot
+ 
++    // Migot start
++    private boolean unloaded = false;
++
++    public boolean wasUnloaded() {
++        return this.unloaded;
++    }
++
++    public void markAsUnloaded() {
++        this.unloaded = true;
++    }
++    // Migot end
++
+     // CraftBukkit start - Neighbor loaded cache for chunk lighting and entity ticking
+     private int neighbors = 0x1 << 12;
+ 
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index bfa6b42..be05a04 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -353,6 +353,7 @@ public class ChunkProviderServer implements IChunkProvider {
+                 if (!event.isCancelled()) {
+ 
+                     if (chunk != null) {
++                        chunk.markAsUnloaded(); // Migot
+                         chunk.removeEntities();
+                         this.saveChunk(chunk);
+                         this.saveChunkNOP(chunk);
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 0271b19..1a71294 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -163,6 +163,13 @@ public abstract class World implements IBlockAccess {
+ 
+     public final SpigotTimings.WorldTimingsHandler timings; // Spigot
+ 
++    // Migot start
++    private Chunk dummyChunk = new EmptyChunk(this, Integer.MIN_VALUE, Integer.MIN_VALUE);
++    private Chunk lastChunkAccessed = dummyChunk;
++    final Object chunkLock = new Object();
++    public ChunkProviderServer chunkProviderServer; // moved here from WorldServer
++    // Migot end
++
+     public CraftWorld getWorld() {
+         return this.world;
+     }
+@@ -351,8 +358,30 @@ public abstract class World implements IBlockAccess {
+         return this.getChunkAt(blockposition.getX() >> 4, blockposition.getZ() >> 4);
+     }
+ 
++    // Migot start
++    private void cacheLastChunkAccess(Chunk foundChunk) {
++        this.lastChunkAccessed = ((foundChunk == null || foundChunk.isEmpty() || foundChunk.wasUnloaded()) ? this.dummyChunk : foundChunk);
++    }
++    // Migot end
++
+     public Chunk getChunkAt(int i, int j) {
+-        return this.chunkProvider.getOrCreateChunk(i, j);
++        // Migot start
++        Chunk last = this.lastChunkAccessed;
++        if(last.a(i,j) && !last.wasUnloaded()) {
++            return last;
++        } else {
++            Chunk result = null;
++            if(this.chunkProviderServer.isChunkLoaded(i, j)) {
++                result = this.chunkProviderServer.getChunkAt(i, j);
++            } else {
++                synchronized (this.chunkLock) {
++                    result = this.chunkProvider.getOrCreateChunk(i, j);
++                }
++            }
++            this.cacheLastChunkAccess(result);
++            return result;
++        }
++        // Migot end
+     }
+ 
+     public boolean setTypeAndData(BlockPosition blockposition, IBlockData iblockdata, int i) {
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 6755143..6c32dd7 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -38,7 +38,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
+     // private final Set<NextTickListEntry> L = Sets.newHashSet(); // PAIL: Rename nextTickListHash
+     private final HashTreeSet<NextTickListEntry> M = new HashTreeSet<NextTickListEntry>(); // CraftBukkit - HashTreeSet // PAIL: Rename nextTickList
+     private final Map<UUID, Entity> entitiesByUUID = Maps.newHashMap();
+-    public ChunkProviderServer chunkProviderServer;
++    //public ChunkProviderServer chunkProviderServer; // Migot - moved to World
+     public boolean savingDisabled;
+     private boolean O;
+     private int emptyTime;
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 01315ed..db518d5 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -188,6 +188,7 @@ public class CraftWorld implements World {
+             save = true;
+         }
+ 
++        chunk.markAsUnloaded(); // Migot
+         chunk.removeEntities(); // Always remove entities - even if discarding, need to get them out of world table
+ 
+         if (save && !(chunk instanceof EmptyChunk)) {
+-- 
+1.8.3.msysgit.0
+
