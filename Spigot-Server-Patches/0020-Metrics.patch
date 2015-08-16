@@ -1,0 +1,22 @@
+From 5160816ee20e821435f9525bf10799fe53d2b80a Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sun, 16 Aug 2015 17:39:31 +0200
+Subject: [PATCH] Metrics
+
+
+diff --git a/src/main/java/org/spigotmc/Metrics.java b/src/main/java/org/spigotmc/Metrics.java
+index a5fd59d..7a52b3f 100644
+--- a/src/main/java/org/spigotmc/Metrics.java
++++ b/src/main/java/org/spigotmc/Metrics.java
+@@ -344,7 +344,7 @@ public class Metrics {
+      */
+     private void postPlugin(final boolean isPing) throws IOException {
+         // Server software specific section
+-        String pluginName = "Spigot";
++        String pluginName = "Migot"; // Migot
+         boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
+         String pluginVersion = (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown";
+         String serverVersion = Bukkit.getVersion();
+-- 
+1.8.3.msysgit.0
+
