@@ -1,0 +1,42 @@
+From 9099f98e1bc703ad22374971566dab4e8369bb10 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sun, 23 Aug 2015 02:01:34 +0200
+Subject: [PATCH] Reallow Saving of Mineshaft Info
+
+
+diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
+index 0f8211a..1867dde 100644
+--- a/src/main/java/net/minecraft/server/StructureGenerator.java
++++ b/src/main/java/net/minecraft/server/StructureGenerator.java
+@@ -196,7 +196,7 @@ public abstract class StructureGenerator extends WorldGenBase {
+     private void a(World world) {
+         if (this.d == null) {
+             // Spigot Start
+-            if ( world.spigotConfig.saveStructureInfo && !this.a().equals( "Mineshaft" ) )
++            if ( world.spigotConfig.saveStructureInfo && ( !this.a().equals( "Mineshaft" ) || world.spigotConfig.saveMineshaftStructureInfo ) ) // Migot
+             {
+             this.d = (PersistentStructure) world.a(PersistentStructure.class, this.a());
+             } else
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index 8e86212..471d1aa 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -191,10 +191,15 @@ public class SpigotWorldConfig
+     }
+ 
+     public boolean saveStructureInfo;
++    public boolean saveMineshaftStructureInfo; // Migot
+     private void structureInfo()
+     {
+         saveStructureInfo = getBoolean( "save-structure-info", true );
+         log( "Structure Info Saving: " + saveStructureInfo );
++        // Migot start
++        saveMineshaftStructureInfo = getBoolean( "save-mineshaft-structure-info", false);
++        log( "Mineshaft Structure Info Saving: " + saveMineshaftStructureInfo );
++        // Migot end
+         if ( !saveStructureInfo )
+         {
+             log( "*** WARNING *** You have selected to NOT save structure info. This may cause structures such as fortresses to not spawn mobs!" );
+-- 
+1.8.3.msysgit.0
+
