@@ -7,7 +7,7 @@ Multithreading and other optimizations (aka. MinetickMod) for the Spigot Minecra
 Compilation
 -----------
 
-We use maven to handle our dependencies.
-
-* Install [Maven 3](http://maven.apache.org/download.html)
-* Clone this repo and: `mvn clean package` or `mvn clean install` to add the compiled server jar to your local maven cache as well.
+The [MigotTools](https://github.com/Poweruser/MigotTools) are required
+* Download the runnable jar from the [releases](https://github.com/Poweruser/MigotTools/releases) or clone the MigotTools repo, checkout the branch `migottools` and build them with `mvn clean package`
+* Run the MigotTools with `java -jar MigotTools.jar` to compile it for the latest MC version.     
+For specific versions use the revision flag `--rev`.
