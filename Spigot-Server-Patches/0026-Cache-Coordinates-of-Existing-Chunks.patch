@@ -1,0 +1,90 @@
+From 12fbc4d39136c322060a0b58d11bed45babca260 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sun, 30 Aug 2015 00:14:25 +0200
+Subject: [PATCH] Cache Coordinates of Existing Chunks
+
+
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index be05a04..ccfd8c2 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -34,6 +34,20 @@ public class ChunkProviderServer implements IChunkProvider {
+     public LongObjectHashMap<Chunk> chunks = new LongObjectHashMap<Chunk>();
+     public WorldServer world;
+ 
++    // Migot start
++    private ChunkRegionLoader checkedRegionLoader = null;
++
++    public boolean doesChunkExist(int x, int z) {
++        if(this.checkedRegionLoader == null && this.chunkLoader instanceof ChunkRegionLoader) {
++            this.checkedRegionLoader = (ChunkRegionLoader) this.chunkLoader;
++        }
++        if(this.checkedRegionLoader != null) {
++            return this.checkedRegionLoader.chunkExists(this.world, x, z);
++        }
++        return false;
++    }
++    // Migot end
++
+     public ChunkProviderServer(WorldServer worldserver, IChunkLoader ichunkloader, IChunkProvider ichunkprovider) {
+         this.emptyChunk = new EmptyChunk(worldserver, Integer.MIN_VALUE, Integer.MIN_VALUE); // Migot
+         this.world = worldserver;
+diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
+index 3e31f4b..aa4cf30 100644
+--- a/src/main/java/net/minecraft/server/RegionFile.java
++++ b/src/main/java/net/minecraft/server/RegionFile.java
+@@ -25,6 +25,18 @@ public class RegionFile {
+     private int g;
+     private long h;
+ 
++    // Migot start
++    private boolean[] existingChunkCache = new boolean[1024];
++
++    private boolean checkExistingChunkCache(int i, int j) {
++        return this.existingChunkCache[i + j * 32];
++    }
++
++    private void addCoordinatesToCache(int i, int j) {
++        this.existingChunkCache[i + j * 32] = true;
++    }
++    // Migot end
++
+     public RegionFile(File file) {
+         this.b = file;
+         this.g = 0;
+@@ -95,6 +107,11 @@ public class RegionFile {
+         if (this.d(i, j)) {
+             return false;
+         } else {
++            // Migot start
++            if(checkExistingChunkCache(i, j)) {
++                return true;
++            }
++            // Migot end
+             try {
+                 int k = this.e(i, j);
+ 
+@@ -117,6 +134,7 @@ public class RegionFile {
+ 
+                     byte b0 = this.c.readByte();
+                     if (b0 == 1 || b0 == 2) {
++                        this.addCoordinatesToCache(i, j); // Migot
+                         return true;
+                     }
+                 }
+@@ -157,10 +175,12 @@ public class RegionFile {
+                             byte[] abyte;
+ 
+                             if (b0 == 1) {
++                                this.addCoordinatesToCache(i, j); // Migot
+                                 abyte = new byte[j1 - 1];
+                                 this.c.read(abyte);
+                                 return new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(abyte))));
+                             } else if (b0 == 2) {
++                                this.addCoordinatesToCache(i, j); // Migot
+                                 abyte = new byte[j1 - 1];
+                                 this.c.read(abyte);
+                                 return new DataInputStream(new BufferedInputStream(new InflaterInputStream(new ByteArrayInputStream(abyte))));
+-- 
+1.8.3.msysgit.0
+
