@@ -1,6 +1,6 @@
-From 87c78868f7ef070ec89f4db41c413065daa05640 Mon Sep 17 00:00:00 2001
+From 59ad9ef0c30a2c5ff85ab3ff7d6e685d05385e1f Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Sun, 30 Aug 2015 07:47:59 +0200
+Date: Sun, 30 Aug 2015 21:02:28 +0200
 Subject: [PATCH] Rewrite of Player Chunk Management
 
 
@@ -71,46 +71,48 @@ index 0000000..66b74a4
 +    }
 +}
 diff --git a/src/main/java/de/minetick/Migot.java b/src/main/java/de/minetick/Migot.java
-index 24a2710..c7eb458 100644
+index 24a2710..3cf1645 100644
 --- a/src/main/java/de/minetick/Migot.java
 +++ b/src/main/java/de/minetick/Migot.java
-@@ -26,6 +26,7 @@ import org.bukkit.craftbukkit.CraftServer;
- 
- import de.minetick.command.ReloadSettingsCommand;
- import de.minetick.command.TPSCommand;
-+import de.minetick.packetbuilder.PacketBuilderThreadPool;
- import de.minetick.pathsearch.PathSearchJob;
- import de.minetick.pathsearch.PathSearchThrottlerThread;
- 
-@@ -45,6 +46,7 @@ public class Migot {
+@@ -45,6 +45,7 @@ public class Migot {
      private int ticksCounter = 0;
      private final Logger log = LogManager.getLogger();
      private PathSearchThrottlerThread pathSearchThrottler;
-+    private PacketBuilderThreadPool packetBuilderPool;
++    private PacketBuilderBuffer builderBuffer;
  
      public Migot() {
          this.tickTimerObject = new TickTimer();
-@@ -74,6 +76,8 @@ public class Migot {
+@@ -74,6 +75,8 @@ public class Migot {
              CraftServer craftserver = MinecraftServer.getServer().server;
              craftserver.getCommandMap().register("tps", "Migot", new TPSCommand("tps"));
              craftserver.getCommandMap().register("migot-reload", "Migot", new ReloadSettingsCommand("migot-reload"));
 +
-+            this.packetBuilderPool = new PacketBuilderThreadPool(this.mainConfig.getPacketBuilderPoolSize());
++            this.builderBuffer = new PacketBuilderBuffer();
          }
      }
  
-@@ -85,6 +89,9 @@ public class Migot {
+@@ -85,6 +88,10 @@ public class Migot {
          this.timerService.shutdown();
          this.nbtFileService.shutdown();
          this.pathSearchThrottler.shutdown();
-+        if(this.packetBuilderPool != null) {
-+            this.packetBuilderPool.shutdown();
++        if(this.builderBuffer != null) {
++            this.builderBuffer.clear();
 +        }
++
          while(!this.nbtFileService.isTerminated()) {
              try {
                  if(!this.nbtFileService.awaitTermination(3, TimeUnit.MINUTES)) {
+@@ -184,4 +191,8 @@ public class Migot {
+     public static boolean queuePathSearch(PathSearchJob pathSearchJob) {
+         return instance.pathSearchThrottler.queuePathSearch(pathSearchJob);
+     }
++
++    public static PacketBuilderBuffer getPacketBuilderBuffer() {
++        return instance.builderBuffer;
++    }
+ }
 diff --git a/src/main/java/de/minetick/MigotConfig.java b/src/main/java/de/minetick/MigotConfig.java
-index 5352d8f..e263486 100644
+index 5352d8f..439924c 100644
 --- a/src/main/java/de/minetick/MigotConfig.java
 +++ b/src/main/java/de/minetick/MigotConfig.java
 @@ -4,14 +4,18 @@ import java.io.File;
@@ -132,34 +134,27 @@ index 5352d8f..e263486 100644
  import org.bukkit.configuration.InvalidConfigurationException;
  import org.bukkit.configuration.file.FileConfiguration;
  import org.bukkit.configuration.file.YamlConfiguration;
-@@ -19,6 +23,8 @@ import org.bukkit.entity.EntityType;
+@@ -19,6 +23,7 @@ import org.bukkit.entity.EntityType;
  
  import com.google.common.base.Charsets;
  
 +import de.minetick.MinetickChunkCoordComparator.ChunkPriority;
-+import de.minetick.packetbuilder.PacketBuilderThreadPool;
  import de.minetick.pathsearch.MigotNavigation;
  import de.minetick.pathsearch.PathSearchThrottlerThread;
  
-@@ -55,6 +61,9 @@ public class MigotConfig {
+@@ -55,6 +60,8 @@ public class MigotConfig {
          this.loadEntitiesWithOffloadedPathSearches(this.getEntitiesWithOffloadedPathSearches());
          MigotNavigation.setMinimumDistanceForOffloading(this.getMinimumTargetDistanceForOffloading());
          PathSearchThrottlerThread.adjustPoolSize(this.getPathSearchPoolSize());
-+        PacketBuilderThreadPool.adjustPoolSize(this.getPacketBuilderPoolSize());
 +        this.applyPacketChunkRates(ChunkPriority.values());
 +        ChunkGenerationPolicy.setRatesFromConfig(this.getMaxChunkGenerationRates());
      }
  
      private FileConfiguration loadConfig(File file) throws IOException, InvalidConfigurationException {
-@@ -103,4 +112,43 @@ public class MigotConfig {
+@@ -103,4 +110,38 @@ public class MigotConfig {
          int threadcount = configuration.getInt("pathsearches.pathSearchThreadPoolSize", 2);
          return Math.max(1, Math.min(threadcount, 32));
      }
-+
-+    public int getPacketBuilderPoolSize() {
-+        int threadcount = configuration.getInt("chunkloading.packetBuilderThreadPoolSize", 1);
-+        return Math.max(1, Math.min(threadcount, 32));
-+    }
 +
 +    public void applyPacketChunkRates(ChunkPriority[] values) {
 +        ConfigurationSection section = configuration.getConfigurationSection("chunkloading.packetChunkRates");
@@ -334,6 +329,58 @@ index 0000000..4aa6023
 +        } else {
 +            return ChunkPriority.LOW;
 +        }
++    }
++}
+diff --git a/src/main/java/de/minetick/PacketBuilderBuffer.java b/src/main/java/de/minetick/PacketBuilderBuffer.java
+new file mode 100644
+index 0000000..d4014bd
+--- /dev/null
++++ b/src/main/java/de/minetick/PacketBuilderBuffer.java
+@@ -0,0 +1,46 @@
++package de.minetick;
++
++import java.lang.ref.WeakReference;
++import java.util.ArrayList;
++
++public class PacketBuilderBuffer {
++
++    private ArrayList<WeakReference<byte[]>> sendBufferCache = new ArrayList<WeakReference<byte[]>>();
++
++    public PacketBuilderBuffer() {}
++
++    public void offerSendBuffer(byte[] array) {
++        synchronized(this.sendBufferCache) {
++            this.sendBufferCache.add(new WeakReference<byte[]>(array));
++        }
++    }
++
++    public byte[] requestSendBuffer(int length) {
++        synchronized(this.sendBufferCache) {
++            return this.checkInList(this.sendBufferCache, length);
++        }
++    }
++
++    public void clear() {
++        synchronized(this.sendBufferCache) {
++            this.sendBufferCache.clear();
++        }
++    }
++
++    private byte[] checkInList(ArrayList<WeakReference<byte[]>> list, int length) {
++        WeakReference<byte[]> ref;
++        byte[] array;
++        int size = list.size();
++        for(int i = size - 1; i >= 0; i--) {
++            ref = list.get(i);
++            array = ref.get();
++            if(array == null) {
++                list.remove(i);
++            } else if(array.length == length) {
++                list.remove(i);
++                return array;
++            }
++        }
++        return new byte[length];
 +    }
 +}
 diff --git a/src/main/java/de/minetick/PlayerChunkBuffer.java b/src/main/java/de/minetick/PlayerChunkBuffer.java
@@ -513,10 +560,10 @@ index 0000000..cf5191c
 +}
 diff --git a/src/main/java/de/minetick/PlayerChunkManager.java b/src/main/java/de/minetick/PlayerChunkManager.java
 new file mode 100644
-index 0000000..3d5ea79
+index 0000000..4e52d87
 --- /dev/null
 +++ b/src/main/java/de/minetick/PlayerChunkManager.java
-@@ -0,0 +1,211 @@
+@@ -0,0 +1,225 @@
 +package de.minetick;
 +
 +import java.util.ArrayList;
@@ -529,12 +576,10 @@ index 0000000..3d5ea79
 +import java.util.PriorityQueue;
 +
 +import de.minetick.MinetickChunkCoordComparator.ChunkPriority;
-+import de.minetick.packetbuilder.PacketBuilderChunkDataBulk;
-+import de.minetick.packetbuilder.PacketBuilderThreadPool;
-+import de.minetick.packetbuilder.jobs.PBJobPlayOutMapChunkBulk;
 +
 +import net.minecraft.server.Chunk;
 +import net.minecraft.server.ChunkCoordIntPair;
++import net.minecraft.server.PacketPlayOutMapChunk;
 +import net.minecraft.server.PacketPlayOutMapChunkBulk;
 +import net.minecraft.server.EntityPlayer;
 +import net.minecraft.server.PlayerChunkMap;
@@ -679,19 +724,21 @@ index 0000000..3d5ea79
 +                this.shuffleList.remove(entityplayer);
 +                this.shuffleList.add(entityplayer);
 +            }
-+
++            if(!chunkQueue.hasChunksQueued()) { return allGenerated; }
 +            int skipped = 0;
-+            PacketBuilderChunkDataBulk chunkData = new PacketBuilderChunkDataBulk();
-+            while(chunkQueue.hasChunksQueued() && chunkData.size() < this.world.spigotConfig.maxBulkChunk && skipped < (20 + previouslyskipped)) {
++            ArrayList<Chunk> list = new ArrayList<Chunk>();
++            ArrayList<TileEntity> tileEntityList = new ArrayList<TileEntity>();
++            while(chunkQueue.hasChunksQueued() && list.size() < this.world.spigotConfig.maxBulkChunk && skipped < (20 + previouslyskipped)) {
 +                ChunkCoordIntPair chunkcoordintpair = chunkQueue.peekFirst();
 +                if (chunkcoordintpair != null && chunkQueue.isOnServer(chunkcoordintpair)) {
 +                    if(this.world.chunkProviderServer.isChunkLoaded(chunkcoordintpair.x, chunkcoordintpair.z)) {
 +                        Chunk chunk = this.world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z);
 +                        if(chunk.isReady()) {
-+                            chunkData.addChunk(chunk);
++                            list.add(chunk);
++                            tileEntityList.addAll(chunk.tileEntities.values());
 +                            chunkQueue.removeFirst(true);
 +                            ChunkPriority priority = buff.comp.getChunkPriority(chunkcoordintpair);
-+                            if(chunkData.size() >= priority.getChunksPerPacket()) {
++                            if(list.size() >= priority.getChunksPerPacket()) {
 +                                break;
 +                            }
 +                        } else {
@@ -706,8 +753,22 @@ index 0000000..3d5ea79
 +                    chunkQueue.removeFirst(false);
 +                }
 +            }
-+            if (!chunkData.isEmpty()) {
-+                PacketBuilderThreadPool.addJobStatic(new PBJobPlayOutMapChunkBulk(entityplayer.playerConnection, chunkData, chunkQueue));
++            if (!list.isEmpty()) {
++                if(list.size() == 1) {
++                    entityplayer.playerConnection.sendPacket(new PacketPlayOutMapChunk(Migot.getPacketBuilderBuffer(), (Chunk) list.get(0), true, '\uffff'));
++                } else {
++                    entityplayer.playerConnection.sendPacket(new PacketPlayOutMapChunkBulk(Migot.getPacketBuilderBuffer(), list));                    
++                }
++
++                Iterator<TileEntity> tilesIterator = tileEntityList.iterator();
++
++                while (tilesIterator.hasNext()) {
++                    TileEntity tileentity = tilesIterator.next();
++
++                    entityplayer.a(tileentity);
++                }
++
++                entityplayer.queueChunksForTracking(list);
 +            }
 +        }
 +        return allGenerated;
@@ -948,514 +1009,50 @@ index 0000000..abe6962
 +        return this.centerZ;
 +    }
 +}
-diff --git a/src/main/java/de/minetick/packetbuilder/PacketBuilderBuffer.java b/src/main/java/de/minetick/packetbuilder/PacketBuilderBuffer.java
+diff --git a/src/main/java/de/minetick/SendBufferPacketBase.java b/src/main/java/de/minetick/SendBufferPacketBase.java
 new file mode 100644
-index 0000000..692ec25
+index 0000000..adb0c15
 --- /dev/null
-+++ b/src/main/java/de/minetick/packetbuilder/PacketBuilderBuffer.java
-@@ -0,0 +1,46 @@
-+package de.minetick.packetbuilder;
++++ b/src/main/java/de/minetick/SendBufferPacketBase.java
+@@ -0,0 +1,40 @@
++package de.minetick;
 +
-+import java.lang.ref.WeakReference;
-+import java.util.ArrayList;
++import net.minecraft.server.PacketPlayOutMapChunk.ChunkMap;
 +
-+public class PacketBuilderBuffer {
++public abstract class SendBufferPacketBase {
 +
-+    private ArrayList<WeakReference<byte[]>> sendBufferCache = new ArrayList<WeakReference<byte[]>>();
++    protected PacketBuilderBuffer pbb;
++    private int useCount;
 +
-+    public PacketBuilderBuffer() {}
-+
-+    public void offerSendBuffer(byte[] array) {
-+        synchronized(this.sendBufferCache) {
-+            this.sendBufferCache.add(new WeakReference<byte[]>(array));
-+        }
++    protected SendBufferPacketBase() {
++        this(null);
 +    }
 +
-+    public byte[] requestSendBuffer(int length) {
-+        synchronized(this.sendBufferCache) {
-+            return this.checkInList(this.sendBufferCache, length);
-+        }
-+    }
-+
-+    public void clear() {
-+        synchronized(this.sendBufferCache) {
-+            this.sendBufferCache.clear();
-+        }
-+    }
-+
-+    private byte[] checkInList(ArrayList<WeakReference<byte[]>> list, int length) {
-+        WeakReference<byte[]> ref;
-+        byte[] array;
-+        int size = list.size();
-+        for(int i = size - 1; i >= 0; i--) {
-+            ref = list.get(i);
-+            array = ref.get();
-+            if(array == null) {
-+                list.remove(i);
-+            } else if(array.length == length) {
-+                list.remove(i);
-+                return array;
-+            }
-+        }
-+        return new byte[length];
-+    }
-+}
-diff --git a/src/main/java/de/minetick/packetbuilder/PacketBuilderChunkData.java b/src/main/java/de/minetick/packetbuilder/PacketBuilderChunkData.java
-new file mode 100644
-index 0000000..ef299ba
---- /dev/null
-+++ b/src/main/java/de/minetick/packetbuilder/PacketBuilderChunkData.java
-@@ -0,0 +1,57 @@
-+package de.minetick.packetbuilder;
-+
-+import java.util.ArrayList;
-+import java.util.List;
-+
-+import net.minecraft.server.BlockPosition;
-+import net.minecraft.server.Chunk;
-+import net.minecraft.server.Packet;
-+import net.minecraft.server.PlayerConnection;
-+import net.minecraft.server.TileEntity;
-+
-+public class PacketBuilderChunkData {
-+
-+    private Chunk chunk;
-+    private List<TileEntity> tileEntites;
-+    private boolean sendAllFlag;
-+    private int sectionBitmask;
-+
-+    public PacketBuilderChunkData(Chunk chunk, boolean sendAllFlag, int sectionBitmask) {
-+        this.chunk = chunk;
-+        this.sendAllFlag = sendAllFlag;
-+        this.sectionBitmask = sectionBitmask;
-+        this.tileEntites = new ArrayList<TileEntity>(this.chunk.tileEntities.values());
-+    }
-+
-+    public Chunk getChunk() {
-+        return this.chunk;
-+    }
-+
-+    public boolean getSendAllFlag() {
-+        return this.sendAllFlag;
-+    }
-+
-+    public int getSectionBitmask() {
-+        return this.sectionBitmask;
-+    }
-+
-+    public void sendTileEntities(PlayerConnection playerconnection) {
-+        if(this.sectionBitmask == 0) {
-+            return;
-+        }
-+        for(TileEntity tileEntity: this.tileEntites) {
-+            int sectionId = tileEntity.getPosition().getZ() >> 4;
-+            if((this.sectionBitmask & (1 << sectionId)) != 0) {
-+                Packet packet = tileEntity.getUpdatePacket();
-+                if(packet != null) {
-+                    playerconnection.sendPacket(packet);
-+                }
-+            }
-+        }
-+    }
-+
-+    public void clear() {
-+        this.tileEntites.clear();
-+        this.chunk = null;
-+    }
-+}
-diff --git a/src/main/java/de/minetick/packetbuilder/PacketBuilderChunkDataBulk.java b/src/main/java/de/minetick/packetbuilder/PacketBuilderChunkDataBulk.java
-new file mode 100644
-index 0000000..3003774
---- /dev/null
-+++ b/src/main/java/de/minetick/packetbuilder/PacketBuilderChunkDataBulk.java
-@@ -0,0 +1,84 @@
-+package de.minetick.packetbuilder;
-+
-+import java.util.ArrayList;
-+import java.util.HashMap;
-+import java.util.Iterator;
-+import java.util.List;
-+import java.util.Map;
-+import java.util.Map.Entry;
-+
-+import de.minetick.PlayerChunkSendQueue;
-+
-+import net.minecraft.server.Chunk;
-+import net.minecraft.server.EntityPlayer;
-+import net.minecraft.server.Packet;
-+import net.minecraft.server.PlayerConnection;
-+import net.minecraft.server.TileEntity;
-+
-+public class PacketBuilderChunkDataBulk {
-+
-+    private Map<Chunk, List<TileEntity>> map;
-+
-+    public PacketBuilderChunkDataBulk() {
-+        this.map = new HashMap<Chunk, List<TileEntity>>();
-+    }
-+
-+    public void addChunk(Chunk chunk) {
-+        List<TileEntity> list = new ArrayList<TileEntity>();
-+        list.addAll(chunk.tileEntities.values());
-+        this.map.put(chunk, list);
-+    }
-+
-+    public boolean verifyLoadedChunks(PlayerChunkSendQueue pcsq) {
-+        boolean allOk = !this.isEmpty();
-+        Iterator<Chunk> iterator = this.map.keySet().iterator();
-+        while(iterator.hasNext()) {
-+            Chunk chunk = iterator.next();
-+            if(!pcsq.isOnServer(chunk.locX, chunk.locZ)) {
-+                List<TileEntity> list = this.map.get(chunk);
-+                list.clear();
-+                iterator.remove();
-+                allOk = false;
-+            }
-+        }
-+        return allOk;
-+    }
-+
-+    public void sendTileEntities(PlayerConnection connection) {
-+        for(List<TileEntity> list: this.map.values()) {
-+            for(TileEntity tileEntity: list) {
-+                if (tileEntity != null) {
-+                    Packet packet = tileEntity.getUpdatePacket();
-+                    if(packet != null) {
-+                        connection.sendPacket(packet);
-+                    }
-+                }
-+            }
-+        }
-+    }
-+
-+    public void queueChunksForTracking(EntityPlayer entityplayer, PlayerChunkSendQueue sendQueue) {
-+        entityplayer.chunksForTracking.addAll(this.map.keySet());
-+    }
-+
-+    public void clear() {
-+        Iterator<Entry<Chunk, List<TileEntity>>> iterator = this.map.entrySet().iterator();
-+        while(iterator.hasNext()) {
-+            Entry<Chunk, List<TileEntity>> entry = iterator.next();
-+            entry.getValue().clear();
-+            iterator.remove();
-+        }
-+    }
-+
-+    public boolean isEmpty() {
-+        return this.map.isEmpty();
-+    }
-+
-+    public List<Chunk> getChunks() {
-+        return new ArrayList<Chunk>(this.map.keySet());
-+    }
-+
-+    public int size() {
-+        return this.map.size();
-+    }
-+}
-diff --git a/src/main/java/de/minetick/packetbuilder/PacketBuilderJobInterface.java b/src/main/java/de/minetick/packetbuilder/PacketBuilderJobInterface.java
-new file mode 100644
-index 0000000..a013993
---- /dev/null
-+++ b/src/main/java/de/minetick/packetbuilder/PacketBuilderJobInterface.java
-@@ -0,0 +1,6 @@
-+package de.minetick.packetbuilder;
-+
-+public interface PacketBuilderJobInterface extends Runnable {
-+
-+    public void assignBuildBuffer(PacketBuilderBuffer pbb);
-+}
-diff --git a/src/main/java/de/minetick/packetbuilder/PacketBuilderThread.java b/src/main/java/de/minetick/packetbuilder/PacketBuilderThread.java
-new file mode 100644
-index 0000000..1b2b229
---- /dev/null
-+++ b/src/main/java/de/minetick/packetbuilder/PacketBuilderThread.java
-@@ -0,0 +1,33 @@
-+package de.minetick.packetbuilder;
-+
-+import java.util.concurrent.ExecutorService;
-+import java.util.concurrent.Executors;
-+
-+import de.minetick.MigotThreadFactory;
-+
-+public class PacketBuilderThread {
-+
-+    private int id;
-+    private static volatile int threadCounter = 0;
-+    private ExecutorService thread;
-+    private PacketBuilderBuffer buildBuffer;
-+
-+    public PacketBuilderThread() {
-+        this.id = threadCounter++;
-+        this.thread = Executors.newSingleThreadExecutor(new MigotThreadFactory(Thread.NORM_PRIORITY - 2, "Migot_PacketBuilder-" + this.id));
-+        this.buildBuffer = new PacketBuilderBuffer();
-+    }
-+
-+    public boolean addJob(PacketBuilderJobInterface job) {
-+        if(!this.thread.isShutdown()) {
-+            job.assignBuildBuffer(this.buildBuffer);
-+            this.thread.submit(job);
-+            return true;
-+        }
-+        return false;
-+    }
-+
-+    public void shutdown() {
-+        this.thread.shutdown();
-+    }
-+}
-diff --git a/src/main/java/de/minetick/packetbuilder/PacketBuilderThreadPool.java b/src/main/java/de/minetick/packetbuilder/PacketBuilderThreadPool.java
-new file mode 100644
-index 0000000..6270405
---- /dev/null
-+++ b/src/main/java/de/minetick/packetbuilder/PacketBuilderThreadPool.java
-@@ -0,0 +1,71 @@
-+package de.minetick.packetbuilder;
-+
-+import java.util.ArrayList;
-+
-+public class PacketBuilderThreadPool {
-+
-+    private boolean active;
-+    private ArrayList<PacketBuilderThread> threads;
-+    private static PacketBuilderThreadPool instance;
-+    private int jobAssignmentCounter = 0;
-+    private final Object lockObject = new Object();
-+
-+    public PacketBuilderThreadPool(int poolsize) {
-+        instance = this;
-+        this.threads = new ArrayList<PacketBuilderThread>();
-+        adjustPoolSize(poolsize);
-+        this.active = true;
-+    }
-+
-+    public static void addJobStatic(PacketBuilderJobInterface job) {
-+        if(instance != null) {
-+            instance.addJob(job);
-+        }
-+    }
-+
-+    public void addJob(PacketBuilderJobInterface job) {
-+        if(this.active && !this.threads.isEmpty()) {
-+            boolean jobAdded = false;
-+            synchronized(this.lockObject) {
-+                int attempts = 0;
-+                while(!jobAdded && attempts < this.threads.size()) {
-+                    attempts++;
-+                    this.jobAssignmentCounter = (this.jobAssignmentCounter + 1) % this.threads.size();
-+                    jobAdded = this.threads.get(this.jobAssignmentCounter).addJob(job);
-+                }
-+            }
-+        }
-+    }
-+
-+    public static void shutdownStatic() {
-+        if(instance != null) {
-+            instance.shutdown();
-+        }
-+    }
-+
-+    public void shutdown() {
-+        this.active = false;
-+        for(PacketBuilderThread thread : this.threads) {
-+            thread.shutdown();
-+        }
-+    }
-+
-+    private static int capInputSize(int size) {
-+        int newSize = Math.max(1, size);
-+        newSize = Math.min(newSize, 32);
-+        return newSize;
-+    }
-+
-+    public static void adjustPoolSize(int size) {
-+        if(instance != null) {
-+            int newSize = capInputSize(size);
-+            while(instance.threads.size() < newSize) {
-+                instance.threads.add(new PacketBuilderThread());
-+            }
-+            while(instance.threads.size() > newSize) {
-+                PacketBuilderThread thread = instance.threads.remove(instance.threads.size() - 1);
-+                thread.shutdown();
-+            }
-+        }
-+    }
-+}
-diff --git a/src/main/java/de/minetick/packetbuilder/jobs/PBJobPlayOutMapChunk.java b/src/main/java/de/minetick/packetbuilder/jobs/PBJobPlayOutMapChunk.java
-new file mode 100644
-index 0000000..b7fee00
---- /dev/null
-+++ b/src/main/java/de/minetick/packetbuilder/jobs/PBJobPlayOutMapChunk.java
-@@ -0,0 +1,106 @@
-+package de.minetick.packetbuilder.jobs;
-+
-+import java.util.ArrayList;
-+
-+import net.minecraft.server.Chunk;
-+import net.minecraft.server.PacketPlayOutMapChunk;
-+import net.minecraft.server.PlayerConnection;
-+import de.minetick.PlayerChunkSendQueue;
-+import de.minetick.packetbuilder.PacketBuilderBuffer;
-+import de.minetick.packetbuilder.PacketBuilderChunkData;
-+import de.minetick.packetbuilder.PacketBuilderJobInterface;
-+
-+public class PBJobPlayOutMapChunk implements PacketBuilderJobInterface {
-+
-+    private PlayerConnection connection;
-+    private PlayerChunkSendQueue chunkQueue;
-+    private PlayerConnection[] connections;
-+    private PlayerChunkSendQueue[] chunkQueues;
-+    private PacketBuilderChunkData chunkData;
-+    ArrayList<PlayerConnection> validOnes = new ArrayList<PlayerConnection>();
-+    private boolean multipleConnections;
-+
-+    private PacketBuilderBuffer pbb;
-+
-+    public PBJobPlayOutMapChunk(PlayerConnection connection, PlayerChunkSendQueue chunkQueue, PacketBuilderChunkData chunkData) {
-+        this.multipleConnections = false;
-+        this.connection = connection;
-+        this.chunkQueue = chunkQueue;
-+        this.chunkData = chunkData;
-+    }
-+
-+    public PBJobPlayOutMapChunk(PlayerConnection[] connections, PlayerChunkSendQueue[] chunkQueues, PacketBuilderChunkData chunkData) {
-+        this.multipleConnections = true;
-+        this.connections = connections;
-+        this.chunkQueues = chunkQueues;
-+        this.chunkData = chunkData;
-+    }
-+
-+    @Override
-+    public void run() {
-+        boolean packetSent = false;
-+        Chunk chunk = this.chunkData.getChunk();
-+        PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk(this.pbb, chunk, this.chunkData.getSendAllFlag(), this.chunkData.getSectionBitmask());
-+        if(this.multipleConnections) {
-+            for(int a = 0; a < this.connections.length; a++) {
-+                if(this.chunkQueues[a] != null && this.connections[a] != null) {
-+                    if(this.chunkQueues[a].isOnServer(chunk.locX, chunk.locZ)) {
-+                        this.validOnes.add(this.connections[a]);
-+                        this.connections[a] = null;
-+                        this.chunkQueues[a] = null;
-+                    }
-+                }
-+            }
-+            if(this.validOnes.size() > 0) {
-+                packet.setPendingUses(this.validOnes.size());
-+                packetSent = true;
-+                for(PlayerConnection n: this.validOnes) {
-+                    n.sendPacket(packet);
-+                    this.chunkData.sendTileEntities(n);
-+                }
-+            }
-+            this.connections = null;
-+            this.chunkQueues = null;
-+        } else {
-+            if(this.chunkQueue != null &&  this.connection != null) {
-+                if(!this.chunkQueue.isOnServer(chunk.locX, chunk.locZ)) {
-+                    packetSent = true;
-+                    packet.setPendingUses(1);
-+                    this.connection.sendPacket(packet);
-+                }
-+            }
-+            this.connection = null;
-+            this.chunkQueue = null;
-+        }
-+        if(!packetSent) {
-+            packet.discard();
-+        }
-+        this.clear();
-+    }
-+
-+    private void clear() {
-+        this.validOnes.clear();
-+        this.validOnes = null;
-+        this.chunkData.clear();
-+        if(this.connections != null) {
-+            for(int i = 0; i < this.connections.length; i++) {
-+                this.connections[i] = null;
-+            }
-+            this.connections = null;
-+        }
-+        if(this.chunkQueues != null) {
-+            for(int i = 0; i < this.chunkQueues.length; i++) {
-+                this.chunkQueues[i] = null;
-+            }
-+            this.chunkQueues = null;
-+        }
-+        this.connection = null;
-+        this.chunkQueue = null;
-+        this.pbb = null;
-+    }
-+
-+    @Override
-+    public void assignBuildBuffer(PacketBuilderBuffer pbb) {
++    protected SendBufferPacketBase(PacketBuilderBuffer pbb) {
 +        this.pbb = pbb;
-+    }
-+}
-diff --git a/src/main/java/de/minetick/packetbuilder/jobs/PBJobPlayOutMapChunkBulk.java b/src/main/java/de/minetick/packetbuilder/jobs/PBJobPlayOutMapChunkBulk.java
-new file mode 100644
-index 0000000..e531bed
---- /dev/null
-+++ b/src/main/java/de/minetick/packetbuilder/jobs/PBJobPlayOutMapChunkBulk.java
-@@ -0,0 +1,59 @@
-+package de.minetick.packetbuilder.jobs;
-+
-+import net.minecraft.server.PacketPlayOutMapChunkBulk;
-+import net.minecraft.server.PlayerConnection;
-+import de.minetick.PlayerChunkSendQueue;
-+import de.minetick.packetbuilder.PacketBuilderBuffer;
-+import de.minetick.packetbuilder.PacketBuilderChunkDataBulk;
-+import de.minetick.packetbuilder.PacketBuilderJobInterface;
-+import de.minetick.packetbuilder.PacketBuilderThreadPool;
-+
-+public class PBJobPlayOutMapChunkBulk implements PacketBuilderJobInterface {
-+
-+    private PlayerConnection connection;
-+    private PlayerChunkSendQueue chunkQueue;
-+    private PacketBuilderChunkDataBulk chunkData;
-+
-+    private PacketBuilderBuffer pbb;
-+
-+    public PBJobPlayOutMapChunkBulk(PlayerConnection connection, PacketBuilderChunkDataBulk chunkData, PlayerChunkSendQueue chunkQueue) {
-+        this.connection = connection;
-+        this.chunkData = chunkData;
-+        this.chunkQueue = chunkQueue;
++        this.useCount = 1;
 +    }
 +
-+    @Override
-+    public void run() {
-+        if(this.chunkQueue == null || this.connection == null) {
-+            this.chunkData.clear();
-+            this.clear();
++    public void setUseCount(int count) {
++        this.useCount = count;
++    }
++
++    protected int decreaseAndGetUseCount() {
++        return --this.useCount;
++    }
++
++    protected void freeSendBuffer(ChunkMap[] maps) {
++        for(ChunkMap map: maps) {
++            this.freeSendBuffer(map);
 +        }
-+        PacketPlayOutMapChunkBulk packet = new PacketPlayOutMapChunkBulk(this.pbb, this.chunkData.getChunks());
-+        boolean allStillListed = this.chunkData.verifyLoadedChunks(this.chunkQueue);
-+        if(allStillListed) {
-+            packet.setPendingUses(1);
-+            this.connection.sendPacket(packet);
-+            this.chunkData.sendTileEntities(this.connection);
-+            this.chunkData.queueChunksForTracking(this.connection.player, this.chunkQueue);
-+            this.chunkData.clear();
-+        } else {
-+            packet.discard();
-+        }
-+        if(!allStillListed && !this.chunkData.isEmpty()) {
-+            PacketBuilderThreadPool.addJobStatic(new PBJobPlayOutMapChunkBulk(this.connection, this.chunkData, this.chunkQueue));
-+        }
-+        this.clear();
 +    }
 +
-+    private void clear() {
-+        this.chunkData = null;
-+        this.connection = null;
-+        this.chunkQueue = null;
-+        this.pbb = null;
-+    }
-+
-+    @Override
-+    public void assignBuildBuffer(PacketBuilderBuffer pbb) {
-+        this.pbb = pbb;
++    protected void freeSendBuffer(ChunkMap map) {
++        if(this.pbb != null && map.a != null) {
++            this.pbb.offerSendBuffer(map.a);
++            map.a = null;
++            this.pbb = null;
++        }
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
@@ -1500,7 +1097,7 @@ index ccfd8c2..5db590c 100644
  
              this.chunks.put(LongHash.toLong(i, j), chunk);
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 3810f86..ee82f03 100644
+index 3810f86..5776f85 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -24,6 +24,11 @@ import org.bukkit.event.inventory.InventoryType;
@@ -1515,13 +1112,13 @@ index 3810f86..ee82f03 100644
  public class EntityPlayer extends EntityHuman implements ICrafting {
  
      private static final Logger bH = LogManager.getLogger();
-@@ -78,6 +83,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -78,6 +83,22 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
      }
      // Spigot end
  
 +    // Migot start
 +    public PlayerChunkSendQueue chunkQueue;
-+    public ConcurrentLinkedQueue<Chunk> chunksForTracking = new ConcurrentLinkedQueue<Chunk>();
++    private ConcurrentLinkedQueue<Chunk> chunksForTracking = new ConcurrentLinkedQueue<Chunk>();
 +
 +    public void setPlayerChunkSendQueue(PlayerChunkSendQueue pcsq) {
 +        if(this.chunkQueue != null) {
@@ -1529,20 +1126,24 @@ index 3810f86..ee82f03 100644
 +        }
 +        this.chunkQueue = pcsq;
 +    }
++
++    public void queueChunksForTracking(List<Chunk> list) {
++        this.chunksForTracking.addAll(list);
++    }
 +    // Migot end
 +
      public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
          super(worldserver, gameprofile);
          playerinteractmanager.player = this;
-@@ -216,6 +233,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -216,6 +237,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
              this.playerConnection.sendPacket(new PacketPlayOutEntityDestroy(aint));
          }
  
-+        /* Migot - The PlayerChunkManager and the PacketBuilder are going to handle this
++        /* Migot - The PlayerChunkManager is going to handle this
          if (!this.chunkCoordIntPairQueue.isEmpty()) {
              ArrayList arraylist = Lists.newArrayList();
              Iterator iterator1 = this.chunkCoordIntPairQueue.iterator();
-@@ -263,6 +281,14 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -263,6 +285,14 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                  }
              }
          }
@@ -1557,12 +1158,12 @@ index 3810f86..ee82f03 100644
  
          Entity entity = this.C();
  
-@@ -546,7 +572,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -546,7 +576,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return entityplayer.isSpectator() ? this.C() == this : (this.isSpectator() ? false : super.a(entityplayer));
      }
  
 -    private void a(TileEntity tileentity) {
-+    public void a(TileEntity tileentity) { // Migot
++    public void a(TileEntity tileentity) { // Migot - public
          if (tileentity != null) {
              Packet packet = tileentity.getUpdatePacket();
  
@@ -1584,48 +1185,40 @@ index 2826b6a..87de286 100644
  
          this.methodProfiler.c("connection");
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
-index 58c0275..ae5c5e1 100644
+index 58c0275..5707f45 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
-@@ -5,6 +5,11 @@ import java.io.IOException;
+@@ -1,11 +1,17 @@
+ package net.minecraft.server;
+ 
+ import com.google.common.collect.Lists;
++
+ import java.io.IOException;
  import java.util.ArrayList;
  import java.util.Iterator;
  
+-public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
 +// Migot start
-+import java.util.concurrent.atomic.AtomicInteger;
-+import de.minetick.packetbuilder.PacketBuilderBuffer;
++import de.minetick.PacketBuilderBuffer;
++import de.minetick.SendBufferPacketBase;
 +// Migot end
 +
- public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
++public class PacketPlayOutMapChunk extends SendBufferPacketBase implements Packet<PacketListenerPlayOut> { // Migot
  
      private int a;
-@@ -12,13 +17,32 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
-     private PacketPlayOutMapChunk.ChunkMap c;
-     private boolean d;
+     private int b;
+@@ -14,11 +20,18 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
  
-+    // Migot start
-+    private AtomicInteger pendingUses = new AtomicInteger(1);
-+    private PacketBuilderBuffer pbb;
-+
-+    public void setPendingUses(int uses) {
-+        this.pendingUses.set(uses);
-+    }
-+
-+    public void discard() {
-+        if(this.pbb != null) {
-+            if(this.c.a != null) {
-+                this.pbb.offerSendBuffer(this.c.a);
-+                this.c.a = null;
-+            }
-+            this.pbb = null;
-+        }
-+    }
-+    // Migot end
-+
      public PacketPlayOutMapChunk() {}
  
--    public PacketPlayOutMapChunk(Chunk chunk, boolean flag, int i) {
-+    public PacketPlayOutMapChunk(PacketBuilderBuffer pbb, Chunk chunk, boolean flag, int i) { // Migot
++    // Migot start
+     public PacketPlayOutMapChunk(Chunk chunk, boolean flag, int i) {
++        this(null, chunk, flag, i);
++    }
++
++    public PacketPlayOutMapChunk(PacketBuilderBuffer pbb, Chunk chunk, boolean flag, int i) {
++        super(pbb);
++    // Migot end
          this.a = chunk.locX;
          this.b = chunk.locZ;
          this.d = flag;
@@ -1634,128 +1227,123 @@ index 58c0275..ae5c5e1 100644
          chunk.world.spigotConfig.antiXrayInstance.obfuscateSync(chunk.locX, chunk.locZ, c.b, c.a, chunk.world);
      }
  
-@@ -37,6 +61,11 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
+@@ -37,6 +50,12 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
          packetdataserializer.writeBoolean(this.d);
          packetdataserializer.writeShort((short) (this.c.b & '\uffff'));
          packetdataserializer.a(this.c.a);
++
 +        // Migot start
-+        if(this.pendingUses.decrementAndGet() == 0) {
-+            this.discard();
++        if(this.decreaseAndGetUseCount() == 0) {
++            this.freeSendBuffer(this.c);
 +        }
 +        // Migot end
      }
  
      public void a(PacketListenerPlayOut packetlistenerplayout) {
-@@ -52,7 +81,7 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
+@@ -52,7 +71,13 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
          return j + k + l + i1;
      }
  
--    public static PacketPlayOutMapChunk.ChunkMap a(Chunk chunk, boolean flag, boolean flag1, int i) {
-+    public static PacketPlayOutMapChunk.ChunkMap a(PacketBuilderBuffer pbb, Chunk chunk, boolean flag, boolean flag1, int i) { // Migot
++    // Migot start
+     public static PacketPlayOutMapChunk.ChunkMap a(Chunk chunk, boolean flag, boolean flag1, int i) {
++        return a(null, chunk, flag, flag1, i);
++    }
++
++    public static PacketPlayOutMapChunk.ChunkMap a(PacketBuilderBuffer pbb, Chunk chunk, boolean flag, boolean flag1, int i) {
++    // Migot end
          ChunkSection[] achunksection = chunk.getSections();
          PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = new PacketPlayOutMapChunk.ChunkMap();
          ArrayList arraylist = Lists.newArrayList();
-@@ -68,7 +97,7 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
+@@ -68,7 +93,14 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
              }
          }
  
 -        packetplayoutmapchunk_chunkmap.a = new byte[a(Integer.bitCount(packetplayoutmapchunk_chunkmap.b), flag1, flag)];
-+        packetplayoutmapchunk_chunkmap.a = pbb.requestSendBuffer(a(Integer.bitCount(packetplayoutmapchunk_chunkmap.b), flag1, flag)); // Migot
++        // Migot start
++        int length = a(Integer.bitCount(packetplayoutmapchunk_chunkmap.b), flag1, flag);
++        if(pbb != null) {
++            packetplayoutmapchunk_chunkmap.a = pbb.requestSendBuffer(length);
++        } else {
++            packetplayoutmapchunk_chunkmap.a = new byte[length];
++        }
++        // Migot end
          j = 0;
          Iterator iterator = arraylist.iterator();
  
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
-index 10c0e34..0371311 100644
+index 10c0e34..8239062 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
-@@ -3,6 +3,11 @@ package net.minecraft.server;
+@@ -3,7 +3,12 @@ package net.minecraft.server;
  import java.io.IOException;
  import java.util.List;
  
+-public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut> {
 +// Migot start
-+import java.util.concurrent.atomic.AtomicInteger;
-+import de.minetick.packetbuilder.PacketBuilderBuffer;
++import de.minetick.PacketBuilderBuffer;
++import de.minetick.SendBufferPacketBase;
 +// Migot end
 +
- public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut> {
++public class PacketPlayOutMapChunkBulk extends SendBufferPacketBase implements Packet<PacketListenerPlayOut> {
  
      private int[] a;
-@@ -11,9 +16,30 @@ public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut>
-     private boolean d;
-     private World world; // Spigot
+     private int[] b;
+@@ -13,7 +18,14 @@ public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut>
  
-+    // Migot start
-+    private AtomicInteger pendingUses = new AtomicInteger(1);
-+    private PacketBuilderBuffer pbb;
-+
-+    public void setPendingUses(int uses) {
-+        this.pendingUses.set(uses);
-+    }
-+
-+    public void discard() {
-+        if(this.pbb != null) {
-+            if(this.c != null) {
-+                for(int i = 0; i < this.c.length; i++) {
-+                    this.pbb.offerSendBuffer(this.c[i].a);
-+                    this.c[i].a = null;
-+                }
-+            }
-+            this.pbb = null;
-+        }
-+    }
-+    // Migot end
-+
      public PacketPlayOutMapChunkBulk() {}
  
--    public PacketPlayOutMapChunkBulk(List<Chunk> list) {
-+    public PacketPlayOutMapChunkBulk(PacketBuilderBuffer pbb, List<Chunk> list) { // Migot
++    // Migot start
+     public PacketPlayOutMapChunkBulk(List<Chunk> list) {
++        this(null, list);
++    }
++
++    public PacketPlayOutMapChunkBulk(PacketBuilderBuffer pbb, List<Chunk> list) {
++        super(pbb);
++    // Migot end
          int i = list.size();
  
          this.a = new int[i];
-@@ -23,7 +49,7 @@ public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut>
+@@ -23,7 +35,7 @@ public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut>
  
          for (int j = 0; j < i; ++j) {
              Chunk chunk = (Chunk) list.get(j);
 -            PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = PacketPlayOutMapChunk.a(chunk, true, this.d, '\uffff');
-+            PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = PacketPlayOutMapChunk.a(pbb, chunk, true, this.d, '\uffff'); // Migot
++            PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = PacketPlayOutMapChunk.a(this.pbb, chunk, true, this.d, '\uffff'); // Migot
  
              this.a[j] = chunk.locX;
              this.b[j] = chunk.locZ;
-@@ -74,6 +100,12 @@ public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut>
+@@ -74,6 +86,11 @@ public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut>
              packetdataserializer.writeBytes(this.c[i].a);
          }
  
 +        // Migot start
-+        if(this.pendingUses.decrementAndGet() == 0) {
-+            this.discard();
++        if(this.decreaseAndGetUseCount() == 0) {
++            this.freeSendBuffer(this.c);
 +        }
 +        // Migot end
-+
      }
  
      public void a(PacketListenerPlayOut packetlistenerplayout) {
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index abb24c8..f4e6fd8 100644
+index abb24c8..1a0e237 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -15,6 +15,16 @@ import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
+@@ -15,6 +15,14 @@ import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
  import java.util.HashMap;
  // CraftBukkit end
  
 +// Migot start
 +import de.minetick.ChunkGenerationPolicy;
++import de.minetick.Migot;
 +import de.minetick.PlayerChunkBuffer;
 +import de.minetick.PlayerChunkManager;
 +import de.minetick.PlayerChunkSendQueue;
-+import de.minetick.packetbuilder.PacketBuilderChunkData;
-+import de.minetick.packetbuilder.PacketBuilderThreadPool;
-+import de.minetick.packetbuilder.jobs.PBJobPlayOutMapChunk;
 +// Migot end
 +
  public class PlayerChunkMap {
  
      private static final Logger a = LogManager.getLogger();
-@@ -28,9 +38,30 @@ public class PlayerChunkMap {
+@@ -28,9 +36,30 @@ public class PlayerChunkMap {
      private final int[][] i = new int[][] { { 1, 0}, { 0, 1}, { -1, 0}, { 0, -1}};
      private boolean wasNotEmpty; // CraftBukkit - add field
  
@@ -1786,7 +1374,7 @@ index abb24c8..f4e6fd8 100644
      }
  
      public WorldServer a() {
-@@ -85,7 +116,7 @@ public class PlayerChunkMap {
+@@ -85,7 +114,7 @@ public class PlayerChunkMap {
          return this.d.getEntry(k) != null;
      }
  
@@ -1795,7 +1383,7 @@ index abb24c8..f4e6fd8 100644
          long k = (long) i + 2147483647L | (long) j + 2147483647L << 32;
          PlayerChunkMap.PlayerChunk playerchunkmap_playerchunk = (PlayerChunkMap.PlayerChunk) this.d.getEntry(k);
  
-@@ -120,6 +151,7 @@ public class PlayerChunkMap {
+@@ -120,6 +149,7 @@ public class PlayerChunkMap {
      }
  
      public void addPlayer(EntityPlayer entityplayer) {
@@ -1803,7 +1391,7 @@ index abb24c8..f4e6fd8 100644
          int i = (int) entityplayer.locX >> 4;
          int j = (int) entityplayer.locZ >> 4;
  
-@@ -143,8 +175,48 @@ public class PlayerChunkMap {
+@@ -143,8 +173,48 @@ public class PlayerChunkMap {
  
          this.managedPlayers.add(entityplayer);
          this.b(entityplayer);
@@ -1852,7 +1440,7 @@ index abb24c8..f4e6fd8 100644
      public void b(EntityPlayer entityplayer) {
          ArrayList arraylist = Lists.newArrayList(entityplayer.chunkCoordIntPairQueue);
          int i = 0;
-@@ -189,8 +261,10 @@ public class PlayerChunkMap {
+@@ -189,8 +259,10 @@ public class PlayerChunkMap {
          }
  
      }
@@ -1863,7 +1451,7 @@ index abb24c8..f4e6fd8 100644
          int i = (int) entityplayer.d >> 4;
          int j = (int) entityplayer.e >> 4;
  
-@@ -203,6 +277,22 @@ public class PlayerChunkMap {
+@@ -203,6 +275,22 @@ public class PlayerChunkMap {
                  }
              }
          }
@@ -1886,7 +1474,7 @@ index abb24c8..f4e6fd8 100644
  
          this.managedPlayers.remove(entityplayer);
      }
-@@ -215,6 +305,7 @@ public class PlayerChunkMap {
+@@ -215,6 +303,7 @@ public class PlayerChunkMap {
      }
  
      public void movePlayer(EntityPlayer entityplayer) {
@@ -1894,7 +1482,7 @@ index abb24c8..f4e6fd8 100644
          int i = (int) entityplayer.locX >> 4;
          int j = (int) entityplayer.locZ >> 4;
          double d0 = entityplayer.d - entityplayer.locX;
-@@ -262,12 +353,45 @@ public class PlayerChunkMap {
+@@ -262,12 +351,45 @@ public class PlayerChunkMap {
                  // CraftBukkit end
              }
          }
@@ -1941,7 +1529,7 @@ index abb24c8..f4e6fd8 100644
      }
  
      public void a(int i) {
-@@ -313,7 +437,7 @@ public class PlayerChunkMap {
+@@ -313,7 +435,7 @@ public class PlayerChunkMap {
          return i * 16 - 16;
      }
  
@@ -1950,7 +1538,7 @@ index abb24c8..f4e6fd8 100644
  
          private final List<EntityPlayer> b = Lists.newArrayList();
          private final ChunkCoordIntPair location;
-@@ -332,9 +456,27 @@ public class PlayerChunkMap {
+@@ -332,9 +454,27 @@ public class PlayerChunkMap {
          };
          // CraftBukkit end
  
@@ -1979,7 +1567,7 @@ index abb24c8..f4e6fd8 100644
          }
  
          public void a(final EntityPlayer entityplayer) {  // CraftBukkit - added final to argument
-@@ -350,11 +492,11 @@ public class PlayerChunkMap {
+@@ -350,11 +490,11 @@ public class PlayerChunkMap {
                  Runnable playerRunnable;
                  if (this.loaded) {
                      playerRunnable = null;
@@ -1993,12 +1581,12 @@ index abb24c8..f4e6fd8 100644
                          }
                      };
                      PlayerChunkMap.this.a().chunkProviderServer.getChunkAt(this.location.x, this.location.z, playerRunnable);
-@@ -386,12 +528,12 @@ public class PlayerChunkMap {
+@@ -386,12 +526,12 @@ public class PlayerChunkMap {
                  Chunk chunk = PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z);
  
                  if (chunk.isReady()) {
 -                    entityplayer.playerConnection.sendPacket(new PacketPlayOutMapChunk(chunk, true, 0));
-+                    PacketBuilderThreadPool.addJobStatic(new PBJobPlayOutMapChunk(entityplayer.playerConnection, entityplayer.chunkQueue, new PacketBuilderChunkData(chunk, true, 0))); // Migot
++                    entityplayer.playerConnection.sendPacket(new PacketPlayOutMapChunk(Migot.getPacketBuilderBuffer(), chunk, true, 0)); // Migot
                  }
  
                  this.players.remove(entityplayer); // CraftBukkit
@@ -2008,7 +1596,7 @@ index abb24c8..f4e6fd8 100644
                  if (this.b.isEmpty()) {
                      long i = (long) this.location.x + 2147483647L | (long) this.location.z + 2147483647L << 32;
  
-@@ -441,9 +583,19 @@ public class PlayerChunkMap {
+@@ -441,9 +581,19 @@ public class PlayerChunkMap {
              for (int i = 0; i < this.b.size(); ++i) {
                  EntityPlayer entityplayer = (EntityPlayer) this.b.get(i);
  
@@ -2028,38 +1616,20 @@ index abb24c8..f4e6fd8 100644
              }
  
          }
-@@ -468,6 +620,7 @@ public class PlayerChunkMap {
-                     int l;
- 
+@@ -470,7 +620,11 @@ public class PlayerChunkMap {
                      if (this.dirtyCount == 64) {
-+                        /* Migot
                          i = this.location.x * 16;
                          j = this.location.z * 16;
-                         this.a((Packet) (new PacketPlayOutMapChunk(PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z), false, this.f)));
-@@ -482,6 +635,22 @@ public class PlayerChunkMap {
-                                 }
-                             }
-                         }
-+                        */
+-                        this.a((Packet) (new PacketPlayOutMapChunk(PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z), false, this.f)));
 +                        // Migot start
-+                        PlayerConnection[] players = new PlayerConnection[this.b.size()];
-+                        PlayerChunkSendQueue[] queues = new PlayerChunkSendQueue[this.b.size()];
-+                        for(int index = 0; index < this.b.size(); index++) {
-+                            EntityPlayer entityplayer = (EntityPlayer) this.b.get(index);
-+                            PlayerChunkSendQueue sq = entityplayer.chunkQueue;
-+                            if(sq != null) {
-+                                if(!sq.isAboutToSend(this.location)) {
-+                                    players[index] = entityplayer.playerConnection;
-+                                    queues[index] = entityplayer.chunkQueue;
-+                                }
-+                            }
-+                        }
-+                        PacketBuilderThreadPool.addJobStatic(new PBJobPlayOutMapChunk(players, queues, new PacketBuilderChunkData(PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z), false, this.f)));
++                        PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk(Migot.getPacketBuilderBuffer(), PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z), false, this.f);
++                        packet.setUseCount(this.b.size());
++                        this.a((Packet) packet);
 +                        // Migot end
-                     } else {
-                         this.a((Packet) (new PacketPlayOutMultiBlockChange(this.dirtyCount, this.dirtyBlocks, PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z))));
  
-@@ -515,6 +684,7 @@ public class PlayerChunkMap {
+                         for (k = 0; k < 16; ++k) {
+                             if ((this.f & 1 << k) != 0) {
+@@ -515,6 +669,7 @@ public class PlayerChunkMap {
          }
      }
  
@@ -2067,7 +1637,7 @@ index abb24c8..f4e6fd8 100644
      // CraftBukkit start - Sorter to load nearby chunks first
      private static class ChunkCoordComparator implements java.util.Comparator<ChunkCoordIntPair> {
          private int x;
-@@ -557,4 +727,5 @@ public class PlayerChunkMap {
+@@ -557,4 +712,5 @@ public class PlayerChunkMap {
          }
      }
      // CraftBukkit end
@@ -2110,15 +1680,14 @@ index bc1c3c6..0f1e9d7 100644
      // Migot end
  
 diff --git a/src/main/resources/configurations/migot.yml b/src/main/resources/configurations/migot.yml
-index 5e406f0..9b3ebb9 100644
+index 5e406f0..4ff0cd1 100644
 --- a/src/main/resources/configurations/migot.yml
 +++ b/src/main/resources/configurations/migot.yml
-@@ -24,3 +24,15 @@ pathsearches:
+@@ -24,3 +24,14 @@ pathsearches:
      - SQUID
      - WITCH
      - ZOMBIE
 +chunkloading:
-+    packetBuilderThreadPoolSize: 1
 +    packetChunkRates:
 +        HIGHEST: 5
 +        HIGH: 4
