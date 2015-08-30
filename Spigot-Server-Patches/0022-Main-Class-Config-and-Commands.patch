@@ -1,6 +1,6 @@
-From ed04dfb389b5dba82472c6b9eaa5ad36c4ddf198 Mon Sep 17 00:00:00 2001
+From 670e4e424f6e14ca7084b96ef44d8b3c8c008926 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Sun, 23 Aug 2015 00:44:23 +0200
+Date: Sun, 30 Aug 2015 07:24:06 +0200
 Subject: [PATCH] Main Class Config and Commands
 
 
@@ -454,7 +454,7 @@ index c30867d..40b59f1 100644
              this.a(MinecraftEncryption.b());
              DedicatedServer.LOGGER.info("Starting Minecraft server on " + (this.getServerIp().length() == 0 ? "*" : this.getServerIp()) + ":" + this.R());
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 0147704..f693c21 100644
+index 0147704..2826b6a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -52,6 +52,8 @@ import org.bukkit.craftbukkit.SpigotTimings; // Spigot
@@ -535,27 +535,49 @@ index 0147704..f693c21 100644
          }
          SpigotTimings.timeUpdateTimer.stopTiming(); // Spigot
  
-+        this.migot.cancelTimerTask(false); // Migot
++        this.cancelHeavyCalculationsForAllWorlds(false); // Migot
 +
          int i;
  
          for (i = 0; i < this.worlds.size(); ++i) {
+@@ -847,6 +870,8 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+             // this.i[i][this.ticks % 100] = System.nanoTime() - j; // CraftBukkit
+         }
+ 
++        this.migot.cancelTimerTask(false); // Migot
++
+         this.methodProfiler.c("connection");
+         SpigotTimings.connectionTimer.startTiming(); // Spigot
+         this.aq().c();
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 1a71294..ac372d9 100644
+index 1a71294..0d7ac85 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -168,6 +168,11 @@ public abstract class World implements IBlockAccess {
+@@ -168,6 +168,7 @@ public abstract class World implements IBlockAccess {
      private Chunk lastChunkAccessed = dummyChunk;
      final Object chunkLock = new Object();
      public ChunkProviderServer chunkProviderServer; // moved here from WorldServer
 +    protected boolean cancelHeavyCalculations = false;
-+
-+    public void cancelHeavyCalculations(boolean cancel) {
-+        this.cancelHeavyCalculations = cancel;
-+    }
      // Migot end
  
      public CraftWorld getWorld() {
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 6c32dd7..bc1c3c6 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -50,6 +50,12 @@ public class WorldServer extends World implements IAsyncTaskHandler {
+     private static final List<StructurePieceTreasure> U = Lists.newArrayList(new StructurePieceTreasure[] { new StructurePieceTreasure(Items.STICK, 0, 1, 3, 10), new StructurePieceTreasure(Item.getItemOf(Blocks.PLANKS), 0, 1, 3, 10), new StructurePieceTreasure(Item.getItemOf(Blocks.LOG), 0, 1, 3, 10), new StructurePieceTreasure(Items.STONE_AXE, 0, 1, 1, 3), new StructurePieceTreasure(Items.WOODEN_AXE, 0, 1, 1, 5), new StructurePieceTreasure(Items.STONE_PICKAXE, 0, 1, 1, 3), new StructurePieceTreasure(Items.WOODEN_PICKAXE, 0, 1, 1, 5), new StructurePieceTreasure(Items.APPLE, 0, 2, 3, 5), new StructurePieceTreasure(Items.BREAD, 0, 2, 3, 3), new StructurePieceTreasure(Item.getItemOf(Blocks.LOG2), 0, 1, 3, 10)});
+     private List<NextTickListEntry> V = Lists.newArrayList();
+ 
++    // Migot start
++    public void cancelHeavyCalculations(boolean cancel) {
++        this.cancelHeavyCalculations = cancel;
++    }
++    // Migot end
++
+     // CraftBukkit start
+     public final int dimension;
+ 
 diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
 index f6a67d6..9533539 100644
 --- a/src/main/java/org/spigotmc/SpigotConfig.java
