@@ -1,0 +1,161 @@
+From f91f1ffa8fc47d4d17eace73e0412d671622ebdd Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Mon, 31 Aug 2015 04:33:58 +0200
+Subject: [PATCH] Thread Local IntCache
+
+
+diff --git a/src/main/java/net/minecraft/server/IntCache.java b/src/main/java/net/minecraft/server/IntCache.java
+index 95060a4..3cab644 100644
+--- a/src/main/java/net/minecraft/server/IntCache.java
++++ b/src/main/java/net/minecraft/server/IntCache.java
+@@ -1,63 +1,115 @@
+ package net.minecraft.server;
+ 
+ import com.google.common.collect.Lists;
++
++// Migot start
++import java.lang.ref.WeakReference;
++import java.util.ArrayList;
++import java.util.Iterator;
+ import java.util.List;
++// Migot end
+ 
+ public class IntCache {
+ 
+-    private static int a = 256;
+-    private static List<int[]> b = Lists.newArrayList();
+-    private static List<int[]> c = Lists.newArrayList();
+-    private static List<int[]> d = Lists.newArrayList();
+-    private static List<int[]> e = Lists.newArrayList();
++    // Migot start - Refactored IntCache to be thread local instead of static
++    private static final ThreadLocal<IntCache> caches = new ThreadLocal<IntCache>() {
++        @Override
++        protected IntCache initialValue() {
++            IntCache cache = new IntCache();
++            synchronized(allCaches) {
++                allCaches.add(new WeakReference<IntCache>(cache));
++            }
++            return new IntCache();
++        }
++    };
++
++    private static List<WeakReference<IntCache>> allCaches = new ArrayList<WeakReference<IntCache>>();
++
++    private int a = 256;
++    private List<int[]> b = Lists.newArrayList();
++    private List<int[]> c = Lists.newArrayList();
++    private List<int[]> d = Lists.newArrayList();
++    private List<int[]> e = Lists.newArrayList();
++
++    public static int[] a(int i) {
++        return caches.get().aNonStatic(i);
++    }
+ 
+-    public static synchronized int[] a(int i) {
++    public int[] aNonStatic(int i) {
+         int[] aint;
+ 
+         if (i <= 256) {
+-            if (IntCache.b.isEmpty()) {
++            if (this.b.isEmpty()) {
+                 aint = new int[256];
+-                if (c.size() < org.spigotmc.SpigotConfig.intCacheLimit) IntCache.c.add(aint);
++                if (c.size() < org.spigotmc.SpigotConfig.intCacheLimit) this.c.add(aint);
+                 return aint;
+             } else {
+-                aint = (int[]) IntCache.b.remove(IntCache.b.size() - 1);
+-                if (c.size() < org.spigotmc.SpigotConfig.intCacheLimit) IntCache.c.add(aint);
++                aint = (int[]) this.b.remove(this.b.size() - 1);
++                if (c.size() < org.spigotmc.SpigotConfig.intCacheLimit) this.c.add(aint);
+                 return aint;
+             }
+-        } else if (i > IntCache.a) {
+-            IntCache.a = i;
+-            IntCache.d.clear();
+-            IntCache.e.clear();
+-            aint = new int[IntCache.a];
+-            if (e.size() < org.spigotmc.SpigotConfig.intCacheLimit) IntCache.e.add(aint);
++        } else if (i > this.a) {
++            this.a = i;
++            this.d.clear();
++            this.e.clear();
++            aint = new int[this.a];
++            if (e.size() < org.spigotmc.SpigotConfig.intCacheLimit) this.e.add(aint);
+             return aint;
+-        } else if (IntCache.d.isEmpty()) {
+-            aint = new int[IntCache.a];
+-            if (e.size() < org.spigotmc.SpigotConfig.intCacheLimit) IntCache.e.add(aint);
++        } else if (this.d.isEmpty()) {
++            aint = new int[this.a];
++            if (e.size() < org.spigotmc.SpigotConfig.intCacheLimit) this.e.add(aint);
+             return aint;
+         } else {
+-            aint = (int[]) IntCache.d.remove(IntCache.d.size() - 1);
+-            if (e.size() < org.spigotmc.SpigotConfig.intCacheLimit) IntCache.e.add(aint);
++            aint = (int[]) this.d.remove(this.d.size() - 1);
++            if (e.size() < org.spigotmc.SpigotConfig.intCacheLimit) this.e.add(aint);
+             return aint;
+         }
+     }
+ 
+-    public static synchronized void a() {
+-        if (!IntCache.d.isEmpty()) {
+-            IntCache.d.remove(IntCache.d.size() - 1);
++    public static void a() {
++        caches.get().aNonStatic();
++    }
++
++    public void aNonStatic() {
++        if (!this.d.isEmpty()) {
++            this.d.remove(this.d.size() - 1);
+         }
+ 
+-        if (!IntCache.b.isEmpty()) {
+-            IntCache.b.remove(IntCache.b.size() - 1);
++        if (!this.b.isEmpty()) {
++            this.b.remove(this.b.size() - 1);
+         }
+ 
+-        IntCache.d.addAll(IntCache.e);
+-        IntCache.b.addAll(IntCache.c);
+-        IntCache.e.clear();
+-        IntCache.c.clear();
++        this.d.addAll(this.e);
++        this.b.addAll(this.c);
++        this.e.clear();
++        this.c.clear();
+     }
+ 
+-    public static synchronized String b() {
+-        return "cache: " + IntCache.d.size() + ", tcache: " + IntCache.b.size() + ", allocated: " + IntCache.e.size() + ", tallocated: " + IntCache.c.size();
++    public static String b() {
++        int cache = 0;
++        int tcache = 0;
++        int allocated = 0;
++        int tallocated = 0;
++        int numberOfCaches;
++
++        synchronized(allCaches) {
++            numberOfCaches = allCaches.size();
++            Iterator<WeakReference<IntCache>> iter = allCaches.iterator();
++            while(iter.hasNext()) {
++                WeakReference<IntCache> reference = iter.next();
++                IntCache intcache = reference.get();
++                if(intcache != null) {
++                    cache += intcache.d.size();
++                    tcache += intcache.b.size();
++                    allocated += intcache.e.size();
++                    tallocated += intcache.c.size();
++                } else {
++                    iter.remove();
++                }
++            }
++        }
++
++        return String.valueOf(numberOfCaches) + " IntCaches. In Total => cache: " + cache + ", tcache: " + tcache + ", allocated: " + allocated + ", tallocated: " + tallocated;
+     }
++    // Migot end
+ }
+-- 
+1.8.3.msysgit.0
+
