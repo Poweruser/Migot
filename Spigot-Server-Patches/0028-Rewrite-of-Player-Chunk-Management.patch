@@ -1,6 +1,6 @@
-From 59ad9ef0c30a2c5ff85ab3ff7d6e685d05385e1f Mon Sep 17 00:00:00 2001
+From 7d8f0fc29fbccf6ff1b0be3bde8e7aae47725542 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Sun, 30 Aug 2015 21:02:28 +0200
+Date: Mon, 31 Aug 2015 22:12:23 +0200
 Subject: [PATCH] Rewrite of Player Chunk Management
 
 
@@ -791,12 +791,13 @@ index 0000000..4e52d87
 +}
 diff --git a/src/main/java/de/minetick/PlayerChunkSendQueue.java b/src/main/java/de/minetick/PlayerChunkSendQueue.java
 new file mode 100644
-index 0000000..c4d6685
+index 0000000..ea3af3f
 --- /dev/null
 +++ b/src/main/java/de/minetick/PlayerChunkSendQueue.java
-@@ -0,0 +1,160 @@
+@@ -0,0 +1,165 @@
 +package de.minetick;
 +
++import java.util.Collection;
 +import java.util.Collections;
 +import java.util.Iterator;
 +import java.util.LinkedHashSet;
@@ -953,6 +954,10 @@ index 0000000..c4d6685
 +
 +    public int size() {
 +        return this.queue.size();
++    }
++
++    public Collection<Long> getEnlistedChunkHashes() {
++        return this.serverData;
 +    }
 +}
 diff --git a/src/main/java/de/minetick/PlayerMovement.java b/src/main/java/de/minetick/PlayerMovement.java
@@ -1325,10 +1330,10 @@ index 10c0e34..8239062 100644
  
      public void a(PacketListenerPlayOut packetlistenerplayout) {
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index abb24c8..1a0e237 100644
+index abb24c8..171472c 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -15,6 +15,14 @@ import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
+@@ -15,6 +15,15 @@ import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
  import java.util.HashMap;
  // CraftBukkit end
  
@@ -1338,12 +1343,13 @@ index abb24c8..1a0e237 100644
 +import de.minetick.PlayerChunkBuffer;
 +import de.minetick.PlayerChunkManager;
 +import de.minetick.PlayerChunkSendQueue;
++import org.bukkit.craftbukkit.util.LongHash;
 +// Migot end
 +
  public class PlayerChunkMap {
  
      private static final Logger a = LogManager.getLogger();
-@@ -28,9 +36,30 @@ public class PlayerChunkMap {
+@@ -28,9 +37,30 @@ public class PlayerChunkMap {
      private final int[][] i = new int[][] { { 1, 0}, { 0, 1}, { -1, 0}, { 0, -1}};
      private boolean wasNotEmpty; // CraftBukkit - add field
  
@@ -1374,7 +1380,7 @@ index abb24c8..1a0e237 100644
      }
  
      public WorldServer a() {
-@@ -85,7 +114,7 @@ public class PlayerChunkMap {
+@@ -85,7 +115,7 @@ public class PlayerChunkMap {
          return this.d.getEntry(k) != null;
      }
  
@@ -1383,7 +1389,7 @@ index abb24c8..1a0e237 100644
          long k = (long) i + 2147483647L | (long) j + 2147483647L << 32;
          PlayerChunkMap.PlayerChunk playerchunkmap_playerchunk = (PlayerChunkMap.PlayerChunk) this.d.getEntry(k);
  
-@@ -120,6 +149,7 @@ public class PlayerChunkMap {
+@@ -120,6 +150,7 @@ public class PlayerChunkMap {
      }
  
      public void addPlayer(EntityPlayer entityplayer) {
@@ -1391,7 +1397,7 @@ index abb24c8..1a0e237 100644
          int i = (int) entityplayer.locX >> 4;
          int j = (int) entityplayer.locZ >> 4;
  
-@@ -143,8 +173,48 @@ public class PlayerChunkMap {
+@@ -143,8 +174,48 @@ public class PlayerChunkMap {
  
          this.managedPlayers.add(entityplayer);
          this.b(entityplayer);
@@ -1440,7 +1446,7 @@ index abb24c8..1a0e237 100644
      public void b(EntityPlayer entityplayer) {
          ArrayList arraylist = Lists.newArrayList(entityplayer.chunkCoordIntPairQueue);
          int i = 0;
-@@ -189,8 +259,10 @@ public class PlayerChunkMap {
+@@ -189,8 +260,10 @@ public class PlayerChunkMap {
          }
  
      }
@@ -1451,21 +1457,21 @@ index abb24c8..1a0e237 100644
          int i = (int) entityplayer.d >> 4;
          int j = (int) entityplayer.e >> 4;
  
-@@ -203,6 +275,22 @@ public class PlayerChunkMap {
+@@ -203,6 +276,22 @@ public class PlayerChunkMap {
                  }
              }
          }
 +        */
 +        // Migot start
-+        java.util.Iterator i = this.f.iterator();
-+        while(i.hasNext()) {
-+            PlayerChunk c = (PlayerChunk) i.next();
-+            if(c != null) {
-+                c.b(entityplayer);
-+            }
-+        }
 +        PlayerChunkSendQueue pcsq = entityplayer.chunkQueue;
 +        if(pcsq != null) {
++            java.util.Collection<Long> enlistedChunks = pcsq.getEnlistedChunkHashes();
++            for(Long hash: enlistedChunks) {
++                PlayerChunk playerchunk = this.a(LongHash.lsw(hash), LongHash.msw(hash), false);
++                if(playerchunk != null) {
++                    playerchunk.b(entityplayer);
++                }
++            }
 +            pcsq.clear();
 +        }
 +        entityplayer.setPlayerChunkSendQueue(null);
@@ -1474,7 +1480,7 @@ index abb24c8..1a0e237 100644
  
          this.managedPlayers.remove(entityplayer);
      }
-@@ -215,6 +303,7 @@ public class PlayerChunkMap {
+@@ -215,6 +304,7 @@ public class PlayerChunkMap {
      }
  
      public void movePlayer(EntityPlayer entityplayer) {
@@ -1482,7 +1488,7 @@ index abb24c8..1a0e237 100644
          int i = (int) entityplayer.locX >> 4;
          int j = (int) entityplayer.locZ >> 4;
          double d0 = entityplayer.d - entityplayer.locX;
-@@ -262,12 +351,45 @@ public class PlayerChunkMap {
+@@ -262,12 +352,45 @@ public class PlayerChunkMap {
                  // CraftBukkit end
              }
          }
@@ -1529,7 +1535,7 @@ index abb24c8..1a0e237 100644
      }
  
      public void a(int i) {
-@@ -313,7 +435,7 @@ public class PlayerChunkMap {
+@@ -313,7 +436,7 @@ public class PlayerChunkMap {
          return i * 16 - 16;
      }
  
@@ -1538,7 +1544,7 @@ index abb24c8..1a0e237 100644
  
          private final List<EntityPlayer> b = Lists.newArrayList();
          private final ChunkCoordIntPair location;
-@@ -332,9 +454,27 @@ public class PlayerChunkMap {
+@@ -332,9 +455,27 @@ public class PlayerChunkMap {
          };
          // CraftBukkit end
  
@@ -1567,7 +1573,7 @@ index abb24c8..1a0e237 100644
          }
  
          public void a(final EntityPlayer entityplayer) {  // CraftBukkit - added final to argument
-@@ -350,11 +490,11 @@ public class PlayerChunkMap {
+@@ -350,11 +491,11 @@ public class PlayerChunkMap {
                  Runnable playerRunnable;
                  if (this.loaded) {
                      playerRunnable = null;
@@ -1581,7 +1587,7 @@ index abb24c8..1a0e237 100644
                          }
                      };
                      PlayerChunkMap.this.a().chunkProviderServer.getChunkAt(this.location.x, this.location.z, playerRunnable);
-@@ -386,12 +526,12 @@ public class PlayerChunkMap {
+@@ -386,12 +527,12 @@ public class PlayerChunkMap {
                  Chunk chunk = PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z);
  
                  if (chunk.isReady()) {
@@ -1596,7 +1602,7 @@ index abb24c8..1a0e237 100644
                  if (this.b.isEmpty()) {
                      long i = (long) this.location.x + 2147483647L | (long) this.location.z + 2147483647L << 32;
  
-@@ -441,9 +581,19 @@ public class PlayerChunkMap {
+@@ -441,9 +582,19 @@ public class PlayerChunkMap {
              for (int i = 0; i < this.b.size(); ++i) {
                  EntityPlayer entityplayer = (EntityPlayer) this.b.get(i);
  
@@ -1616,7 +1622,7 @@ index abb24c8..1a0e237 100644
              }
  
          }
-@@ -470,7 +620,11 @@ public class PlayerChunkMap {
+@@ -470,7 +621,11 @@ public class PlayerChunkMap {
                      if (this.dirtyCount == 64) {
                          i = this.location.x * 16;
                          j = this.location.z * 16;
@@ -1629,7 +1635,7 @@ index abb24c8..1a0e237 100644
  
                          for (k = 0; k < 16; ++k) {
                              if ((this.f & 1 << k) != 0) {
-@@ -515,6 +669,7 @@ public class PlayerChunkMap {
+@@ -515,6 +670,7 @@ public class PlayerChunkMap {
          }
      }
  
@@ -1637,7 +1643,7 @@ index abb24c8..1a0e237 100644
      // CraftBukkit start - Sorter to load nearby chunks first
      private static class ChunkCoordComparator implements java.util.Comparator<ChunkCoordIntPair> {
          private int x;
-@@ -557,4 +712,5 @@ public class PlayerChunkMap {
+@@ -557,4 +713,5 @@ public class PlayerChunkMap {
          }
      }
      // CraftBukkit end

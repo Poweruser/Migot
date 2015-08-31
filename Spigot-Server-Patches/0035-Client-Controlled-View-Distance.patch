@@ -1,4 +1,4 @@
-From e71f39c8da4f2cf891345fd2025b3d3dd8ca75d3 Mon Sep 17 00:00:00 2001
+From 2765f37344a0518edad1073a03ec9e0c48256f13 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 21:39:11 +0200
 Subject: [PATCH] Client Controlled View Distance
@@ -244,10 +244,10 @@ index 8b79cd0..53cc637 100644
 +    // MinetickMod end
  }
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index 1a0e237..9e1af56 100644
+index 171472c..35ba21d 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -187,7 +187,7 @@ public class PlayerChunkMap {
+@@ -188,7 +188,7 @@ public class PlayerChunkMap {
  
          List<ChunkCoordIntPair> chunkList = new ArrayList<ChunkCoordIntPair>(450);
          boolean areaExists = this.playerChunkManager.doAllCornersOfPlayerAreaExist(i, j, this.g);
