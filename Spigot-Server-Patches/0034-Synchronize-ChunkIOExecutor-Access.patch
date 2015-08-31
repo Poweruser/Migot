@@ -1,0 +1,39 @@
+From 9ef13e165c8827f3e4a046ea9190fe81cf40df21 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Mon, 31 Aug 2015 15:13:32 +0200
+Subject: [PATCH] Synchronize ChunkIOExecutor Access
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOExecutor.java b/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOExecutor.java
+index e4fd9bc..66e3524 100644
+--- a/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOExecutor.java
++++ b/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOExecutor.java
+@@ -13,16 +13,22 @@ public class ChunkIOExecutor {
+     private static final AsynchronousExecutor<QueuedChunk, Chunk, Runnable, RuntimeException> instance = new AsynchronousExecutor<QueuedChunk, Chunk, Runnable, RuntimeException>(new ChunkIOProvider(), BASE_THREADS);
+ 
+     public static Chunk syncChunkLoad(World world, ChunkRegionLoader loader, ChunkProviderServer provider, int x, int z) {
+-        return instance.getSkipQueue(new QueuedChunk(x, z, loader, world, provider));
++        synchronized(instance) { // Migot
++            return instance.getSkipQueue(new QueuedChunk(x, z, loader, world, provider));
++        }
+     }
+ 
+     public static void queueChunkLoad(World world, ChunkRegionLoader loader, ChunkProviderServer provider, int x, int z, Runnable runnable) {
+-        instance.add(new QueuedChunk(x, z, loader, world, provider), runnable);
++        synchronized(instance) { // Migot
++            instance.add(new QueuedChunk(x, z, loader, world, provider), runnable);
++        }
+     }
+ 
+     // Abuses the fact that hashCode and equals for QueuedChunk only use world and coords
+     public static void dropQueuedChunkLoad(World world, int x, int z, Runnable runnable) {
+-        instance.drop(new QueuedChunk(x, z, null, world, null), runnable);
++        synchronized(instance) { // Migot
++            instance.drop(new QueuedChunk(x, z, null, world, null), runnable);
++        }
+     }
+ 
+     public static void adjustPoolSize(int players) {
+-- 
+1.8.3.msysgit.0
+
