@@ -1,0 +1,122 @@
+From 5977d50d72c7f73e129457ec2a877225078bafdd Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Mon, 31 Aug 2015 04:05:27 +0200
+Subject: [PATCH] Queue Entities for Dimension Change
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index bd22f94..a14e930 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -124,6 +124,14 @@ public abstract class Entity implements ICommandListener {
+     public void inactiveTick() { }
+     // Spigot end
+ 
++    // Migot start
++    private int targetDimension;
++
++    public int getTargetDimension() {
++        return this.targetDimension;
++    }
++    // Migot end
++
+     public int getId() {
+         return this.id;
+     }
+@@ -152,6 +160,7 @@ public abstract class Entity implements ICommandListener {
+         this.setPosition(0.0D, 0.0D, 0.0D);
+         if (world != null) {
+             this.dimension = world.worldProvider.getDimension();
++            this.targetDimension = this.dimension; // Migot
+             // Spigot start
+             this.defaultActivationState = org.spigotmc.ActivationRange.initializeEntityActivationState(this, world.spigotConfig);
+         } else {
+@@ -1890,6 +1899,15 @@ public abstract class Entity implements ICommandListener {
+     }
+ 
+     public void c(int i) {
++    // Migot start - Entities will be queued and teleported after all worlds have been ticked
++        if(i != this.dimension) {
++            this.targetDimension = i;
++            this.world.queueEntityForDimensionChange(this);
++        }
++    }
++
++    public void changeDimension(int i) {
++    // Migot end
+         if (!this.world.isClientSide && !this.dead) {
+             this.world.methodProfiler.a("changeDimension");
+             MinecraftServer minecraftserver = MinecraftServer.getServer();
+@@ -1919,7 +1937,9 @@ public abstract class Entity implements ICommandListener {
+                 return;
+             }
+             exit = event.useTravelAgent() ? event.getPortalTravelAgent().findOrCreate(event.getTo()) : event.getTo();
+-            this.teleportTo(exit, true);
++            if(exit != null) { // Migot
++                this.teleportTo(exit, true);
++            }
+         }
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 5776f85..73b6326 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -538,6 +538,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     }
+ 
+     public void c(int i) {
++    // Migot start
++        super.c(i);
++    }
++
++    public void changeDimension(int i) {
++    // Migot end
+         if (this.dimension == 1 && i == 1) {
+             this.b((Statistic) AchievementList.D);
+             this.world.kill(this);
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 87de286..d70a832 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -878,6 +878,12 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+ 
+         this.migot.cancelTimerTask(false); // Migot
+ 
++        // Migot start
++        for(i = 0; i < this.worlds.size(); ++i) {
++            this.worlds.get(i).processDimensionChangeQueue();
++        }
++        // Migot end
++
+         this.methodProfiler.c("connection");
+         SpigotTimings.connectionTimer.startTiming(); // Spigot
+         this.aq().c();
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index a3575dc..bf87969 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -170,6 +170,20 @@ public abstract class World implements IBlockAccess {
+     public ChunkProviderServer chunkProviderServer; // moved here from WorldServer
+     protected boolean cancelHeavyCalculations = false;
+     public boolean instantBlockFall;
++    private List<Entity> dimensionChangeQueue = java.util.Collections.synchronizedList(new ArrayList<Entity>());
++
++    public void queueEntityForDimensionChange(Entity entity) {
++        this.dimensionChangeQueue.add(entity);
++    }
++
++    public void processDimensionChangeQueue() {
++        Iterator<Entity> iter = this.dimensionChangeQueue.iterator();
++        while(iter.hasNext()) {
++            Entity entity = iter.next();
++            entity.changeDimension(entity.getTargetDimension());
++            iter.remove();
++        }
++    }
+     // Migot end
+ 
+     public CraftWorld getWorld() {
+-- 
+1.8.3.msysgit.0
+
