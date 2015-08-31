@@ -1,0 +1,140 @@
+From 6911374ce353b997667cbd37d693aa886fb91dbf Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Mon, 31 Aug 2015 03:03:23 +0200
+Subject: [PATCH] Per World Instant Block Fall Flag
+
+
+diff --git a/src/main/java/net/minecraft/server/BlockDragonEgg.java b/src/main/java/net/minecraft/server/BlockDragonEgg.java
+index de7ac6f..02a2fd4 100644
+--- a/src/main/java/net/minecraft/server/BlockDragonEgg.java
++++ b/src/main/java/net/minecraft/server/BlockDragonEgg.java
+@@ -27,7 +27,7 @@ public class BlockDragonEgg extends Block {
+         if (BlockFalling.canFall(world, blockposition.down()) && blockposition.getY() >= 0) {
+             byte b0 = 32;
+ 
+-            if (!BlockFalling.instaFall && world.areChunksLoadedBetween(blockposition.a(-b0, -b0, -b0), blockposition.a(b0, b0, b0))) {
++            if (!world.instantBlockFall && world.areChunksLoadedBetween(blockposition.a(-b0, -b0, -b0), blockposition.a(b0, b0, b0))) { // Migot
+                 world.addEntity(new EntityFallingBlock(world, (double) ((float) blockposition.getX() + 0.5F), (double) blockposition.getY(), (double) ((float) blockposition.getZ() + 0.5F), this.getBlockData()));
+             } else {
+                 world.setAir(blockposition);
+diff --git a/src/main/java/net/minecraft/server/BlockFalling.java b/src/main/java/net/minecraft/server/BlockFalling.java
+index 29f8554..c4383aa 100644
+--- a/src/main/java/net/minecraft/server/BlockFalling.java
++++ b/src/main/java/net/minecraft/server/BlockFalling.java
+@@ -4,7 +4,7 @@ import java.util.Random;
+ 
+ public class BlockFalling extends Block {
+ 
+-    public static boolean instaFall;
++    //public static boolean instaFall; // Migot
+ 
+     public BlockFalling() {
+         super(Material.SAND);
+@@ -34,7 +34,7 @@ public class BlockFalling extends Block {
+         if (canFall(world, blockposition.down()) && blockposition.getY() >= 0) {
+             byte b0 = 32;
+ 
+-            if (!BlockFalling.instaFall && world.areChunksLoadedBetween(blockposition.a(-b0, -b0, -b0), blockposition.a(b0, b0, b0))) {
++            if (!world.instantBlockFall && world.areChunksLoadedBetween(blockposition.a(-b0, -b0, -b0), blockposition.a(b0, b0, b0))) { // Migot
+                 if (!world.isClientSide) {
+                     EntityFallingBlock entityfallingblock = new EntityFallingBlock(world, (double) blockposition.getX() + 0.5D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.5D, world.getType(blockposition));
+ 
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderGenerate.java b/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
+index e0be3c1..e1c1607 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
+@@ -305,7 +305,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
+     }
+ 
+     public void getChunkAt(IChunkProvider ichunkprovider, int i, int j) {
+-        BlockFalling.instaFall = true;
++        this.m.instantBlockFall = true; // Migot
+         int k = i * 16;
+         int l = j * 16;
+         BlockPosition blockposition = new BlockPosition(k, 0, l);
+@@ -388,7 +388,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
+             }
+         }
+ 
+-        BlockFalling.instaFall = false;
++        this.m.instantBlockFall = false; // Migot
+     }
+ 
+     public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderHell.java b/src/main/java/net/minecraft/server/ChunkProviderHell.java
+index 2f01bbf..ad459b8 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderHell.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderHell.java
+@@ -294,7 +294,7 @@ public class ChunkProviderHell implements IChunkProvider {
+     }
+ 
+     public void getChunkAt(IChunkProvider ichunkprovider, int i, int j) {
+-        BlockFalling.instaFall = true;
++        this.h.instantBlockFall = true; // Migot
+         BlockPosition blockposition = new BlockPosition(i * 16, 0, j * 16);
+         ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
+ 
+@@ -334,7 +334,7 @@ public class ChunkProviderHell implements IChunkProvider {
+             this.x.generate(this.h, this.j, blockposition.a(this.j.nextInt(16), this.j.nextInt(108) + 10, this.j.nextInt(16)));
+         }
+ 
+-        BlockFalling.instaFall = false;
++        this.h.instantBlockFall = false; // Migot
+     }
+ 
+     public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index 5db590c..c6082f2 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -282,7 +282,7 @@ public class ChunkProviderServer implements IChunkProvider {
+                 this.chunkProvider.getChunkAt(ichunkprovider, i, j);
+ 
+                 // CraftBukkit start
+-                BlockSand.instaFall = true;
++                this.world.instantBlockFall = true; // Migot
+                 Random random = new Random();
+                 random.setSeed(world.getSeed());
+                 long xRand = random.nextLong() / 2L * 2L + 1L;
+@@ -300,7 +300,7 @@ public class ChunkProviderServer implements IChunkProvider {
+                         this.world.populating = false;
+                     }
+                 }
+-                BlockSand.instaFall = false;
++                this.world.instantBlockFall = false; // Migot
+                 this.world.getServer().getPluginManager().callEvent(new org.bukkit.event.world.ChunkPopulateEvent(chunk.bukkitChunk));
+                 // CraftBukkit end
+                 
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderTheEnd.java b/src/main/java/net/minecraft/server/ChunkProviderTheEnd.java
+index 4f2c865..92deca0 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderTheEnd.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderTheEnd.java
+@@ -223,11 +223,11 @@ public class ChunkProviderTheEnd implements IChunkProvider {
+     }
+ 
+     public void getChunkAt(IChunkProvider ichunkprovider, int i, int j) {
+-        BlockFalling.instaFall = true;
++        this.l.instantBlockFall = true; // Migot
+         BlockPosition blockposition = new BlockPosition(i * 16, 0, j * 16);
+ 
+         this.l.getBiome(blockposition.a(16, 0, 16)).a(this.l, this.l.random, blockposition);
+-        BlockFalling.instaFall = false;
++        this.l.instantBlockFall = false; // Migot
+     }
+ 
+     public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 0d7ac85..a3575dc 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -169,6 +169,7 @@ public abstract class World implements IBlockAccess {
+     final Object chunkLock = new Object();
+     public ChunkProviderServer chunkProviderServer; // moved here from WorldServer
+     protected boolean cancelHeavyCalculations = false;
++    public boolean instantBlockFall;
+     // Migot end
+ 
+     public CraftWorld getWorld() {
+-- 
+1.8.3.msysgit.0
+
