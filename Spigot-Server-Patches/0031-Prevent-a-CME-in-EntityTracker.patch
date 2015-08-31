@@ -1,0 +1,179 @@
+From ee6753d5f0c6191a8b2a95bf1dd74757e7006b7a Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Mon, 31 Aug 2015 03:25:29 +0200
+Subject: [PATCH] Prevent a CME in EntityTracker
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityTracker.java b/src/main/java/net/minecraft/server/EntityTracker.java
+index cb72b36..569b735 100644
+--- a/src/main/java/net/minecraft/server/EntityTracker.java
++++ b/src/main/java/net/minecraft/server/EntityTracker.java
+@@ -26,13 +26,15 @@ public class EntityTracker {
+         if (entity instanceof EntityPlayer) {
+             this.addEntity(entity, 512, 2);
+             EntityPlayer entityplayer = (EntityPlayer) entity;
+-            Iterator iterator = this.c.iterator();
++            synchronized(this.c) { // Migot
++                Iterator iterator = this.c.iterator();
+ 
+-            while (iterator.hasNext()) {
+-                EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
++                while (iterator.hasNext()) {
++                    EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+ 
+-                if (entitytrackerentry.tracker != entityplayer) {
+-                    entitytrackerentry.updatePlayer(entityplayer);
++                    if (entitytrackerentry.tracker != entityplayer) {
++                        entitytrackerentry.updatePlayer(entityplayer);
++                    }
+                 }
+             }
+         } else if (entity instanceof EntityFishingHook) {
+@@ -107,7 +109,9 @@ public class EntityTracker {
+ 
+             EntityTrackerEntry entitytrackerentry = new EntityTrackerEntry(entity, i, j, flag);
+ 
+-            this.c.add(entitytrackerentry);
++            synchronized(this.c) { // Migot
++                this.c.add(entitytrackerentry);
++            }
+             this.trackedEntities.a(entity.getId(), entitytrackerentry);
+             entitytrackerentry.scanPlayers(this.world.players);
+         } catch (Throwable throwable) {
+@@ -149,19 +153,23 @@ public class EntityTracker {
+         org.spigotmc.AsyncCatcher.catchOp( "entity untrack"); // Spigot
+         if (entity instanceof EntityPlayer) {
+             EntityPlayer entityplayer = (EntityPlayer) entity;
+-            Iterator iterator = this.c.iterator();
++            synchronized(this.c) { // Migot
++                Iterator iterator = this.c.iterator();
+ 
+-            while (iterator.hasNext()) {
+-                EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
++                while (iterator.hasNext()) {
++                    EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+ 
+-                entitytrackerentry.a(entityplayer);
++                    entitytrackerentry.a(entityplayer);
++                }
+             }
+         }
+ 
+         EntityTrackerEntry entitytrackerentry1 = (EntityTrackerEntry) this.trackedEntities.d(entity.getId());
+ 
+         if (entitytrackerentry1 != null) {
+-            this.c.remove(entitytrackerentry1);
++            synchronized(this.c) { // Migot
++                this.c.remove(entitytrackerentry1);
++            }
+             entitytrackerentry1.a();
+         }
+ 
+@@ -169,26 +177,30 @@ public class EntityTracker {
+ 
+     public void updatePlayers() {
+         ArrayList arraylist = Lists.newArrayList();
+-        Iterator iterator = this.c.iterator();
++        synchronized(this.c) { // Migot
++            Iterator iterator = this.c.iterator();
+ 
+-        while (iterator.hasNext()) {
+-            EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
++            while (iterator.hasNext()) {
++                EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+ 
+-            entitytrackerentry.track(this.world.players);
+-            if (entitytrackerentry.n && entitytrackerentry.tracker instanceof EntityPlayer) {
+-                arraylist.add((EntityPlayer) entitytrackerentry.tracker);
++                entitytrackerentry.track(this.world.players);
++                if (entitytrackerentry.n && entitytrackerentry.tracker instanceof EntityPlayer) {
++                    arraylist.add((EntityPlayer) entitytrackerentry.tracker);
++                }
+             }
+         }
+ 
+         for (int i = 0; i < arraylist.size(); ++i) {
+             EntityPlayer entityplayer = (EntityPlayer) arraylist.get(i);
+-            Iterator iterator1 = this.c.iterator();
++            synchronized(this.c) { // Migot
++                Iterator iterator1 = this.c.iterator();
+ 
+-            while (iterator1.hasNext()) {
+-                EntityTrackerEntry entitytrackerentry1 = (EntityTrackerEntry) iterator1.next();
++                while (iterator1.hasNext()) {
++                    EntityTrackerEntry entitytrackerentry1 = (EntityTrackerEntry) iterator1.next();
+ 
+-                if (entitytrackerentry1.tracker != entityplayer) {
+-                    entitytrackerentry1.updatePlayer(entityplayer);
++                    if (entitytrackerentry1.tracker != entityplayer) {
++                        entitytrackerentry1.updatePlayer(entityplayer);
++                    }
+                 }
+             }
+         }
+@@ -196,15 +208,17 @@ public class EntityTracker {
+     }
+ 
+     public void a(EntityPlayer entityplayer) {
+-        Iterator iterator = this.c.iterator();
++        synchronized(this.c) { // Migot
++            Iterator iterator = this.c.iterator();
+ 
+-        while (iterator.hasNext()) {
+-            EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
++            while (iterator.hasNext()) {
++                EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+ 
+-            if (entitytrackerentry.tracker == entityplayer) {
+-                entitytrackerentry.scanPlayers(this.world.players);
+-            } else {
+-                entitytrackerentry.updatePlayer(entityplayer);
++                if (entitytrackerentry.tracker == entityplayer) {
++                    entitytrackerentry.scanPlayers(this.world.players);
++                } else {
++                    entitytrackerentry.updatePlayer(entityplayer);
++                }
+             }
+         }
+ 
+@@ -229,24 +243,28 @@ public class EntityTracker {
+     }
+ 
+     public void untrackPlayer(EntityPlayer entityplayer) {
+-        Iterator iterator = this.c.iterator();
++        synchronized(this.c) { // Migot
++            Iterator iterator = this.c.iterator();
+ 
+-        while (iterator.hasNext()) {
+-            EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
++            while (iterator.hasNext()) {
++                EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+ 
+-            entitytrackerentry.clear(entityplayer);
++                entitytrackerentry.clear(entityplayer);
++            }
+         }
+ 
+     }
+ 
+     public void a(EntityPlayer entityplayer, Chunk chunk) {
+-        Iterator iterator = this.c.iterator();
++        synchronized(this.c) { // Migot
++            Iterator iterator = this.c.iterator();
+ 
+-        while (iterator.hasNext()) {
+-            EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
++            while (iterator.hasNext()) {
++                EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+ 
+-            if (entitytrackerentry.tracker != entityplayer && entitytrackerentry.tracker.ae == chunk.locX && entitytrackerentry.tracker.ag == chunk.locZ) {
+-                entitytrackerentry.updatePlayer(entityplayer);
++                if (entitytrackerentry.tracker != entityplayer && entitytrackerentry.tracker.ae == chunk.locX && entitytrackerentry.tracker.ag == chunk.locZ) {
++                    entitytrackerentry.updatePlayer(entityplayer);
++                }
+             }
+         }
+ 
+-- 
+1.8.3.msysgit.0
+
