@@ -1,4 +1,4 @@
-From 2765f37344a0518edad1073a03ec9e0c48256f13 Mon Sep 17 00:00:00 2001
+From bf697bcca41a5e9085c238168bb83476aaa676b5 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 21:39:11 +0200
 Subject: [PATCH] Client Controlled View Distance
@@ -20,7 +20,7 @@ index 3cf1645..f5cecae 100644
  
      public void checkTickTime(long tickTime) {
 diff --git a/src/main/java/de/minetick/MigotConfig.java b/src/main/java/de/minetick/MigotConfig.java
-index 439924c..681486e 100644
+index 0862990..05c5c2c 100644
 --- a/src/main/java/de/minetick/MigotConfig.java
 +++ b/src/main/java/de/minetick/MigotConfig.java
 @@ -9,6 +9,7 @@ import java.util.HashSet;
@@ -58,7 +58,7 @@ index 439924c..681486e 100644
      }
  
      public FileConfiguration[] reload() throws IOException, InvalidConfigurationException {
-@@ -144,4 +158,38 @@ public class MigotConfig {
+@@ -148,4 +162,38 @@ public class MigotConfig {
          }
          return rateMap;
      }
@@ -277,10 +277,10 @@ index bf87969..ff7ba3b 100644
                  if ( !chunkTickList.contains( hash ) && this.chunkProvider.isChunkLoaded(dx + j, dz + k ) )
                  {
 diff --git a/src/main/resources/configurations/migot.yml b/src/main/resources/configurations/migot.yml
-index 4ff0cd1..7a6741c 100644
+index c72413d..83dfd8d 100644
 --- a/src/main/resources/configurations/migot.yml
 +++ b/src/main/resources/configurations/migot.yml
-@@ -35,3 +35,4 @@ chunkloading:
+@@ -36,3 +36,4 @@ chunkloading:
          FLAT: 2.0
          LARGEBIOMES: 1.0
          AMPLIFIED: 0.5

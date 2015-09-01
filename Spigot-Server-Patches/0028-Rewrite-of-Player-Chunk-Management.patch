@@ -1,4 +1,4 @@
-From 7d8f0fc29fbccf6ff1b0be3bde8e7aae47725542 Mon Sep 17 00:00:00 2001
+From fc4a11c3de43de0c0a12f58d3832974b299976ee Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 22:12:23 +0200
 Subject: [PATCH] Rewrite of Player Chunk Management
@@ -112,7 +112,7 @@ index 24a2710..3cf1645 100644
 +    }
  }
 diff --git a/src/main/java/de/minetick/MigotConfig.java b/src/main/java/de/minetick/MigotConfig.java
-index 5352d8f..439924c 100644
+index bd37253..0862990 100644
 --- a/src/main/java/de/minetick/MigotConfig.java
 +++ b/src/main/java/de/minetick/MigotConfig.java
 @@ -4,14 +4,18 @@ import java.io.File;
@@ -151,9 +151,9 @@ index 5352d8f..439924c 100644
      }
  
      private FileConfiguration loadConfig(File file) throws IOException, InvalidConfigurationException {
-@@ -103,4 +110,38 @@ public class MigotConfig {
-         int threadcount = configuration.getInt("pathsearches.pathSearchThreadPoolSize", 2);
-         return Math.max(1, Math.min(threadcount, 32));
+@@ -107,4 +114,38 @@ public class MigotConfig {
+     public boolean getOffloadedPathSearchesEnabled() {
+         return configuration.getBoolean("async-pathsearches.enabled", true);
      }
 +
 +    public void applyPacketChunkRates(ChunkPriority[] values) {
@@ -1686,10 +1686,10 @@ index bc1c3c6..0f1e9d7 100644
      // Migot end
  
 diff --git a/src/main/resources/configurations/migot.yml b/src/main/resources/configurations/migot.yml
-index 5e406f0..4ff0cd1 100644
+index 5494808..c72413d 100644
 --- a/src/main/resources/configurations/migot.yml
 +++ b/src/main/resources/configurations/migot.yml
-@@ -24,3 +24,14 @@ pathsearches:
+@@ -25,3 +25,14 @@ async-pathsearches:
      - SQUID
      - WITCH
      - ZOMBIE

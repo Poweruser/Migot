@@ -1,6 +1,6 @@
-From 61406c937f34684e8c45d6b0963e30b809847c01 Mon Sep 17 00:00:00 2001
+From 047f0ebfae774278682521b090b28dac75ae3746 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Thu, 27 Aug 2015 01:32:58 +0200
+Date: Tue, 1 Sep 2015 03:04:51 +0200
 Subject: [PATCH] Async Path Searches
 
 
@@ -51,7 +51,7 @@ index 3d03d29..24a2710 100644
 +    }
  }
 diff --git a/src/main/java/de/minetick/MigotConfig.java b/src/main/java/de/minetick/MigotConfig.java
-index 28036a4..5352d8f 100644
+index 28036a4..bd37253 100644
 --- a/src/main/java/de/minetick/MigotConfig.java
 +++ b/src/main/java/de/minetick/MigotConfig.java
 @@ -4,6 +4,10 @@ import java.io.File;
@@ -96,17 +96,17 @@ index 28036a4..5352d8f 100644
      }
  
      private FileConfiguration loadConfig(File file) throws IOException, InvalidConfigurationException {
-@@ -63,4 +74,33 @@ public class MigotConfig {
+@@ -63,4 +74,37 @@ public class MigotConfig {
          }
          return config;
      }
 +
 +    public List<String> getEntitiesWithOffloadedPathSearches() {
-+        return configuration.getStringList("pathsearches.entitiesWithOffloadedPathSearches");
++        return configuration.getStringList("async-pathsearches.entities");
 +    }
 +
-+    public int getMinimumTargetDistanceForOffloading() {
-+        return configuration.getInt("pathsearches.minimumTargetDistanceForOffloadedPathSearches", 8);
++    public double getMinimumTargetDistanceForOffloading() {
++        return configuration.getDouble("async-pathsearches.minimumDistanceToTarget", 0.0D);
 +    }
 +
 +    private void loadEntitiesWithOffloadedPathSearches(List<String> entities) {
@@ -122,12 +122,16 @@ index 28036a4..5352d8f 100644
 +    }
 +
 +    public boolean isPathSearchOffloadedFor(EntityInsentient entity) {
-+        return this.entitiesWithOffloadedPathSearches.contains(entity.getBukkitEntity().getType());
++        return this.getOffloadedPathSearchesEnabled() && this.entitiesWithOffloadedPathSearches.contains(entity.getBukkitEntity().getType());
 +    }
 +
 +    public int getPathSearchPoolSize() {
-+        int threadcount = configuration.getInt("pathsearches.pathSearchThreadPoolSize", 2);
++        int threadcount = configuration.getInt("async-pathsearches.threadPoolSize", 2);
 +        return Math.max(1, Math.min(threadcount, 32));
++    }
++
++    public boolean getOffloadedPathSearchesEnabled() {
++        return configuration.getBoolean("async-pathsearches.enabled", true);
 +    }
  }
 diff --git a/src/main/java/de/minetick/pathsearch/MigotNavigation.java b/src/main/java/de/minetick/pathsearch/MigotNavigation.java
@@ -1075,15 +1079,16 @@ index 0a14c9d..6bdd864 100644
                              }
                          } else if (!block.b(iblockaccess, blockposition_mutableblockposition) && (!flag1 || !(block instanceof BlockDoor) || block.getMaterial() != Material.WOOD)) {
 diff --git a/src/main/resources/configurations/migot.yml b/src/main/resources/configurations/migot.yml
-index 14cb19d..5e406f0 100644
+index 14cb19d..5494808 100644
 --- a/src/main/resources/configurations/migot.yml
 +++ b/src/main/resources/configurations/migot.yml
-@@ -1 +1,26 @@
+@@ -1 +1,27 @@
  general-settings:
-+pathsearches:
-+    pathSearchThreadPoolSize: 1
-+    minimumTargetDistanceForOffloadedPathSearches: 0
-+    entitiesWithOffloadedPathSearches:
++async-pathsearches:
++    enabled: true
++    threadPoolSize: 1
++    minimumDistanceToTarget: 0.0
++    entities:
 +    - BAT
 +    - BLAZE
 +    - CHICKEN
