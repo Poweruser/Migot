@@ -1,4 +1,4 @@
-From 6911374ce353b997667cbd37d693aa886fb91dbf Mon Sep 17 00:00:00 2001
+From 3f4b99b65637dd3bdc50fb5642c64765969df23f Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 03:03:23 +0200
 Subject: [PATCH] Per World Instant Block Fall Flag
@@ -84,10 +84,10 @@ index 2f01bbf..ad459b8 100644
  
      public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 5db590c..c6082f2 100644
+index ccfd8c2..dcbf8b6 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -282,7 +282,7 @@ public class ChunkProviderServer implements IChunkProvider {
+@@ -281,7 +281,7 @@ public class ChunkProviderServer implements IChunkProvider {
                  this.chunkProvider.getChunkAt(ichunkprovider, i, j);
  
                  // CraftBukkit start
@@ -96,7 +96,7 @@ index 5db590c..c6082f2 100644
                  Random random = new Random();
                  random.setSeed(world.getSeed());
                  long xRand = random.nextLong() / 2L * 2L + 1L;
-@@ -300,7 +300,7 @@ public class ChunkProviderServer implements IChunkProvider {
+@@ -299,7 +299,7 @@ public class ChunkProviderServer implements IChunkProvider {
                          this.world.populating = false;
                      }
                  }

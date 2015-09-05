@@ -1,4 +1,4 @@
-From f31615f9f95fdd818aff2244734b922ff582742e Mon Sep 17 00:00:00 2001
+From 864795afc1e36f397ac65a7cd135145f9745e316 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 03:10:52 +0200
 Subject: [PATCH] Prevent a CME in BlockRedstoneWire

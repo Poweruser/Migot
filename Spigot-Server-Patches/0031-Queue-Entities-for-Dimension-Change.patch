@@ -1,4 +1,4 @@
-From 5977d50d72c7f73e129457ec2a877225078bafdd Mon Sep 17 00:00:00 2001
+From 78c4c3e8b8a39ed40aac82a0ae1d858edc4b10b2 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 04:05:27 +0200
 Subject: [PATCH] Queue Entities for Dimension Change
@@ -59,10 +59,10 @@ index bd22f94..a14e930 100644
      }
  
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 5776f85..73b6326 100644
+index 3810f86..8f30981 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -538,6 +538,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -508,6 +508,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
      }
  
      public void c(int i) {
@@ -76,10 +76,10 @@ index 5776f85..73b6326 100644
              this.b((Statistic) AchievementList.D);
              this.world.kill(this);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 87de286..d70a832 100644
+index 2826b6a..9fa759d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -878,6 +878,12 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -872,6 +872,12 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
  
          this.migot.cancelTimerTask(false); // Migot
  
