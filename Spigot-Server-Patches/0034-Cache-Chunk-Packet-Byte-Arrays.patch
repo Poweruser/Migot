@@ -1,0 +1,260 @@
+From 22b91ad2bd998b59bd6c916b94d84896f2182be3 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Tue, 8 Sep 2015 05:25:38 +0200
+Subject: [PATCH] Cache Chunk Packet Byte Arrays
+
+
+diff --git a/src/main/java/de/minetick/PacketMapChunkBase.java b/src/main/java/de/minetick/PacketMapChunkBase.java
+new file mode 100644
+index 0000000..5905e54
+--- /dev/null
++++ b/src/main/java/de/minetick/PacketMapChunkBase.java
+@@ -0,0 +1,106 @@
++package de.minetick;
++
++import java.lang.ref.WeakReference;
++import java.util.ArrayDeque;
++import java.util.HashMap;
++import java.util.Queue;
++
++public abstract class PacketMapChunkBase {
++
++    private static ThreadLocal<ByteCache> byteCaches = new ThreadLocal<ByteCache>() {
++        @Override
++        protected ByteCache initialValue() {
++            return new ByteCache();
++        }
++    };
++
++    private int useCounter = 1;
++    private ByteCache selectedCache;
++
++    public void setUseCount(int count) {
++        this.useCounter = count;
++    }
++
++    protected abstract void releaseRequestedArrays();
++
++    protected void releaseByteArray(byte[] array) {
++        this.getByteCache().offerArray(array);
++    }
++
++    protected ByteCache getByteCache() {
++        if(this.selectedCache == null) {
++            this.selectedCache = byteCaches.get();
++        }
++        return this.selectedCache;
++    }
++
++    protected byte[] getByteArray(int length) {
++        return this.getByteCache().requestArray(length);
++    }
++
++    protected void useAndCheck() {
++        boolean release;
++        synchronized(this) {
++            release = (--this.useCounter == 0);
++        }
++        if(release) {
++            this.releaseRequestedArrays();
++        }
++    }
++
++    protected static class ByteCache {
++
++        private final static int MINIMUM_SIZE = 8096;
++        private HashMap<Integer, Queue<WeakReference<byte[]>>> cache = new HashMap<Integer, Queue<WeakReference<byte[]>>>();
++
++        public void offerArray(byte[] array) {
++            if(array != null && array.length >= MINIMUM_SIZE) {
++                synchronized(this.cache) {
++                    Integer key = new Integer(array.length);
++                    WeakReference<byte[]> entry = new WeakReference<byte[]>(array);
++                    Queue<WeakReference<byte[]>> list;
++                    if(cache.containsKey(key)) {
++                        list = cache.get(key);
++                    } else {
++                        list = new ArrayDeque<WeakReference<byte[]>>();
++                        cache.put(key, list);
++                    }
++                    list.add(entry);
++                }
++            }
++        }
++
++        public byte[] requestArray(int length) {
++            if(length >= MINIMUM_SIZE) {
++                synchronized(this.cache) {
++                    Integer key = new Integer(length);
++                    return this.checkInQueue(this.cache.get(key), length);
++                }
++            } else {
++                return new byte[length];
++            }
++        }
++
++        public void clear() {
++            synchronized(this.cache) {
++                this.cache.clear();
++            }
++        }
++
++        private byte[] checkInQueue(Queue<WeakReference<byte[]>> queue, int length) {
++            if(queue != null) {
++                byte[] array;
++                while(!queue.isEmpty()) {
++                    WeakReference<byte[]> ref = queue.poll();
++                    if(ref != null) {
++                        array = ref.get();
++                        if(array != null) {
++                            return array;
++                        }
++                    }
++                }
++            }
++            return new byte[length];
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+index 58c0275..c5f28cc 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+@@ -1,11 +1,14 @@
+ package net.minecraft.server;
+ 
+ import com.google.common.collect.Lists;
++
++import de.minetick.PacketMapChunkBase; // Migot
++
+ import java.io.IOException;
+ import java.util.ArrayList;
+ import java.util.Iterator;
+ 
+-public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
++public class PacketPlayOutMapChunk extends PacketMapChunkBase implements Packet<PacketListenerPlayOut> { // Migot
+ 
+     private int a;
+     private int b;
+@@ -18,7 +21,7 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
+         this.a = chunk.locX;
+         this.b = chunk.locZ;
+         this.d = flag;
+-        this.c = a(chunk, flag, !chunk.getWorld().worldProvider.o(), i);
++        this.c = a(this.getByteCache(), chunk, flag, !chunk.getWorld().worldProvider.o(), i);
+         chunk.world.spigotConfig.antiXrayInstance.obfuscateSync(chunk.locX, chunk.locZ, c.b, c.a, chunk.world);
+     }
+ 
+@@ -37,6 +40,7 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
+         packetdataserializer.writeBoolean(this.d);
+         packetdataserializer.writeShort((short) (this.c.b & '\uffff'));
+         packetdataserializer.a(this.c.a);
++        this.useAndCheck(); // Migot
+     }
+ 
+     public void a(PacketListenerPlayOut packetlistenerplayout) {
+@@ -52,7 +56,7 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
+         return j + k + l + i1;
+     }
+ 
+-    public static PacketPlayOutMapChunk.ChunkMap a(Chunk chunk, boolean flag, boolean flag1, int i) {
++    public static PacketPlayOutMapChunk.ChunkMap a(ByteCache cache, Chunk chunk, boolean flag, boolean flag1, int i) { // Migot
+         ChunkSection[] achunksection = chunk.getSections();
+         PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = new PacketPlayOutMapChunk.ChunkMap();
+         ArrayList arraylist = Lists.newArrayList();
+@@ -68,7 +72,14 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
+             }
+         }
+ 
+-        packetplayoutmapchunk_chunkmap.a = new byte[a(Integer.bitCount(packetplayoutmapchunk_chunkmap.b), flag1, flag)];
++        // Migot start
++        int arraylength = a(Integer.bitCount(packetplayoutmapchunk_chunkmap.b), flag1, flag);
++        if(cache != null) {
++            packetplayoutmapchunk_chunkmap.a = cache.requestArray(arraylength);
++        } else {
++            packetplayoutmapchunk_chunkmap.a = new byte[arraylength];
++        }
++        // Migot end
+         j = 0;
+         Iterator iterator = arraylist.iterator();
+ 
+@@ -117,4 +128,13 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
+ 
+         public ChunkMap() {}
+     }
++
++    // Migot start
++    @Override
++    protected void releaseRequestedArrays() {
++        this.releaseByteArray(this.c.a);
++        this.c.a = null;
++    }
++    // Migot end
++
+ }
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
+index 10c0e34..a891c40 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
+@@ -3,7 +3,9 @@ package net.minecraft.server;
+ import java.io.IOException;
+ import java.util.List;
+ 
+-public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut> {
++import de.minetick.PacketMapChunkBase; // Migot
++
++public class PacketPlayOutMapChunkBulk extends PacketMapChunkBase implements Packet<PacketListenerPlayOut> { // Migot
+ 
+     private int[] a;
+     private int[] b;
+@@ -23,7 +25,7 @@ public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut>
+ 
+         for (int j = 0; j < i; ++j) {
+             Chunk chunk = (Chunk) list.get(j);
+-            PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = PacketPlayOutMapChunk.a(chunk, true, this.d, '\uffff');
++            PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = PacketPlayOutMapChunk.a(this.getByteCache(), chunk, true, this.d, '\uffff');
+ 
+             this.a[j] = chunk.locX;
+             this.b[j] = chunk.locZ;
+@@ -73,10 +75,21 @@ public class PacketPlayOutMapChunkBulk implements Packet<PacketListenerPlayOut>
+             world.spigotConfig.antiXrayInstance.obfuscate(this.a[i], this.b[i], this.c[i].b, this.c[i].a, world); // Spigot
+             packetdataserializer.writeBytes(this.c[i].a);
+         }
++        this.useAndCheck(); // Migot
+ 
+     }
+ 
+     public void a(PacketListenerPlayOut packetlistenerplayout) {
+         packetlistenerplayout.a(this);
+     }
++
++    // Migot start
++    @Override
++    protected void releaseRequestedArrays() {
++        for(int i = 0; i < c.length; i++) {
++            this.releaseByteArray(this.c[i].a);
++            this.c[i].a = null;
++        }
++    }
++    // Migot end
+ }
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index abb24c8..a8b3c06 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -470,7 +470,11 @@ public class PlayerChunkMap {
+                     if (this.dirtyCount == 64) {
+                         i = this.location.x * 16;
+                         j = this.location.z * 16;
+-                        this.a((Packet) (new PacketPlayOutMapChunk(PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z), false, this.f)));
++                        // Migot start
++                        PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk(PlayerChunkMap.this.world.getChunkAt(this.location.x, this.location.z), false, this.f);
++                        packet.setUseCount(this.b.size());
++                        this.a((Packet) packet);
++                        // Migot end
+ 
+                         for (k = 0; k < 16; ++k) {
+                             if ((this.f & 1 << k) != 0) {
+-- 
+1.8.3.msysgit.0
+
