@@ -1,6 +1,6 @@
-From 22b91ad2bd998b59bd6c916b94d84896f2182be3 Mon Sep 17 00:00:00 2001
+From 174612c5aea5cc9261f368032471a1440fad8e46 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Tue, 8 Sep 2015 05:25:38 +0200
+Date: Tue, 8 Sep 2015 05:54:59 +0200
 Subject: [PATCH] Cache Chunk Packet Byte Arrays
 
 
@@ -117,7 +117,7 @@ index 0000000..5905e54
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
-index 58c0275..c5f28cc 100644
+index 58c0275..55976c7 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 @@ -1,11 +1,14 @@
@@ -141,7 +141,7 @@ index 58c0275..c5f28cc 100644
          this.b = chunk.locZ;
          this.d = flag;
 -        this.c = a(chunk, flag, !chunk.getWorld().worldProvider.o(), i);
-+        this.c = a(this.getByteCache(), chunk, flag, !chunk.getWorld().worldProvider.o(), i);
++        this.c = a(this.getByteCache(), chunk, flag, !chunk.getWorld().worldProvider.o(), i); // Migot
          chunk.world.spigotConfig.antiXrayInstance.obfuscateSync(chunk.locX, chunk.locZ, c.b, c.a, chunk.world);
      }
  
@@ -193,7 +193,7 @@ index 58c0275..c5f28cc 100644
 +
  }
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
-index 10c0e34..a891c40 100644
+index 10c0e34..237333a 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
 @@ -3,7 +3,9 @@ package net.minecraft.server;
@@ -212,7 +212,7 @@ index 10c0e34..a891c40 100644
          for (int j = 0; j < i; ++j) {
              Chunk chunk = (Chunk) list.get(j);
 -            PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = PacketPlayOutMapChunk.a(chunk, true, this.d, '\uffff');
-+            PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = PacketPlayOutMapChunk.a(this.getByteCache(), chunk, true, this.d, '\uffff');
++            PacketPlayOutMapChunk.ChunkMap packetplayoutmapchunk_chunkmap = PacketPlayOutMapChunk.a(this.getByteCache(), chunk, true, this.d, '\uffff'); // Migot
  
              this.a[j] = chunk.locX;
              this.b[j] = chunk.locZ;
