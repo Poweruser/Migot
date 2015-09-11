@@ -1,14 +1,14 @@
-From 90b90c218eda7f7c40a182d4e05955cff528c04c Mon Sep 17 00:00:00 2001
+From d9c79fa88efb88ee1d59fea36fb0e3143a39f3e2 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Sat, 15 Aug 2015 03:13:44 +0200
 Subject: [PATCH] Fix Chunk Coordinates Miscalculations
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index c97be17..46c4391 100644
+index e345dd7..d9617cc 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -1553,7 +1553,7 @@ public abstract class Entity implements ICommandListener {
+@@ -1554,7 +1554,7 @@ public abstract class Entity implements ICommandListener {
              this.vehicle = null;
          } else {
              // CraftBukkit start

@@ -1,14 +1,14 @@
-From cc4840b22e5ddcb652ba7f09270f13f033f28e79 Mon Sep 17 00:00:00 2001
+From f60572cf6dd230ec3a8d23a68b1c31ff6f119156 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Sat, 15 Aug 2015 03:28:45 +0200
 Subject: [PATCH] Prevent Projectiles from Using Portals
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 46c4391..bd22f94 100644
+index d9617cc..62b945d 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -258,7 +258,7 @@ public abstract class Entity implements ICommandListener {
+@@ -259,7 +259,7 @@ public abstract class Entity implements ICommandListener {
          this.lastZ = this.locZ;
          this.lastPitch = this.pitch;
          this.lastYaw = this.yaw;

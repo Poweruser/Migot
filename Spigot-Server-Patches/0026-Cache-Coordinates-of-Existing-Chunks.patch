@@ -1,4 +1,4 @@
-From 12fbc4d39136c322060a0b58d11bed45babca260 Mon Sep 17 00:00:00 2001
+From abd8847346f279951a8b69918e5908159c51c7b5 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Sun, 30 Aug 2015 00:14:25 +0200
 Subject: [PATCH] Cache Coordinates of Existing Chunks
@@ -30,7 +30,7 @@ index be05a04..ccfd8c2 100644
          this.emptyChunk = new EmptyChunk(worldserver, Integer.MIN_VALUE, Integer.MIN_VALUE); // Migot
          this.world = worldserver;
 diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
-index 3e31f4b..aa4cf30 100644
+index 348706f..faef694 100644
 --- a/src/main/java/net/minecraft/server/RegionFile.java
 +++ b/src/main/java/net/minecraft/server/RegionFile.java
 @@ -25,6 +25,18 @@ public class RegionFile {
@@ -52,7 +52,7 @@ index 3e31f4b..aa4cf30 100644
      public RegionFile(File file) {
          this.b = file;
          this.g = 0;
-@@ -95,6 +107,11 @@ public class RegionFile {
+@@ -91,6 +103,11 @@ public class RegionFile {
          if (this.d(i, j)) {
              return false;
          } else {
@@ -64,7 +64,7 @@ index 3e31f4b..aa4cf30 100644
              try {
                  int k = this.e(i, j);
  
-@@ -117,6 +134,7 @@ public class RegionFile {
+@@ -113,6 +130,7 @@ public class RegionFile {
  
                      byte b0 = this.c.readByte();
                      if (b0 == 1 || b0 == 2) {
@@ -72,7 +72,7 @@ index 3e31f4b..aa4cf30 100644
                          return true;
                      }
                  }
-@@ -157,10 +175,12 @@ public class RegionFile {
+@@ -153,10 +171,12 @@ public class RegionFile {
                              byte[] abyte;
  
                              if (b0 == 1) {

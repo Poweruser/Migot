@@ -1,14 +1,14 @@
-From 78c4c3e8b8a39ed40aac82a0ae1d858edc4b10b2 Mon Sep 17 00:00:00 2001
+From 93ccd235d577fe891c935cef3a30fd9985c26897 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 04:05:27 +0200
 Subject: [PATCH] Queue Entities for Dimension Change
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index bd22f94..a14e930 100644
+index 62b945d..8c7ff00 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -124,6 +124,14 @@ public abstract class Entity implements ICommandListener {
+@@ -125,6 +125,14 @@ public abstract class Entity implements ICommandListener {
      public void inactiveTick() { }
      // Spigot end
  
@@ -23,7 +23,7 @@ index bd22f94..a14e930 100644
      public int getId() {
          return this.id;
      }
-@@ -152,6 +160,7 @@ public abstract class Entity implements ICommandListener {
+@@ -153,6 +161,7 @@ public abstract class Entity implements ICommandListener {
          this.setPosition(0.0D, 0.0D, 0.0D);
          if (world != null) {
              this.dimension = world.worldProvider.getDimension();
@@ -31,7 +31,7 @@ index bd22f94..a14e930 100644
              // Spigot start
              this.defaultActivationState = org.spigotmc.ActivationRange.initializeEntityActivationState(this, world.spigotConfig);
          } else {
-@@ -1890,6 +1899,15 @@ public abstract class Entity implements ICommandListener {
+@@ -1891,6 +1900,15 @@ public abstract class Entity implements ICommandListener {
      }
  
      public void c(int i) {
@@ -47,7 +47,7 @@ index bd22f94..a14e930 100644
          if (!this.world.isClientSide && !this.dead) {
              this.world.methodProfiler.a("changeDimension");
              MinecraftServer minecraftserver = MinecraftServer.getServer();
-@@ -1919,7 +1937,9 @@ public abstract class Entity implements ICommandListener {
+@@ -1920,7 +1938,9 @@ public abstract class Entity implements ICommandListener {
                  return;
              }
              exit = event.useTravelAgent() ? event.getPortalTravelAgent().findOrCreate(event.getTo()) : event.getTo();
