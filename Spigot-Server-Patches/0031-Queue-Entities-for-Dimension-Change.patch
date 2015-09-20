@@ -1,4 +1,4 @@
-From 93ccd235d577fe891c935cef3a30fd9985c26897 Mon Sep 17 00:00:00 2001
+From 94075879ea5a10404b8be877727c711c2820b70a Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 04:05:27 +0200
 Subject: [PATCH] Queue Entities for Dimension Change
@@ -76,10 +76,10 @@ index 3810f86..8f30981 100644
              this.b((Statistic) AchievementList.D);
              this.world.kill(this);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2826b6a..9fa759d 100644
+index b6fb20d..1b2be27 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -872,6 +872,12 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -873,6 +873,12 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
  
          this.migot.cancelTimerTask(false); // Migot
  

@@ -1,14 +1,14 @@
-From b979d7ee2e0d80b7ede2e4446b43e19efa0c9c31 Mon Sep 17 00:00:00 2001
+From c42200eb540aac84299fd180b27c02abcde69b8b Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Sun, 16 Aug 2015 18:00:49 +0200
 Subject: [PATCH] Show Migot in Crashes Server Lists and Stats
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index cd982de..0147704 100644
+index 268ac1c..78a332d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1061,7 +1061,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -1062,7 +1062,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
      }
  
      public String getServerModName() {

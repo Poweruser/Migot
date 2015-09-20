@@ -1,4 +1,4 @@
-From 670e4e424f6e14ca7084b96ef44d8b3c8c008926 Mon Sep 17 00:00:00 2001
+From bcb4621722ed61e33e64f21a6e5651df053da2be Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Sun, 30 Aug 2015 07:24:06 +0200
 Subject: [PATCH] Main Class Config and Commands
@@ -454,7 +454,7 @@ index c30867d..40b59f1 100644
              this.a(MinecraftEncryption.b());
              DedicatedServer.LOGGER.info("Starting Minecraft server on " + (this.getServerIp().length() == 0 ? "*" : this.getServerIp()) + ":" + this.R());
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 0147704..2826b6a 100644
+index 78a332d..b6fb20d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -52,6 +52,8 @@ import org.bukkit.craftbukkit.SpigotTimings; // Spigot
@@ -494,7 +494,7 @@ index 0147704..2826b6a 100644
          // this.universe = file; // CraftBukkit
          // this.q = new ServerConnection(this); // Spigot
          this.Z = new UserCache(this, file1);
-@@ -529,6 +539,9 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -530,6 +540,9 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
              if (this.n.d()) {
                  this.n.e();
              }
@@ -504,7 +504,7 @@ index 0147704..2826b6a 100644
              // Spigot start
              if( org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly )
              {
-@@ -685,6 +698,11 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -686,6 +699,11 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
          SpigotTimings.serverTickTimer.startTiming(); // Spigot
          long i = System.nanoTime();
  
@@ -516,7 +516,7 @@ index 0147704..2826b6a 100644
          ++this.ticks;
          if (this.T) {
              this.T = false;
-@@ -721,10 +739,13 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -722,10 +740,13 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
          if(this.autoSaveOrdered) {
              this.autoSaveNextWorld();
          }
@@ -531,7 +531,7 @@ index 0147704..2826b6a 100644
          this.methodProfiler.b();
          this.methodProfiler.a("snooper");
          if (getSnooperEnabled() && !this.n.d() && this.ticks > 100) {  // Spigot
-@@ -782,6 +803,8 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -783,6 +804,8 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
          }
          SpigotTimings.timeUpdateTimer.stopTiming(); // Spigot
  
@@ -540,7 +540,7 @@ index 0147704..2826b6a 100644
          int i;
  
          for (i = 0; i < this.worlds.size(); ++i) {
-@@ -847,6 +870,8 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -848,6 +871,8 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
              // this.i[i][this.ticks % 100] = System.nanoTime() - j; // CraftBukkit
          }
  
@@ -562,7 +562,7 @@ index 1a71294..0d7ac85 100644
  
      public CraftWorld getWorld() {
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 6c32dd7..bc1c3c6 100644
+index d9bfce4..74ac04a 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -50,6 +50,12 @@ public class WorldServer extends World implements IAsyncTaskHandler {
