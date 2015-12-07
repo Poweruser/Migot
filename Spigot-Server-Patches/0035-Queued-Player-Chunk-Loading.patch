@@ -1,0 +1,605 @@
+From 457cfe0cc8f5d1330c42529c626758c244d1f7c7 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Mon, 7 Dec 2015 15:15:02 +0100
+Subject: [PATCH] Queued Player Chunk Loading
+
+
+diff --git a/src/main/java/de/minetick/playerchunks/EmptyChunkCoordIntPair.java b/src/main/java/de/minetick/playerchunks/EmptyChunkCoordIntPair.java
+new file mode 100644
+index 0000000..93af1f6
+--- /dev/null
++++ b/src/main/java/de/minetick/playerchunks/EmptyChunkCoordIntPair.java
+@@ -0,0 +1,15 @@
++package de.minetick.playerchunks;
++
++import net.minecraft.server.ChunkCoordIntPair;
++
++public class EmptyChunkCoordIntPair extends ChunkCoordIntPair {
++
++    public EmptyChunkCoordIntPair(int i, int j) {
++        super(i, j);
++    }
++
++    @Override
++    public boolean isEmpty() {
++        return true;
++    }
++}
+diff --git a/src/main/java/de/minetick/playerchunks/FOVChunkCoordComparator.java b/src/main/java/de/minetick/playerchunks/FOVChunkCoordComparator.java
+new file mode 100644
+index 0000000..ea97175
+--- /dev/null
++++ b/src/main/java/de/minetick/playerchunks/FOVChunkCoordComparator.java
+@@ -0,0 +1,88 @@
++package de.minetick.playerchunks;
++
++import java.io.Serializable;
++import java.util.Comparator;
++
++import net.minecraft.server.EntityPlayer;
++import net.minecraft.server.ChunkCoordIntPair;
++import net.minecraft.server.MathHelper;
++
++public class FOVChunkCoordComparator implements Comparator<ChunkCoordIntPair>, Serializable {
++
++    private static final long serialVersionUID = 5600078159334305946L;
++    private int x;
++    private int z;
++
++    private double[] normaldirectionVector;
++    private boolean isXnormal;
++
++    private double[] directionVector;
++    private double[] tempMatching;
++
++    public FOVChunkCoordComparator (EntityPlayer entityplayer) {
++        this.normaldirectionVector = new double[] { 1.0D, 0.0D };
++        this.directionVector = new double[] { 1.0D, 0.0D };
++        this.tempMatching = new double[] { 1.0D, 0.0D, 1.0D }; // x component, z component, squared vector length
++        this.isXnormal = true;
++        this.setPos(entityplayer);
++    }
++
++    public void setPos(EntityPlayer entityplayer) {
++        this.x = MathHelper.floor(entityplayer.locX) >> 4;
++        this.z = MathHelper.floor(entityplayer.locZ) >> 4;
++        this.calcDirectionVectors(entityplayer.yaw);
++        this.x -= (this.normaldirectionVector[0] * 1.5D);
++        this.z -= (this.normaldirectionVector[1] * 1.5D);
++    }
++
++    @Override
++    public int compare(ChunkCoordIntPair a, ChunkCoordIntPair b) {
++        double weightA = this.calcChunkWeight(a);
++        double weightB = this.calcChunkWeight(b);
++
++        if(weightA < weightB) {
++            return -1;
++        } else if(weightA > weightB) {
++            return 1;
++        } else {
++            return (a.x + a.z) - (b.x + b.z);
++        }
++    }
++
++    private void calcDirectionVectors(float yaw) {
++        this.directionVector[0] = Math.sin(Math.toRadians(yaw + 180.0f));
++        this.directionVector[1] = Math.cos(Math.toRadians(yaw));
++        double max;
++        double absX = Math.abs(this.directionVector[0]);
++        double absZ = Math.abs(this.directionVector[1]);
++        if(absX > absZ) {
++            this.isXnormal = true;
++            max = absX;
++        } else {
++            this.isXnormal = false;
++            max = absZ;
++        }
++        double factor = 1.0D / max;
++        this.normaldirectionVector[0] = this.directionVector[0] * factor;
++        this.normaldirectionVector[1] = this.directionVector[1] * factor;
++    }
++
++    private double[] getMatchingDirectionVector(ChunkCoordIntPair ccip) {
++        int abs = Math.abs(this.isXnormal ? ccip.x - this.x : ccip.z - this.z);
++        this.tempMatching[0] = this.normaldirectionVector[0] * abs;
++        this.tempMatching[1] = this.normaldirectionVector[1] * abs;
++        this.tempMatching[2] = (this.tempMatching[0] * this.tempMatching[0]) + (this.tempMatching[1] * this.tempMatching[1]);
++        return this.tempMatching;
++    }
++
++    private double calcDistance(ChunkCoordIntPair ccip, double[] matchingVector) {
++        double diffX = ccip.x - (this.x + matchingVector[0]);
++        double diffZ = ccip.z - (this.z + matchingVector[1]);
++        return diffX * diffX + diffZ * diffZ;
++    }
++
++    private double calcChunkWeight(ChunkCoordIntPair ccip) {
++        double[] matchingVector = this.getMatchingDirectionVector(ccip);
++        return (matchingVector[2] * 0.06D) + this.calcDistance(ccip, matchingVector);
++    }
++}
+diff --git a/src/main/java/de/minetick/playerchunks/PlayerRegion.java b/src/main/java/de/minetick/playerchunks/PlayerRegion.java
+new file mode 100644
+index 0000000..b6f82b0
+--- /dev/null
++++ b/src/main/java/de/minetick/playerchunks/PlayerRegion.java
+@@ -0,0 +1,132 @@
++package de.minetick.playerchunks;
++
++import java.util.Collection;
++import java.util.HashSet;
++import java.util.PriorityQueue;
++
++import net.minecraft.server.ChunkCoordIntPair;
++import net.minecraft.server.EmptyChunk;
++import net.minecraft.server.EntityPlayer;
++import net.minecraft.server.MinecraftServer;
++import net.minecraft.server.PacketPlayOutMapChunk;
++import net.minecraft.server.PlayerChunkMap;
++import net.minecraft.server.PlayerChunkMap.PlayerChunk;
++import net.minecraft.server.WorldServer;
++
++public class PlayerRegion {
++
++    private final EntityPlayer player;
++    private final PlayerChunkMap map;
++    private HashSet<ChunkCoordIntPair> queuedChunks;
++    private HashSet<ChunkCoordIntPair> sentEmptyChunks;
++    private PriorityQueue<ChunkCoordIntPair> queue;
++    private FOVChunkCoordComparator comparator;
++
++    public PlayerRegion(EntityPlayer player, PlayerChunkMap map) {
++        this.player = player;
++        this.map = map;
++        this.queuedChunks = new HashSet<ChunkCoordIntPair>();
++        this.sentEmptyChunks = new HashSet<ChunkCoordIntPair>();
++        this.comparator = new FOVChunkCoordComparator(this.player);
++        this.queue = new PriorityQueue<ChunkCoordIntPair>(100, this.comparator);
++    }
++
++    public void queue(int x, int z) {
++        this.queue(new ChunkCoordIntPair(x, z));
++    }
++
++    public void queue(ChunkCoordIntPair ccip) {
++        if(this.map.a(ccip.x, ccip.z, false) != null) {
++            this.loadDirectly(ccip);
++        } else if(!this.player.chunkCoordIntPairQueue.contains(ccip)) {
++            this.player.chunkCoordIntPairQueue.add(new EmptyChunkCoordIntPair(ccip.x, ccip.z));
++            this.queuedChunks.add(ccip);
++        }
++    }
++
++    public boolean loadDirectly(ChunkCoordIntPair ccip) {
++        return this.loadDirectly(ccip.x, ccip.z);
++    }
++
++    public boolean loadDirectly(int x, int z) {
++        PlayerChunk pc = this.map.a(x, z, true);
++        pc.a(this.player);
++        return pc.takeIsNew();
++    }
++
++    private PriorityQueue<ChunkCoordIntPair> getQueue() {
++        this.queue.clear();
++        this.comparator.setPos(this.player);
++        this.queue.addAll(this.queuedChunks);
++        return this.queue;
++    }
++
++    public boolean isQueued(ChunkCoordIntPair ccip) {
++        return this.queuedChunks.contains(ccip);
++    }
++
++    public void processQueue() {
++        if(this.queuedChunks.isEmpty()) { return; }
++        PriorityQueue<ChunkCoordIntPair> queue = this.getQueue();
++        int limit = 20;
++        int i = 0;
++        while(!queue.isEmpty() && i < limit) {
++            ChunkCoordIntPair ccip = queue.poll();
++            this.unqueue(ccip);
++            if(ccip != null && this.isStillInRegion(ccip)) {
++                if(this.loadDirectly(ccip)) {
++                    i++;
++                    break;
++                } else {
++                    i++;
++                }
++            }
++        }
++    }
++
++    public boolean isStillInRegion(ChunkCoordIntPair ccip) {
++        int x = (int)this.player.d >> 4;
++        int z = (int)this.player.e >> 4;
++        int distance = this.map.getViewDistance();
++
++        int diffx = ccip.x - x;
++        int diffz = ccip.z - z;
++        return diffx >= -distance && diffx <= distance && diffz >= -distance && diffz <= distance;
++    }
++
++    public void clear() {
++        this.queue.clear();
++        this.queuedChunks.clear();
++        while(!this.sentEmptyChunks.isEmpty()) {
++            this.clearClient(this.sentEmptyChunks.iterator().next());
++        }
++    }
++
++    public void unqueue(int x, int z) {
++        this.unqueue(new ChunkCoordIntPair(x, z));
++    }
++
++    public void unqueue(ChunkCoordIntPair ccip) {
++        this.queuedChunks.remove(ccip);
++        while(this.player.chunkCoordIntPairQueue.remove(ccip)) { };
++        this.clearClient(ccip);
++    }
++
++    public Collection<ChunkCoordIntPair> getQueuedChunks() {
++        return this.queuedChunks;
++    }
++
++    public void sendEmpty(ChunkCoordIntPair ccip) {
++        this.sentEmptyChunks.add(ccip);
++    }
++
++    public boolean checkAndRemoveEmptySentChunk(ChunkCoordIntPair ccip) {
++        return this.sentEmptyChunks.remove(ccip);
++    }
++
++    public void clearClient(ChunkCoordIntPair ccip) {
++        if(this.sentEmptyChunks.remove(ccip)) {
++            this.player.playerConnection.sendPacket(new PacketPlayOutMapChunk(new EmptyChunk(this.player.world, ccip.x, ccip.z), true, 0));
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
+index 95e8d16..56a66e0 100644
+--- a/src/main/java/net/minecraft/server/Chunk.java
++++ b/src/main/java/net/minecraft/server/Chunk.java
+@@ -46,6 +46,7 @@ public class Chunk {
+ 
+     // Migot start
+     private boolean unloaded = false;
++    public boolean isNew = false;
+ 
+     public boolean wasUnloaded() {
+         return this.unloaded;
+@@ -54,6 +55,12 @@ public class Chunk {
+     public void markAsUnloaded() {
+         this.unloaded = true;
+     }
++
++    public boolean takeIsNew() {
++        boolean out = this.isNew;
++        this.isNew = false;
++        return out;
++    }
+     // Migot end
+ 
+     // CraftBukkit start - Neighbor loaded cache for chunk lighting and entity ticking
+diff --git a/src/main/java/net/minecraft/server/ChunkCoordIntPair.java b/src/main/java/net/minecraft/server/ChunkCoordIntPair.java
+index 652c079..50cf3fd 100644
+--- a/src/main/java/net/minecraft/server/ChunkCoordIntPair.java
++++ b/src/main/java/net/minecraft/server/ChunkCoordIntPair.java
+@@ -68,4 +68,10 @@ public class ChunkCoordIntPair {
+     public String toString() {
+         return "[" + this.x + ", " + this.z + "]";
+     }
++
++    // Migot start
++    public boolean isEmpty() {
++        return false;
++    }
++    // Migot end
+ }
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index ae75a2a..fc3b1f4 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -169,6 +169,7 @@ public class ChunkProviderServer implements IChunkProvider {
+                     }
+                 }
+                 newChunk = true; // CraftBukkit
++                chunk.isNew = true; // Migot
+             }
+ 
+             this.chunks.put(LongHash.toLong(i, j), chunk);
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 8f30981..a4493bf 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -24,6 +24,10 @@ import org.bukkit.event.inventory.InventoryType;
+ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+ // CraftBukkit end
+ 
++// Migot start
++import de.minetick.playerchunks.PlayerRegion;
++// Migot end
++
+ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+     private static final Logger bH = LogManager.getLogger();
+@@ -78,6 +82,23 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     }
+     // Spigot end
+ 
++    // Migot start
++    private PlayerRegion playerRegion;
++
++    protected PlayerRegion getPlayerRegion() {
++        return this.playerRegion;
++    }
++
++    protected void initPlayerRegion(PlayerChunkMap map) {
++        this.playerRegion = new PlayerRegion(this, map);
++    }
++
++    @Override
++    public void inactiveTick() {
++        this.playerRegion.processQueue();
++    }
++    // Migot end
++
+     public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
+         super(worldserver, gameprofile);
+         playerinteractmanager.player = this;
+@@ -216,6 +237,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+             this.playerConnection.sendPacket(new PacketPlayOutEntityDestroy(aint));
+         }
+ 
++        this.playerRegion.processQueue(); // Migot
++
+         if (!this.chunkCoordIntPairQueue.isEmpty()) {
+             ArrayList arraylist = Lists.newArrayList();
+             Iterator iterator1 = this.chunkCoordIntPairQueue.iterator();
+@@ -226,10 +249,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+             while (iterator1.hasNext() && arraylist.size() < this.world.spigotConfig.maxBulkChunk) { // Spigot
+                 ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) iterator1.next();
+ 
+-                if (chunkcoordintpair != null) {
++                // Migot start
++                if (chunkcoordintpair != null && this.getPlayerRegion().isStillInRegion(chunkcoordintpair)) {
++                    if (chunkcoordintpair.isEmpty()) {
++                        this.playerConnection.sendPacket(new PacketPlayOutMapChunk(new EmptyChunk(this.world, chunkcoordintpair.x, chunkcoordintpair.z), true, '\uffff'));
++                        this.playerRegion.sendEmpty(chunkcoordintpair);
++                        iterator1.remove();
++                    } else
++                // Migot end
+                     if (this.world.isLoaded(new BlockPosition(chunkcoordintpair.x << 4, 0, chunkcoordintpair.z << 4))) {
+                         chunk = this.world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z);
+                         if (chunk.isReady()) {
++                            this.playerRegion.clearClient(chunkcoordintpair); // Migot
+                             arraylist.add(chunk);
+                             arraylist1.addAll(chunk.tileEntities.values()); // CraftBukkit - Get tile entities directly from the chunk instead of the world
+                             iterator1.remove();
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index a8b3c06..18e8bc4 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -15,6 +15,12 @@ import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
+ import java.util.HashMap;
+ // CraftBukkit end
+ 
++// Migot start
++import de.minetick.playerchunks.EmptyChunkCoordIntPair;
++import de.minetick.playerchunks.FOVChunkCoordComparator;
++import de.minetick.playerchunks.PlayerRegion;
++// Migot end
++
+ public class PlayerChunkMap {
+ 
+     private static final Logger a = LogManager.getLogger();
+@@ -85,7 +91,7 @@ public class PlayerChunkMap {
+         return this.d.getEntry(k) != null;
+     }
+ 
+-    private PlayerChunkMap.PlayerChunk a(int i, int j, boolean flag) {
++    public PlayerChunkMap.PlayerChunk a(int i, int j, boolean flag) { // Migot - private -> public
+         long k = (long) i + 2147483647L | (long) j + 2147483647L << 32;
+         PlayerChunkMap.PlayerChunk playerchunkmap_playerchunk = (PlayerChunkMap.PlayerChunk) this.d.getEntry(k);
+ 
+@@ -126,20 +132,21 @@ public class PlayerChunkMap {
+         entityplayer.d = entityplayer.locX;
+         entityplayer.e = entityplayer.locZ;
+ 
+-        // CraftBukkit start - Load nearby chunks first
+-        List<ChunkCoordIntPair> chunkList = new LinkedList<ChunkCoordIntPair>();
++        // Migot start
++        entityplayer.initPlayerRegion(this);
++        PlayerRegion region = entityplayer.getPlayerRegion();
+ 
+         for (int k = i - this.g; k <= i + this.g; ++k) {
+             for (int l = j - this.g; l <= j + this.g; ++l) {
+-                chunkList.add(new ChunkCoordIntPair(k, l));
++                int directLoadRange = 1;
++                if(k - i <= directLoadRange && k - i >= -directLoadRange && l - j <= directLoadRange && l - j >= -directLoadRange) {
++                    region.loadDirectly(k, l);
++                } else {
++                    region.queue(k, l);
++                }
+             }
+         }
+-        
+-        Collections.sort(chunkList, new ChunkCoordComparator(entityplayer));
+-        for (ChunkCoordIntPair pair : chunkList) {
+-            this.a(pair.x, pair.z, true).a(entityplayer);
+-        }
+-        // CraftBukkit end
++        // Migot end
+ 
+         this.managedPlayers.add(entityplayer);
+         this.b(entityplayer);
+@@ -169,7 +176,14 @@ public class PlayerChunkMap {
+                 for (int i2 = 0; i2 < k1; ++i2) {
+                     i1 += aint[0];
+                     j1 += aint[1];
+-                    chunkcoordintpair = this.a(k + i1, l + j1, true).location;
++                    // Migot start
++                    PlayerChunk pc = this.a(k + i1, l + j1, false);
++                    if(pc == null) {
++                        chunkcoordintpair = new EmptyChunkCoordIntPair(k + i1, l + j1);
++                    } else {
++                        chunkcoordintpair = pc.location;
++                    }
++                    // Migot end
+                     if (arraylist.contains(chunkcoordintpair)) {
+                         entityplayer.chunkCoordIntPairQueue.add(chunkcoordintpair);
+                     }
+@@ -182,7 +196,14 @@ public class PlayerChunkMap {
+         for (k1 = 0; k1 < j * 2; ++k1) {
+             i1 += this.i[i][0];
+             j1 += this.i[i][1];
+-            chunkcoordintpair = this.a(k + i1, l + j1, true).location;
++            // Migot start
++            PlayerChunk pc = this.a(k + i1, l + j1, false);
++            if(pc == null) {
++                chunkcoordintpair = new EmptyChunkCoordIntPair(k + i1, l + j1);
++            } else {
++                chunkcoordintpair = pc.location;
++            }
++            // Migot end
+             if (arraylist.contains(chunkcoordintpair)) {
+                 entityplayer.chunkCoordIntPairQueue.add(chunkcoordintpair);
+             }
+@@ -194,6 +215,8 @@ public class PlayerChunkMap {
+         int i = (int) entityplayer.d >> 4;
+         int j = (int) entityplayer.e >> 4;
+ 
++        entityplayer.getPlayerRegion().clear(); // Migot
++
+         for (int k = i - this.g; k <= i + this.g; ++k) {
+             for (int l = j - this.g; l <= j + this.g; ++l) {
+                 PlayerChunkMap.PlayerChunk playerchunkmap_playerchunk = this.a(k, l, false);
+@@ -237,6 +260,7 @@ public class PlayerChunkMap {
+                         }
+ 
+                         if (!this.a(l1 - j1, i2 - k1, i, j, i1)) {
++                            entityplayer.getPlayerRegion().unqueue(l1 - j1, i2 - k1); // Migot
+                             PlayerChunkMap.PlayerChunk playerchunkmap_playerchunk = this.a(l1 - j1, i2 - k1, false);
+ 
+                             if (playerchunkmap_playerchunk != null) {
+@@ -251,13 +275,23 @@ public class PlayerChunkMap {
+                 entityplayer.e = entityplayer.locZ;
+ 
+                 // CraftBukkit start - send nearest chunks first
+-                Collections.sort(chunksToLoad, new ChunkCoordComparator(entityplayer));
++                // Migot start
++                FOVChunkCoordComparator comparator = new FOVChunkCoordComparator(entityplayer);
++                Collections.sort(chunksToLoad, comparator);
++                // Migot end
+                 for (ChunkCoordIntPair pair : chunksToLoad) {
+-                    this.a(pair.x, pair.z, true).a(entityplayer);
++                    // Migot start
++                    int directLoadRange = 0;
++                    if(k - pair.x <= directLoadRange && k - pair.x >= -directLoadRange && l - pair.z <= directLoadRange && l - pair.z >= -directLoadRange) {
++                        entityplayer.getPlayerRegion().loadDirectly(pair);
++                    } else {
++                        entityplayer.getPlayerRegion().queue(pair);
++                    }
++                    // Migot end
+                 }
+ 
+                 if (j1 > 1 || j1 < -1 || k1 > 1 || k1 < -1) {
+-                    Collections.sort(entityplayer.chunkCoordIntPairQueue, new ChunkCoordComparator(entityplayer));
++                    Collections.sort(entityplayer.chunkCoordIntPairQueue, comparator); // Migot
+                 }
+                 // CraftBukkit end
+             }
+@@ -287,18 +321,30 @@ public class PlayerChunkMap {
+                 if (j > 0) {
+                     for (i1 = k - i; i1 <= k + i; ++i1) {
+                         for (j1 = l - i; j1 <= l + i; ++j1) {
+-                            PlayerChunkMap.PlayerChunk playerchunkmap_playerchunk = this.a(i1, j1, true);
++                            // Migot start
++                            PlayerChunkMap.PlayerChunk playerchunkmap_playerchunk = this.a(i1, j1, false);
+ 
+-                            if (!playerchunkmap_playerchunk.b.contains(entityplayer)) {
++                            if (playerchunkmap_playerchunk != null && !playerchunkmap_playerchunk.b.contains(entityplayer)) {
++                                entityplayer.getPlayerRegion().unqueue(playerchunkmap_playerchunk.location);
+                                 playerchunkmap_playerchunk.a(entityplayer);
++                            } else {
++                                entityplayer.getPlayerRegion().queue(i1, j1);
+                             }
++                            // Migot end
+                         }
+                     }
+                 } else {
+                     for (i1 = k - this.g; i1 <= k + this.g; ++i1) {
+                         for (j1 = l - this.g; j1 <= l + this.g; ++j1) {
+                             if (!this.a(i1, j1, k, l, i)) {
+-                                this.a(i1, j1, true).b(entityplayer);
++                                // Migot start
++                                entityplayer.getPlayerRegion().unqueue(i1, j1);
++                                PlayerChunkMap.PlayerChunk playerchunk = this.a(i1, j1, false);
++                                if(playerchunk != null) {
++                                    entityplayer.getPlayerRegion().unqueue(playerchunk.location);
++                                    playerchunk.b(entityplayer);
++                                }
++                                // Migot end
+                             }
+                         }
+                     }
+@@ -313,7 +359,7 @@ public class PlayerChunkMap {
+         return i * 16 - 16;
+     }
+ 
+-    class PlayerChunk {
++    public class PlayerChunk { // Migot - public
+ 
+         private final List<EntityPlayer> b = Lists.newArrayList();
+         private final ChunkCoordIntPair location;
+@@ -332,9 +378,24 @@ public class PlayerChunkMap {
+         };
+         // CraftBukkit end
+ 
++        // Migot start
++        private boolean isNew = false;
++
++        public boolean takeIsNew() {
++            boolean out = this.isNew;
++            this.isNew = false;
++            return out;
++        }
++        // Migot end
++
+         public PlayerChunk(int i, int j) {
+             this.location = new ChunkCoordIntPair(i, j);
+-            PlayerChunkMap.this.a().chunkProviderServer.getChunkAt(i, j, loadedRunnable); // CraftBukkit
++            // Migot start
++            Chunk chunk = PlayerChunkMap.this.a().chunkProviderServer.getChunkAt(i, j, loadedRunnable); // CraftBukkit
++            if(chunk != null) {
++                this.isNew = chunk.takeIsNew();
++            }
++            // Migot end
+         }
+ 
+         public void a(final EntityPlayer entityplayer) {  // CraftBukkit - added final to argument
+@@ -391,7 +452,8 @@ public class PlayerChunkMap {
+ 
+                 this.players.remove(entityplayer); // CraftBukkit
+                 this.b.remove(entityplayer);
+-                entityplayer.chunkCoordIntPairQueue.remove(this.location);
++                //entityplayer.chunkCoordIntPairQueue.remove(this.location);
++                entityplayer.getPlayerRegion().unqueue(this.location); // Migot
+                 if (this.b.isEmpty()) {
+                     long i = (long) this.location.x + 2147483647L | (long) this.location.z + 2147483647L << 32;
+ 
+@@ -561,4 +623,10 @@ public class PlayerChunkMap {
+         }
+     }
+     // CraftBukkit end
++
++    // Migot start
++    public int getViewDistance() {
++        return this.g;
++    }
++    // Migot end
+ }
+-- 
+2.6.2.windows.1
+
