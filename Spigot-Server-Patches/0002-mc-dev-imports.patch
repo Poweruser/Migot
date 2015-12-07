@@ -1,6 +1,6 @@
-From dfdccdd4d1c0d5ee491ecebb61a0daf7c13642f3 Mon Sep 17 00:00:00 2001
+From 1913fe6c0bf6b1a0ba6421aa830bfc661ef8bb9d Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Fri, 14 Aug 2015 22:11:39 +0200
+Date: Mon, 7 Dec 2015 15:09:43 +0100
 Subject: [PATCH] mc dev imports
 
 
@@ -447,6 +447,83 @@ index 0000000..29f8554
 +    }
 +
 +    public void a_(World world, BlockPosition blockposition) {}
++}
+diff --git a/src/main/java/net/minecraft/server/ChunkCoordIntPair.java b/src/main/java/net/minecraft/server/ChunkCoordIntPair.java
+new file mode 100644
+index 0000000..652c079
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/ChunkCoordIntPair.java
+@@ -0,0 +1,71 @@
++package net.minecraft.server;
++
++public class ChunkCoordIntPair {
++
++    public final int x;
++    public final int z;
++
++    public ChunkCoordIntPair(int i, int j) {
++        this.x = i;
++        this.z = j;
++    }
++
++    public static long a(int i, int j) {
++        return (long) i & 4294967295L | ((long) j & 4294967295L) << 32;
++    }
++
++    public int hashCode() {
++        int i = 1664525 * this.x + 1013904223;
++        int j = 1664525 * (this.z ^ -559038737) + 1013904223;
++
++        return i ^ j;
++    }
++
++    public boolean equals(Object object) {
++        if (this == object) {
++            return true;
++        } else if (!(object instanceof ChunkCoordIntPair)) {
++            return false;
++        } else {
++            ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) object;
++
++            return this.x == chunkcoordintpair.x && this.z == chunkcoordintpair.z;
++        }
++    }
++
++    public int a() {
++        return (this.x << 4) + 8;
++    }
++
++    public int b() {
++        return (this.z << 4) + 8;
++    }
++
++    public int c() {
++        return this.x << 4;
++    }
++
++    public int d() {
++        return this.z << 4;
++    }
++
++    public int e() {
++        return (this.x << 4) + 15;
++    }
++
++    public int f() {
++        return (this.z << 4) + 15;
++    }
++
++    public BlockPosition a(int i, int j, int k) {
++        return new BlockPosition((this.x << 4) + i, j, (this.z << 4) + k);
++    }
++
++    public BlockPosition a(int i) {
++        return new BlockPosition(this.a(), i, this.b());
++    }
++
++    public String toString() {
++        return "[" + this.x + ", " + this.z + "]";
++    }
 +}
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderGenerate.java b/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
 new file mode 100644
@@ -3843,5 +3920,5 @@ index 0000000..2f9a0e4
 +    }
 +}
 -- 
-1.8.3.msysgit.0
+2.6.2.windows.1
 

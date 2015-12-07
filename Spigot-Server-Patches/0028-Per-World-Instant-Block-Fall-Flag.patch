@@ -1,4 +1,4 @@
-From 3f4b99b65637dd3bdc50fb5642c64765969df23f Mon Sep 17 00:00:00 2001
+From c717b9592491a41235db2fd7ef8f343eb98fa476 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
 Date: Mon, 31 Aug 2015 03:03:23 +0200
 Subject: [PATCH] Per World Instant Block Fall Flag
@@ -84,10 +84,10 @@ index 2f01bbf..ad459b8 100644
  
      public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index ccfd8c2..dcbf8b6 100644
+index 3f6a043..ae75a2a 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -281,7 +281,7 @@ public class ChunkProviderServer implements IChunkProvider {
+@@ -285,7 +285,7 @@ public class ChunkProviderServer implements IChunkProvider {
                  this.chunkProvider.getChunkAt(ichunkprovider, i, j);
  
                  // CraftBukkit start
@@ -96,7 +96,7 @@ index ccfd8c2..dcbf8b6 100644
                  Random random = new Random();
                  random.setSeed(world.getSeed());
                  long xRand = random.nextLong() / 2L * 2L + 1L;
-@@ -299,7 +299,7 @@ public class ChunkProviderServer implements IChunkProvider {
+@@ -303,7 +303,7 @@ public class ChunkProviderServer implements IChunkProvider {
                          this.world.populating = false;
                      }
                  }
@@ -124,7 +124,7 @@ index 4f2c865..92deca0 100644
  
      public boolean a(IChunkProvider ichunkprovider, Chunk chunk, int i, int j) {
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 0d7ac85..a3575dc 100644
+index 3c97b0a..3e86054 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -169,6 +169,7 @@ public abstract class World implements IBlockAccess {
@@ -136,5 +136,5 @@ index 0d7ac85..a3575dc 100644
  
      public CraftWorld getWorld() {
 -- 
-1.8.3.msysgit.0
+2.6.2.windows.1
 
