@@ -1,14 +1,14 @@
-From abd8847346f279951a8b69918e5908159c51c7b5 Mon Sep 17 00:00:00 2001
+From dd8efccbc2772ba7b589869d8fd930302c1dc407 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Sun, 30 Aug 2015 00:14:25 +0200
+Date: Mon, 7 Dec 2015 13:32:49 +0100
 Subject: [PATCH] Cache Coordinates of Existing Chunks
 
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index be05a04..ccfd8c2 100644
+index be05a04..3f6a043 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -34,6 +34,20 @@ public class ChunkProviderServer implements IChunkProvider {
+@@ -34,6 +34,24 @@ public class ChunkProviderServer implements IChunkProvider {
      public LongObjectHashMap<Chunk> chunks = new LongObjectHashMap<Chunk>();
      public WorldServer world;
  
@@ -16,11 +16,15 @@ index be05a04..ccfd8c2 100644
 +    private ChunkRegionLoader checkedRegionLoader = null;
 +
 +    public boolean doesChunkExist(int x, int z) {
++        return this.doesChunkExist(new ChunkCoordIntPair(x, z));
++    }
++
++    public boolean doesChunkExist(ChunkCoordIntPair chunkcoordintpair) {
 +        if(this.checkedRegionLoader == null && this.chunkLoader instanceof ChunkRegionLoader) {
 +            this.checkedRegionLoader = (ChunkRegionLoader) this.chunkLoader;
 +        }
 +        if(this.checkedRegionLoader != null) {
-+            return this.checkedRegionLoader.chunkExists(this.world, x, z);
++            return this.checkedRegionLoader.chunkExists(this.world, chunkcoordintpair);
 +        }
 +        return false;
 +    }
@@ -29,6 +33,25 @@ index be05a04..ccfd8c2 100644
      public ChunkProviderServer(WorldServer worldserver, IChunkLoader ichunkloader, IChunkProvider ichunkprovider) {
          this.emptyChunk = new EmptyChunk(worldserver, Integer.MIN_VALUE, Integer.MIN_VALUE); // Migot
          this.world = worldserver;
+diff --git a/src/main/java/net/minecraft/server/ChunkRegionLoader.java b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
+index 206e3aa..0d1c8b6 100644
+--- a/src/main/java/net/minecraft/server/ChunkRegionLoader.java
++++ b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
+@@ -29,6 +29,14 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+     // CraftBukkit start
+     public boolean chunkExists(World world, int i, int j) {
+         ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
++        // Migot start
++        return this.chunkExists(world, chunkcoordintpair);
++    }
++
++    public boolean chunkExists(World world, ChunkCoordIntPair chunkcoordintpair) {
++        int i = chunkcoordintpair.x;
++        int j = chunkcoordintpair.z;
++        // Migot end
+ 
+         if (this.c.contains(chunkcoordintpair)) {
+             if (this.b.containsKey(chunkcoordintpair)) {
 diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
 index 348706f..faef694 100644
 --- a/src/main/java/net/minecraft/server/RegionFile.java
@@ -86,5 +109,5 @@ index 348706f..faef694 100644
                                  this.c.read(abyte);
                                  return new DataInputStream(new BufferedInputStream(new InflaterInputStream(new ByteArrayInputStream(abyte))));
 -- 
-1.8.3.msysgit.0
+2.6.2.windows.1
 
