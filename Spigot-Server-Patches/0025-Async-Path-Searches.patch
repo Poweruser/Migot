@@ -1,6 +1,6 @@
-From 047f0ebfae774278682521b090b28dac75ae3746 Mon Sep 17 00:00:00 2001
+From 0d0989b54ae7965f01fb69f37189f636f1a91b24 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Tue, 1 Sep 2015 03:04:51 +0200
+Date: Mon, 7 Dec 2015 12:45:57 +0100
 Subject: [PATCH] Async Path Searches
 
 
@@ -364,11 +364,13 @@ index 0000000..ef6a006
 +}
 diff --git a/src/main/java/de/minetick/pathsearch/PathSearchJob.java b/src/main/java/de/minetick/pathsearch/PathSearchJob.java
 new file mode 100644
-index 0000000..bf8169b
+index 0000000..8c03d2a
 --- /dev/null
 +++ b/src/main/java/de/minetick/pathsearch/PathSearchJob.java
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,52 @@
 +package de.minetick.pathsearch;
++
++import java.util.concurrent.Callable;
 +
 +import net.minecraft.server.ChunkCache;
 +import net.minecraft.server.EntityCreature;
@@ -376,7 +378,7 @@ index 0000000..bf8169b
 +import net.minecraft.server.NavigationAbstract;
 +import net.minecraft.server.PathEntity;
 +
-+public abstract class PathSearchJob implements Runnable {
++public abstract class PathSearchJob implements Callable<PathSearchJob> {
 +
 +    public NavigationAbstract navigation;
 +    protected ChunkCache chunkCache;
@@ -420,10 +422,10 @@ index 0000000..bf8169b
 +}
 diff --git a/src/main/java/de/minetick/pathsearch/PathSearchJobEntity.java b/src/main/java/de/minetick/pathsearch/PathSearchJobEntity.java
 new file mode 100644
-index 0000000..b358eec
+index 0000000..6d6ee36
 --- /dev/null
 +++ b/src/main/java/de/minetick/pathsearch/PathSearchJobEntity.java
-@@ -0,0 +1,55 @@
+@@ -0,0 +1,56 @@
 +package de.minetick.pathsearch;
 +
 +import java.util.UUID;
@@ -448,13 +450,14 @@ index 0000000..b358eec
 +    }
 +
 +    @Override
-+    public void run() {
++    public PathSearchJob call() throws Exception {
 +        if(!this.issued) {
 +            this.issued = true;
 +            this.pathEntity = this.navigation.doPathSearch(this.chunkCache, this.target);
 +            this.navigation.setSearchResult(this);
 +            this.cleanup();
 +        }
++        return this;
 +    }
 +
 +    @Override
@@ -481,10 +484,10 @@ index 0000000..b358eec
 +}
 diff --git a/src/main/java/de/minetick/pathsearch/PathSearchJobPosition.java b/src/main/java/de/minetick/pathsearch/PathSearchJobPosition.java
 new file mode 100644
-index 0000000..4e691c6
+index 0000000..64fa3a5
 --- /dev/null
 +++ b/src/main/java/de/minetick/pathsearch/PathSearchJobPosition.java
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,61 @@
 +package de.minetick.pathsearch;
 +
 +import de.minetick.pathsearch.cache.SearchCacheEntryPosition;
@@ -505,13 +508,14 @@ index 0000000..4e691c6
 +    }
 +
 +    @Override
-+    public void run() {
++    public PathSearchJob call() throws Exception {
 +        if(!this.issued) {
 +            this.issued = true;
 +            this.pathEntity = this.navigation.doPathSearch(this.chunkCache, this.blockposition);
 +            this.navigation.setSearchResult(this);
 +            this.cleanup();
 +        }
++        return this;
 +    }
 +
 +    public PositionPathSearchType getCacheEntryKey() {
@@ -547,16 +551,18 @@ index 0000000..4e691c6
 +}
 diff --git a/src/main/java/de/minetick/pathsearch/PathSearchThrottlerThread.java b/src/main/java/de/minetick/pathsearch/PathSearchThrottlerThread.java
 new file mode 100644
-index 0000000..e10f97d
+index 0000000..fd71257
 --- /dev/null
 +++ b/src/main/java/de/minetick/pathsearch/PathSearchThrottlerThread.java
-@@ -0,0 +1,91 @@
+@@ -0,0 +1,101 @@
 +package de.minetick.pathsearch;
 +
 +import java.util.HashSet;
 +import java.util.Iterator;
 +import java.util.LinkedHashMap;
 +import java.util.Map.Entry;
++import java.util.concurrent.ExecutionException;
++import java.util.concurrent.FutureTask;
 +import java.util.concurrent.LinkedBlockingQueue;
 +import java.util.concurrent.ThreadPoolExecutor;
 +import java.util.concurrent.TimeUnit;
@@ -600,7 +606,7 @@ index 0000000..e10f97d
 +                    iter.remove();
 +                    if(jobToExecute != null) {
 +                        this.activeSearchHashes.add(jobToExecute.getSearchHash());
-+                        this.execute(jobToExecute);
++                        this.submit(jobToExecute);
 +                    }
 +                    if(newJob != null) {
 +                        break;
@@ -620,10 +626,18 @@ index 0000000..e10f97d
 +    @Override
 +    protected void afterExecute(Runnable runnable, Throwable throwable) {
 +        super.afterExecute(runnable, throwable);
-+        if(runnable instanceof PathSearchJob) {
-+            PathSearchJob job = (PathSearchJob) runnable;
-+            synchronized(this.filter) {
-+                this.activeSearchHashes.remove(job.getSearchHash());
++        if(runnable instanceof FutureTask) {
++            FutureTask<PathSearchJob> task = (FutureTask<PathSearchJob>) runnable;
++            PathSearchJob job = null;
++            try {
++                job = task.get();
++            } catch (InterruptedException e) {
++            } catch (ExecutionException e) {
++            }
++            if(job != null) {
++                synchronized(this.filter) {
++                    this.activeSearchHashes.remove(job.getSearchHash());
++                }
 +            }
 +        }
 +        this.queuePathSearch(null);
@@ -1111,5 +1125,5 @@ index 14cb19d..5494808 100644
 +    - WITCH
 +    - ZOMBIE
 -- 
-1.8.3.msysgit.0
+2.6.2.windows.1
 
