@@ -1,6 +1,6 @@
-From cbdd080f4fcf098b725da896f878beb3ce01512c Mon Sep 17 00:00:00 2001
+From 1e30ad3f9c9973a2503355033daf2df95ed01441 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Wed, 6 Jan 2016 03:01:16 +0100
+Date: Wed, 6 Jan 2016 03:11:09 +0100
 Subject: [PATCH] Queued Player Chunk Loading
 
 
@@ -403,7 +403,7 @@ index 8f30981..fdd49a7 100644
              }
          }
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index a8b3c06..18e8bc4 100644
+index a8b3c06..1158626 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
 @@ -15,6 +15,12 @@ import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
@@ -520,8 +520,8 @@ index a8b3c06..18e8bc4 100644
                  for (ChunkCoordIntPair pair : chunksToLoad) {
 -                    this.a(pair.x, pair.z, true).a(entityplayer);
 +                    // Migot start
-+                    int directLoadRange = 0;
-+                    if(k - pair.x <= directLoadRange && k - pair.x >= -directLoadRange && l - pair.z <= directLoadRange && l - pair.z >= -directLoadRange) {
++                    int directLoadRange = 1;
++                    if(pair.x - i <= directLoadRange && pair.x - i >= -directLoadRange && pair.z - j <= directLoadRange && pair.z - j >= -directLoadRange) {
 +                        entityplayer.getPlayerRegion().loadDirectly(pair);
 +                    } else {
 +                        entityplayer.getPlayerRegion().queue(pair);
