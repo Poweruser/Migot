@@ -1,6 +1,6 @@
-From 457cfe0cc8f5d1330c42529c626758c244d1f7c7 Mon Sep 17 00:00:00 2001
+From cbdd080f4fcf098b725da896f878beb3ce01512c Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Mon, 7 Dec 2015 15:15:02 +0100
+Date: Wed, 6 Jan 2016 03:01:16 +0100
 Subject: [PATCH] Queued Player Chunk Loading
 
 
@@ -310,7 +310,7 @@ index ae75a2a..fc3b1f4 100644
  
              this.chunks.put(LongHash.toLong(i, j), chunk);
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 8f30981..a4493bf 100644
+index 8f30981..fdd49a7 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -24,6 +24,10 @@ import org.bukkit.event.inventory.InventoryType;
@@ -357,17 +357,27 @@ index 8f30981..a4493bf 100644
          if (!this.chunkCoordIntPairQueue.isEmpty()) {
              ArrayList arraylist = Lists.newArrayList();
              Iterator iterator1 = this.chunkCoordIntPairQueue.iterator();
-@@ -226,10 +249,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
-             while (iterator1.hasNext() && arraylist.size() < this.world.spigotConfig.maxBulkChunk) { // Spigot
+@@ -223,16 +246,31 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+             Chunk chunk;
+ 
+-            while (iterator1.hasNext() && arraylist.size() < this.world.spigotConfig.maxBulkChunk) { // Spigot
++            // Migot start
++            int limit = this.world.spigotConfig.maxBulkChunk; // Spigot
++            int realChunkCount = 0;
++            int emptyChunkCount = 0;
++            while (iterator1.hasNext() && realChunkCount < limit && emptyChunkCount < (limit << 1)) {
++            // Migot end
                  ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) iterator1.next();
  
 -                if (chunkcoordintpair != null) {
 +                // Migot start
 +                if (chunkcoordintpair != null && this.getPlayerRegion().isStillInRegion(chunkcoordintpair)) {
 +                    if (chunkcoordintpair.isEmpty()) {
-+                        this.playerConnection.sendPacket(new PacketPlayOutMapChunk(new EmptyChunk(this.world, chunkcoordintpair.x, chunkcoordintpair.z), true, '\uffff'));
++                        arraylist.add(new EmptyChunk(this.world, chunkcoordintpair.x, chunkcoordintpair.z));
 +                        this.playerRegion.sendEmpty(chunkcoordintpair);
 +                        iterator1.remove();
++                        emptyChunkCount++;
 +                    } else
 +                // Migot end
                      if (this.world.isLoaded(new BlockPosition(chunkcoordintpair.x << 4, 0, chunkcoordintpair.z << 4))) {
@@ -377,6 +387,21 @@ index 8f30981..a4493bf 100644
                              arraylist.add(chunk);
                              arraylist1.addAll(chunk.tileEntities.values()); // CraftBukkit - Get tile entities directly from the chunk instead of the world
                              iterator1.remove();
++                            realChunkCount++; // Migot
+                         }
+                     }
+                 } else {
+@@ -259,7 +297,9 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+                 while (iterator2.hasNext()) {
+                     chunk = (Chunk) iterator2.next();
+-                    this.u().getTracker().a(this, chunk);
++                    if (!chunk.isEmpty()) { // Migot
++                        this.u().getTracker().a(this, chunk);
++                    }
+                 }
+             }
+         }
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
 index a8b3c06..18e8bc4 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
