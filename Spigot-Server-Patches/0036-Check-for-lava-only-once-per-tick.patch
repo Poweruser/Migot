@@ -1,0 +1,36 @@
+From f3da524811abb3358f921cf90f3d58a6d9f25f25 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Wed, 6 Jan 2016 03:58:07 +0100
+Subject: [PATCH] Check for lava only once per tick
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index c03b3fd..8087d3a 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -127,6 +127,8 @@ public abstract class Entity implements ICommandListener {
+ 
+     // Migot start
+     private int targetDimension;
++    private boolean isInLava;
++    private int lastLavaCheck = Integer.MIN_VALUE;
+ 
+     public int getTargetDimension() {
+         return this.targetDimension;
+@@ -952,7 +954,12 @@ public abstract class Entity implements ICommandListener {
+     }
+ 
+     public boolean ab(IBlockAccess iblockaccess) {
+-        return this.world.a(iblockaccess, this.getBoundingBox().grow(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), Material.LAVA);
++        int currentTick = MinecraftServer.currentTick;
++        if (this.lastLavaCheck != currentTick) {
++            this.lastLavaCheck = currentTick;
++            this.isInLava = this.world.a(iblockaccess, this.getBoundingBox().grow(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), Material.LAVA);
++        }
++        return this.isInLava;
+     }
+     // Migot end
+ 
+-- 
+2.6.2.windows.1
+
