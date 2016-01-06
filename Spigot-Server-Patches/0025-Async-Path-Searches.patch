@@ -1,6 +1,6 @@
-From 0d0989b54ae7965f01fb69f37189f636f1a91b24 Mon Sep 17 00:00:00 2001
+From d289b9bbe5fc680f19ab438a56d6c92e0b352545 Mon Sep 17 00:00:00 2001
 From: Poweruser <poweruser.rs@hotmail.com>
-Date: Mon, 7 Dec 2015 12:45:57 +0100
+Date: Wed, 6 Jan 2016 03:30:52 +0100
 Subject: [PATCH] Async Path Searches
 
 
@@ -824,6 +824,27 @@ index 0000000..e97a474
 +        return false;
 +    }
 +}
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index 62b945d..eb5c7c2 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -938,9 +938,15 @@ public abstract class Entity implements ICommandListener {
+     }
+ 
+     public boolean ab() {
+-        return this.world.a(this.getBoundingBox().grow(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), Material.LAVA);
++    // Migot start
++        return this.ab(this.world);
+     }
+ 
++    public boolean ab(IBlockAccess iblockaccess) {
++        return this.world.a(iblockaccess, this.getBoundingBox().grow(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), Material.LAVA);
++    }
++    // Migot end
++
+     public void a(float f, float f1, float f2) {
+         float f3 = f * f + f1 * f1;
+ 
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
 index 44b0fe4..0ec0b02 100644
 --- a/src/main/java/net/minecraft/server/EntityInsentient.java
@@ -1078,7 +1099,7 @@ index 123e657..12ab67f 100644
  
      public boolean b() {
 diff --git a/src/main/java/net/minecraft/server/PathfinderNormal.java b/src/main/java/net/minecraft/server/PathfinderNormal.java
-index 0a14c9d..6bdd864 100644
+index 0a14c9d..503518e 100644
 --- a/src/main/java/net/minecraft/server/PathfinderNormal.java
 +++ b/src/main/java/net/minecraft/server/PathfinderNormal.java
 @@ -158,8 +158,8 @@ public class PathfinderNormal extends PathfinderAbstract {
@@ -1092,6 +1113,41 @@ index 0a14c9d..6bdd864 100644
                                  return -3;
                              }
                          } else if (!block.b(iblockaccess, blockposition_mutableblockposition) && (!flag1 || !(block instanceof BlockDoor) || block.getMaterial() != Material.WOOD)) {
+@@ -177,7 +177,7 @@ public class PathfinderNormal extends PathfinderAbstract {
+                                 return 0;
+                             }
+ 
+-                            if (!entity.ab()) {
++                            if (!entity.ab(iblockaccess)) { // Migot
+                                 return -2;
+                             }
+                         }
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 3c97b0a..5430baf 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -1831,6 +1831,12 @@ public abstract class World implements IBlockAccess {
+     }
+ 
+     public boolean a(AxisAlignedBB axisalignedbb, Material material) {
++    // Migot start
++        return this.a(this, axisalignedbb, material);
++    }
++
++    public boolean a(IBlockAccess iblockaccess, AxisAlignedBB axisalignedbb, Material material) {
++    // Migot end
+         int i = MathHelper.floor(axisalignedbb.a);
+         int j = MathHelper.floor(axisalignedbb.d + 1.0D);
+         int k = MathHelper.floor(axisalignedbb.b);
+@@ -1842,7 +1848,7 @@ public abstract class World implements IBlockAccess {
+         for (int k1 = i; k1 < j; ++k1) {
+             for (int l1 = k; l1 < l; ++l1) {
+                 for (int i2 = i1; i2 < j1; ++i2) {
+-                    if (this.getType(blockposition_mutableblockposition.c(k1, l1, i2)).getBlock().getMaterial() == material) {
++                    if (iblockaccess.getType(blockposition_mutableblockposition.c(k1, l1, i2)).getBlock().getMaterial() == material) { // Migot
+                         return true;
+                     }
+                 }
 diff --git a/src/main/resources/configurations/migot.yml b/src/main/resources/configurations/migot.yml
 index 14cb19d..5494808 100644
 --- a/src/main/resources/configurations/migot.yml
