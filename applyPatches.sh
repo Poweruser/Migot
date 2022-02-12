@@ -41,5 +41,4 @@ cd ../Bukkit
 hash=$(git rev-parse HEAD)
 git branch -f spigot "$hash"
 
-applyPatch Bukkit Spigot-API origin/spigot && applyPatch CraftBukkit Spigot-Server origin/patched
-applyPatch Spigot-Server Argot-Server master
+applyPatch Bukkit Spigot-API origin/spigot && applyPatch CraftBukkit Spigot-Server origin/patched && applyPatch Spigot-Server Argot-Server master
