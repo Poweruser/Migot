@@ -9,17 +9,17 @@
         <version>7</version>
     </parent>
 
-    <groupId>de.minetick</groupId>
-    <artifactId>migot-parent</artifactId>
+    <groupId>jp.KK0203.dev</groupId>
+    <artifactId>argot-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Migot-Parent</name>
+    <name>Argot-Parent</name>
     <description>Parent project for all Migot modules.</description>
-    <url>https://github.com/Poweruser/Migot</url>
+    <url>https://github.com/KK0203/Argot</url>
 
     <modules>
-        <module>Migot-Server</module>
+        <module>Argot-Server</module>
         <module>Spigot-API</module>
     </modules>
 
