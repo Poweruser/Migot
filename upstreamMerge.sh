@@ -12,3 +12,4 @@ function update {
 
 update Bukkit
 update CraftBukkit
+update Spigot-Server
