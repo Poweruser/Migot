@@ -36,4 +36,4 @@ function savePatches {
 if [ "$1" == "clean" ]; then
 	rm -rf *-Patches
 fi
-savePatches Spigot-Server Migot-Server
+savePatches Spigot-Server Argot-Server
