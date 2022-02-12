@@ -2,10 +2,9 @@
 
 PS1="$"
 basedir=`pwd`
-clean=$1
 echo "Rebuilding patch files from current fork state..."
 
-cleanupPatches() {
+function cleanupPatches {
     cd "$1"
     for patch in *.patch; do
         gitver=$(tail -n 2 $patch | grep -ve "^$" | tail -n 1)
@@ -15,7 +14,7 @@ cleanupPatches() {
         if [ "x$testver" != "x" ]; then
             diffs=$(echo "$diffs" | head -n -2)
         fi
-
+        
 
         if [ "x$diffs" == "x" ] ; then
             git reset HEAD $patch >/dev/null
@@ -24,23 +23,19 @@ cleanupPatches() {
     done
 }
 
-savePatches() {
+function savePatches {
     what=$1
     target=$2
-    branch=$3
     cd "$basedir/$target"
-    git format-patch --no-stat -N -o "../${what}-Patches/" $branch
+    git format-patch --no-stat -N -o "$basedir/${what}-Patches/" upstream/upstream
     cd "$basedir"
-    git add -A "${what}-Patches"
-    if [ "$clean" != "clean" ]; then
-        cleanupPatches "${what}-Patches"
-    fi
+    git add -A "$basedir/${what}-Patches"
+    cleanupPatches "$basedir/${what}-Patches"
     echo "  Patches saved for $what to $what-Patches/"
 }
-if [ "$clean" == "clean" ]; then
-    rm -rf *-Patches
+if [ "$1" == "clean" ]; then
+	rm -rf *-Patches
 fi
-
-savePatches Bukkit Spigot-API origin/spigot
-savePatches CraftBukkit Spigot-Server origin/patched
-savePatches Spigot-Server Argot-Server master
+savePatches Bukkit Spigot-API
+savePatches CraftBukkit Spigot-Server
+savePatches Spigot-Server Argot-Server
