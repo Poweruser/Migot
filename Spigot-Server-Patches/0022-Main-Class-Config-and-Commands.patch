@@ -56,7 +56,7 @@ index 0000000..480c666
 +        this.timerService.scheduleAtFixedRate(this.tickCounterObject, 1, 1, TimeUnit.SECONDS);
 +        instance = this;
 +        try {
-+            this.mainConfig = new MigotConfig(new File("migot.yml"));
++            this.mainConfig = new MigotConfig(new File("argot.yml"));
 +        } catch (IOException e) {
 +            this.failedToLoadConfig = true;
 +        } catch (InvalidConfigurationException e) {
@@ -71,7 +71,7 @@ index 0000000..480c666
 +        if(!this.initDone) {
 +            this.initDone = true;
 +            if(this.failedToLoadConfig) {
-+                throw new IllegalStateException("Migot's config file migot.yml could not be loaded. Check it for syntax errors.");
++                throw new IllegalStateException("Migot's config file argot.yml could not be loaded. Check it for syntax errors.");
 +            }
 +            CraftServer craftserver = MinecraftServer.getServer().server;
 +            craftserver.getCommandMap().register("tps", "Migot", new TPSCommand("tps"));
@@ -169,7 +169,7 @@ index 0000000..28036a4
 +        try {
 +            this.configuration.save(configFile);
 +        } catch(IOException e) {
-+            logger.error("[Migot] Could not save config file migot.yml!");
++            logger.error("[Migot] Could not save config file argot.yml!");
 +            logger.error(e.toString());
 +        }
 +
@@ -199,7 +199,7 @@ index 0000000..28036a4
 +                // Can not happen, I check if the file exists first
 +            }
 +        }
-+        InputStreamReader defConfigStream = new InputStreamReader(getClass().getClassLoader().getResourceAsStream("configurations/migot.yml"), Charsets.UTF_8);
++        InputStreamReader defConfigStream = new InputStreamReader(getClass().getClassLoader().getResourceAsStream("configurations/argot.yml"), Charsets.UTF_8);
 +        if(defConfigStream != null) {
 +            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
 +            config.setDefaults(defConfig);
@@ -277,7 +277,7 @@ index 0000000..a9506ad
 +    public ReloadSettingsCommand(String name) {
 +        super(name);
 +        this.usageMessage = "/migot-reload";
-+        this.description = "Reloads the configurations of Migot from its settings file migot.yml";
++        this.description = "Reloads the configurations of Migot from its settings file argot.yml";
 +    }
 +
 +    @Override
@@ -286,7 +286,7 @@ index 0000000..a9506ad
 +            sender.sendMessage("You are not allowed to use this command!");
 +            return true;
 +        }
-+        this.sendMessage(sender, ChatColor.GOLD + "[Migot]" + ChatColor.RESET + " Reloading config file migot.yml ... ");
++        this.sendMessage(sender, ChatColor.GOLD + "[Migot]" + ChatColor.RESET + " Reloading config file argot.yml ... ");
 +
 +        FileConfiguration[] configs;
 +
@@ -591,11 +591,11 @@ index f6a67d6..9533539 100644
      }
  
      public static int playerSample;
-diff --git a/src/main/resources/configurations/migot.yml b/src/main/resources/configurations/migot.yml
+diff --git a/src/main/resources/configurations/argot.yml b/src/main/resources/configurations/argot.yml
 new file mode 100644
 index 0000000..14cb19d
 --- /dev/null
-+++ b/src/main/resources/configurations/migot.yml
++++ b/src/main/resources/configurations/argot.yml
 @@ -0,0 +1 @@
 +general-settings:
 -- 

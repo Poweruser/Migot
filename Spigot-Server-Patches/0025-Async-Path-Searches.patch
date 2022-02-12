@@ -1148,10 +1148,10 @@ index 3c97b0a..5430baf 100644
                          return true;
                      }
                  }
-diff --git a/src/main/resources/configurations/migot.yml b/src/main/resources/configurations/migot.yml
+diff --git a/src/main/resources/configurations/argot.yml b/src/main/resources/configurations/argot.yml
 index 14cb19d..5494808 100644
---- a/src/main/resources/configurations/migot.yml
-+++ b/src/main/resources/configurations/migot.yml
+--- a/src/main/resources/configurations/argot.yml
++++ b/src/main/resources/configurations/argot.yml
 @@ -1 +1,27 @@
  general-settings:
 +async-pathsearches:
