@@ -43,4 +43,4 @@ fi
 
 savePatches Bukkit Spigot-API origin/spigot
 savePatches CraftBukkit Spigot-Server origin/patched
-savePatches Spigot-Server Argot-Server
+savePatches Spigot-Server Argot-Server master
