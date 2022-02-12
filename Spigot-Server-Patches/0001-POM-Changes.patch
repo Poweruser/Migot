@@ -14,14 +14,14 @@ index 91627ff..45b1662 100644
      <modelVersion>4.0.0</modelVersion>
 -    <groupId>org.spigotmc</groupId>
 -    <artifactId>spigot</artifactId>
-+    <groupId>de.minetick</groupId>
-+    <artifactId>migot</artifactId>
++    <groupId>jp.KK0203.dev</groupId>
++    <artifactId>argot</artifactId>
      <packaging>jar</packaging>
      <version>1.8.8-R0.1-SNAPSHOT</version>
 -    <name>Spigot</name>
 -    <url>http://www.spigotmc.org</url>
-+    <name>Migot</name>
-+    <url>https://github.com/Poweruser/Migot/</url>
++    <name>Argot</name>
++    <url>https://github.com/KK0203/Argot/</url>
  
      <properties>
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,8 +31,8 @@ index 91627ff..45b1662 100644
      <parent>
 -        <groupId>org.spigotmc</groupId>
 -        <artifactId>spigot-parent</artifactId>
-+        <groupId>de.minetick</groupId>
-+        <artifactId>migot-parent</artifactId>
++        <groupId>jp.KK0203.dev</groupId>
++        <artifactId>argot-parent</artifactId>
          <version>dev-SNAPSHOT</version>
          <relativePath>../pom.xml</relativePath>
      </parent>
@@ -41,13 +41,13 @@ index 91627ff..45b1662 100644
                  <executions>
                      <execution>
 -                        <id>ex-spigot</id>
-+                        <id>ex-migot</id>
++                        <id>ex-argot</id>
                          <configuration>
 -                            <format>git-Spigot-%s</format>
-+                            <format>git-Migot-%s</format>
++                            <format>git-Argot-%s</format>
                              <scmDirectory>../</scmDirectory>
 -                            <descriptionProperty>spigot.desc</descriptionProperty>
-+                            <descriptionProperty>migot.desc</descriptionProperty>
++                            <descriptionProperty>argot.desc</descriptionProperty>
                          </configuration>
                          <phase>initialize</phase>
                          <goals>
@@ -56,7 +56,7 @@ index 91627ff..45b1662 100644
                              <Main-Class>org.bukkit.craftbukkit.Main</Main-Class>
                              <Implementation-Title>CraftBukkit</Implementation-Title>
 -                            <Implementation-Version>${spigot.desc}${craftbukkit.desc}</Implementation-Version>
-+                            <Implementation-Version>${migot.desc}${craftbukkit.desc}</Implementation-Version>
++                            <Implementation-Version>${argot.desc}${craftbukkit.desc}</Implementation-Version>
                              <Implementation-Vendor>Bukkit Team</Implementation-Vendor>
                              <Specification-Title>Bukkit</Specification-Title>
                              <Specification-Version>${api.version}</Specification-Version>
